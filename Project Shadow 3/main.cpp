@@ -1,101 +1,98 @@
 #include <SDL.h>
-#include <stdio.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+#include "Player.h"
+#include "GameState.h"
+#include "SoundManager.h"
 #include "texture.h"
 
-SDL_Renderer* renderer = NULL;
-texture demo;
+const int SCREEN_WIDTH = 256;
+const int SCREEN_HEIGHT = 192;
 
-int main( int argc, char* args[] )
-{
-    //The window we'll be rendering to
-    SDL_Window* window = NULL;
-
-    //The surface contained by the window
-    SDL_Surface* screenSurface = NULL;
-
-    //Initialize SDL
-    if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
-    {
+int main(int argc, char* args[]) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
-    }
-    else
-    {
-        //flags for window
-        Uint32 flags = SDL_WINDOW_ALWAYS_ON_TOP | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_BORDERLESS | SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN;
-        //Create window
-        window = SDL_CreateWindow("Project Shadow 3", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 256, 192, flags);
-        if( window == NULL )
-        {
-            printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
-        }
-        renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
-        if( renderer == NULL )
-        {
-            printf( "\n Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
-        }
-        else
-        {
-            //Get window surface
-            screenSurface = SDL_GetWindowSurface( window );
-
-            //Fill the surface white
-            SDL_FillRect( screenSurface, NULL, SDL_MapRGB( screenSurface->format, 0xFF, 0xFF, 0xFF ) );
-
-            //Update the surface
-            SDL_UpdateWindowSurface( window );
-
-            if(!demo.loadFromFile("images/demoScene.png",renderer))
-            {
-                printf("\n demo image failed to load! SDL Error: %s \n",SDL_GetError());
-            }
-
-            //Hack to get window to stay up
-            SDL_Event e;
-            bool quit = false;
-            while( quit == false )
-            {
-                //Handle events on queue
-                while( SDL_PollEvent( &e ) != 0 )
-                {
-                    //User requests quit
-                    if( e.type == SDL_QUIT )
-                    {
-                        quit = true;
-                    }
-                }
-
-                //Clear screen
-                SDL_RenderClear( renderer );
-                SDL_Rect bounds;
-                SDL_GetDisplayBounds(0,&bounds);
-
-                //set viewport in center of screen
-				SDL_Rect viewport;
-				viewport.x = (bounds.w - SCREEN_WIDTH)/2;
-				viewport.y = (bounds.h - SCREEN_HEIGHT)/2;
-				viewport.w = SCREEN_WIDTH;
-				viewport.h = SCREEN_HEIGHT;
-				SDL_RenderSetViewport( renderer, &viewport );
-
-                demo.render(0,0,NULL,0.0,NULL,SDL_FLIP_NONE,renderer);
-
-                //Update screen
-                SDL_RenderPresent( renderer );
-            }
-
-        }
+        return -1;
     }
 
-    demo.free();
+    if (TTF_Init() == -1) {
+        printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+        return -1;
+    }
 
+    SDL_Window* window = SDL_CreateWindow("SDL Game", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    if (window == nullptr) {
+        printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
+        return -1;
+    }
+
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (renderer == nullptr) {
+        printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
+        return -1;
+    }
+
+    // Load assets
+    TextureManager::getInstance().loadTexture("player", "images/ladyInBlue32x32.png", renderer);
+  //SoundManager::getInstance().loadSound("jump", "jump.wav");
+ // SoundManager::getInstance().loadMusic("background", "background.mp3");
+
+    TTF_Font* font = TTF_OpenFont("arial.ttf", 24);
+    if (font == nullptr) {
+        printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
+        return -1;
+    }
+    TextureManager::getInstance().loadTextTexture("text", "Welcome to SDL Game!", {255, 255, 255}, font, renderer);
+
+    Player player("player.png", renderer, 100, 100);
+    GameState gameState("save.dat");
+
+    bool quit = false;
+    SDL_Event e;
+    Uint32 startTick, endTick, deltaTime;
+
+    SoundManager::getInstance().playMusic("background");
+
+    while (!quit) {
+        startTick = SDL_GetTicks();
+
+        while (SDL_PollEvent(&e) != 0) {
+            if (e.type == SDL_QUIT) {
+                quit = true;
+            }
+
+            player.handleEvents(e);
+        }
+
+        deltaTime = SDL_GetTicks() - startTick;
+
+        player.update(deltaTime / 1000.0f); // Convert milliseconds to seconds
+
+        SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
+        SDL_RenderClear(renderer);
+
+        player.render(renderer);
+        TextureManager::getInstance().renderTexture("text", renderer, 50, 50, 300, 50);
+
+        SDL_RenderPresent(renderer);
+
+        endTick = SDL_GetTicks();
+        deltaTime = endTick - startTick;
+
+        if (deltaTime < 16) {
+            SDL_Delay(16 - deltaTime); // Cap the frame rate to ~60 FPS
+        }
+    }
+
+    gameState.save(player);
+
+    // Cleanup
+    SoundManager::getInstance().stopMusic();
+    TextureManager::getInstance().clearTextures();
+    TTF_CloseFont(font);
+    TTF_Quit();
     SDL_DestroyRenderer(renderer);
-    renderer = NULL;
-    //Destroy window
-    SDL_DestroyWindow( window );
-    window = NULL;
-
-    //Quit SDL subsystems
-    IMG_Quit();
+    SDL_DestroyWindow(window);
     SDL_Quit();
 
     return 0;

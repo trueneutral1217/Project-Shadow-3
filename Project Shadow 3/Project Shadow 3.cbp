@@ -54,7 +54,15 @@
 			<Add directory="C:/mingw_dev_lib/SDL2_mixer-2.8.0/i686-w64-mingw32/lib" />
 			<Add directory="C:/mingw_dev_lib/SDL2_ttf-2.22.0/i686-w64-mingw32/lib" />
 		</Linker>
+		<Unit filename="gameState.cpp" />
+		<Unit filename="gameState.h" />
+		<Unit filename="inventory.cpp" />
+		<Unit filename="inventory.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="player.cpp" />
+		<Unit filename="player.h" />
+		<Unit filename="soundManager.cpp" />
+		<Unit filename="soundManager.h" />
 		<Unit filename="texture.cpp" />
 		<Unit filename="texture.h" />
 		<Extensions>

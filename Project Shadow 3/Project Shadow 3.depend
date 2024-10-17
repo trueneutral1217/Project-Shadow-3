@@ -1,7 +1,11 @@
 # depslib dependency file v1.0
-1727227450 source:c:\project shadow 3\project shadow 3\main.cpp
+1729053446 source:c:\project shadow 3\project shadow 3\main.cpp
 	<SDL.h>
-	<stdio.h>
+	<SDL_image.h>
+	<SDL_ttf.h>
+	"Player.h"
+	"GameState.h"
+	"SoundManager.h"
 	"texture.h"
 
 1710798062 c:\mingw_dev_lib\sdl2-2.30.1\x86_64-w64-mingw32\include\sdl2\sdl.h
@@ -397,22 +401,16 @@
 	"begin_code.h"
 	"close_code.h"
 
-1727387475 source:c:\project shadow 3\project shadow 3\texture.cpp
+1729053687 source:c:\project shadow 3\project shadow 3\texture.cpp
 	"texture.h"
+	<iostream>
 
-1727388605 c:\project shadow 3\project shadow 3\texture.h
+1729053687 c:\project shadow 3\project shadow 3\texture.h
 	<SDL.h>
 	<SDL_ttf.h>
-	"string"
-	"stdio.h"
-	"sstream"
 	"SDL_image.h"
-	<cmath>
-	<stddef.h>
-	<iostream>
-	<assert.h>
-	<vector>
-	"cstdlib"
+	<string>
+	<map>
 
 1710798057 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl.h
 	"SDL_main.h"
@@ -817,4 +815,48 @@
 	"SDL_version.h"
 	"begin_code.h"
 	"close_code.h"
+
+1729046047 source:c:\project shadow 3\project shadow 3\inventory.cpp
+	"Inventory.h"
+	<algorithm>
+	<iostream>
+
+1729053025 c:\project shadow 3\project shadow 3\inventory.h
+	<vector>
+	<string>
+
+1729052434 source:c:\project shadow 3\project shadow 3\player.cpp
+	"Player.h"
+	<iostream>
+
+1729052779 c:\project shadow 3\project shadow 3\player.h
+	"SDL.h"
+	"SDL_image.h"
+	"Inventory.h"
+
+1729046380 source:c:\project shadow 3\project shadow 3\soundmanager.cpp
+	"SoundManager.h"
+	<iostream>
+
+1729052952 c:\project shadow 3\project shadow 3\soundmanager.h
+	<SDL_mixer.h>
+	<string>
+	<map>
+
+1710799435 c:\mingw_dev_lib\sdl2_mixer-2.8.0\i686-w64-mingw32\include\sdl2\sdl_mixer.h
+	"SDL_stdinc.h"
+	"SDL_rwops.h"
+	"SDL_audio.h"
+	"SDL_endian.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1729046248 source:c:\project shadow 3\project shadow 3\gamestate.cpp
+	"GameState.h"
+	<iostream>
+
+1729046212 c:\project shadow 3\project shadow 3\gamestate.h
+	"Player.h"
+	<fstream>
 

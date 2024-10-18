@@ -1,5 +1,5 @@
 #include "Enemy.h"
-#include <SDL2/SDL_image.h>
+#include <SDL_image.h>
 
 Enemy::Enemy(const char* texturePath, SDL_Renderer* renderer, int x, int y)
     : xPos(x), yPos(y), xVel(0), yVel(0) {

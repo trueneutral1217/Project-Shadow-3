@@ -1,5 +1,5 @@
 #include "Projectile.h"
-#include <SDL2/SDL_image.h>
+#include <SDL_image.h>
 
 Projectile::Projectile(const char* texturePath, SDL_Renderer* renderer, int x, int y, int dir)
     : xPos(x), yPos(y), direction(dir), speed(300.0f) {

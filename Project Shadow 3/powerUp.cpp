@@ -1,5 +1,5 @@
 #include "PowerUp.h"
-#include <SDL2/SDL_image.h>
+#include <SDL_image.h>
 
 PowerUp::PowerUp(const char* texturePath, SDL_Renderer* renderer, int x, int y) {
     texture = IMG_LoadTexture(renderer, texturePath);

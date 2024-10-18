@@ -1,8 +1,8 @@
 #ifndef NETWORK_H
 #define NETWORK_H
-
+/*
 #include <string>
-#include <SDL2/SDL_net.h>
+#include <SDL_net.h>
 
 class Network {
 public:
@@ -17,5 +17,5 @@ private:
     IPaddress ip;
     TCPsocket socket;
 };
-
+*/
 #endif // NETWORK_H

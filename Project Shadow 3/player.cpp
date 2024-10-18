@@ -15,22 +15,28 @@ Player::~Player() {
 void Player::handleEvents(const SDL_Event& e) {
     if (e.type == SDL_KEYDOWN) {
         switch (e.key.keysym.sym) {
-            case SDLK_UP: yVel = -200; break;
-            case SDLK_DOWN: yVel = 200; break;
-            case SDLK_LEFT: xVel = -200; break;
-            case SDLK_RIGHT: xVel = 200; break;
+            case SDLK_w: yVel = -400; break;
+            case SDLK_s: yVel = 400; break;
+            case SDLK_a: xVel = -400; break;
+            case SDLK_d: xVel = 400; break;
         }
     } else if (e.type == SDL_KEYUP) {
         switch (e.key.keysym.sym) {
-            case SDLK_UP: case SDLK_DOWN: yVel = 0; break;
-            case SDLK_LEFT: case SDLK_RIGHT: xVel = 0; break;
+            case SDLK_w: yVel = 0; break;
+            case SDLK_s: yVel = 0; break;
+            case SDLK_a: xVel = 0; break;
+            case SDLK_d: xVel = 0; break;
         }
     }
 }
 
 void Player::update(float deltaTime) {
+
     xPos += xVel * deltaTime;
     yPos += yVel * deltaTime;
+    //std::cout << "xPos: " << xPos << " yPos: " << yPos << std::endl;
+    //std::cout<<"\n xPos = " <<xPos<<"!\n";
+
     destRect.x = xPos;
     destRect.y = yPos;
 }

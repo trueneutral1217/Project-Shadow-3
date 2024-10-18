@@ -4,6 +4,7 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "Inventory.h"
+#include <iostream>
 
 class Player {
     friend class GameState;
@@ -17,12 +18,13 @@ public:
     void addItemToInventory(const std::string& item);
     void removeItemFromInventory(const std::string& item);
     void showPlayerInventory() const;
-
+    float xVel, yVel;
+    int xPos, yPos;
 private:
     SDL_Texture* texture;
     SDL_Rect srcRect, destRect;
-    int xPos, yPos;
-    float xVel, yVel;
+    //int xPos, yPos;
+    //float xVel, yVel;
     Inventory inventory;
 };
 

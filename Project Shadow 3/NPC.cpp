@@ -1,5 +1,5 @@
 #include "NPC.h"
-#include <SDL2/SDL_image.h>
+#include <SDL_image.h>
 
 NPC::NPC(const char* texturePath, SDL_Renderer* renderer, int x, int y, const std::string& dialogue)
     : xPos(x), yPos(y), dialogue(dialogue) {

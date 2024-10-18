@@ -2,8 +2,8 @@
 #include <fstream>
 #include <iostream>
 
-Settings::Settings(const std::string& settingsFile) 
-    : settingsFile(settingsFile), volume(100), resolutionWidth(800), resolutionHeight(600) {}
+Settings::Settings(const std::string& settingsFile)
+    : settingsFile(settingsFile), volume(100), resolutionWidth(256), resolutionHeight(192) {}
 
 bool Settings::loadSettings() {
     std::ifstream file(settingsFile);

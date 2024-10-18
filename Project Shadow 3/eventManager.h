@@ -1,7 +1,7 @@
 #ifndef EVENTMANAGER_H
 #define EVENTMANAGER_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <vector>
 #include <functional>
 

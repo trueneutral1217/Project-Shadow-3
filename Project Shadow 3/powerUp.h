@@ -1,7 +1,7 @@
 #ifndef POWERUP_H
 #define POWERUP_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 class PowerUp {
 public:

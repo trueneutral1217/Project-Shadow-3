@@ -5,4 +5,4 @@ EventManager& EventManager::getInstance() {
     return instance;
 }
 
-void EventManager::registerEvent(const std::function<void()>&
+//void EventManager::registerEvent(const std::function<void()>&

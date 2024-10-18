@@ -1,12 +1,30 @@
 # depslib dependency file v1.0
-1729053446 source:c:\project shadow 3\project shadow 3\main.cpp
+1729274170 source:c:\project shadow 3\project shadow 3\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
-	"Player.h"
-	"GameState.h"
-	"SoundManager.h"
+	"player.h"
+	"gameState.h"
+	"soundManager.h"
 	"texture.h"
+	<string>
+	<iostream>
+	"animation.h"
+	"AI.h"
+	"collision.h"
+	"eventManager.h"
+	"HUD.h"
+	"map.h"
+	"inventory.h"
+	"inventoryItem.h"
+	"network.h"
+	"NPC.h"
+	"particleSystem.h"
+	"physics.h"
+	"powerUp.h"
+	"projectile.h"
+	"questSystem.h"
+	"settings.h"
 
 1710798062 c:\mingw_dev_lib\sdl2-2.30.1\x86_64-w64-mingw32\include\sdl2\sdl.h
 	"SDL_main.h"
@@ -405,7 +423,7 @@
 	"texture.h"
 	<iostream>
 
-1729053687 c:\project shadow 3\project shadow 3\texture.h
+1729230277 c:\project shadow 3\project shadow 3\texture.h
 	<SDL.h>
 	<SDL_ttf.h>
 	"SDL_image.h"
@@ -825,14 +843,15 @@
 	<vector>
 	<string>
 
-1729052434 source:c:\project shadow 3\project shadow 3\player.cpp
+1729194273 source:c:\project shadow 3\project shadow 3\player.cpp
 	"Player.h"
 	<iostream>
 
-1729052779 c:\project shadow 3\project shadow 3\player.h
+1729142744 c:\project shadow 3\project shadow 3\player.h
 	"SDL.h"
 	"SDL_image.h"
 	"Inventory.h"
+	<iostream>
 
 1729046380 source:c:\project shadow 3\project shadow 3\soundmanager.cpp
 	"SoundManager.h"
@@ -859,4 +878,125 @@
 1729046212 c:\project shadow 3\project shadow 3\gamestate.h
 	"Player.h"
 	<fstream>
+
+1729113406 source:c:\project shadow 3\project shadow 3\ai.cpp
+	"AI.h"
+	<cmath>
+
+1729138335 c:\project shadow 3\project shadow 3\ai.h
+	<SDL.h>
+
+1729274202 source:c:\project shadow 3\project shadow 3\animation.cpp
+	"Animation.h"
+	<iostream>
+
+1729274128 c:\project shadow 3\project shadow 3\animation.h
+	<SDL.h>
+	<vector>
+
+1729112319 source:c:\project shadow 3\project shadow 3\collision.cpp
+	"Collision.h"
+
+1729138335 c:\project shadow 3\project shadow 3\collision.h
+	<SDL.h>
+
+1729138420 source:c:\project shadow 3\project shadow 3\enemy.cpp
+	"Enemy.h"
+	<SDL_image.h>
+
+1729138335 c:\project shadow 3\project shadow 3\enemy.h
+	<SDL.h>
+	<string>
+
+1729112208 source:c:\project shadow 3\project shadow 3\hud.cpp
+	"HUD.h"
+	<iostream>
+
+1729138335 c:\project shadow 3\project shadow 3\hud.h
+	<SDL.h>
+	<SDL_ttf.h>
+	<string>
+
+1729112972 source:c:\project shadow 3\project shadow 3\inventoryitem.cpp
+	"InventoryItem.h"
+
+1729112960 c:\project shadow 3\project shadow 3\inventoryitem.h
+	<string>
+
+1729138420 source:c:\project shadow 3\project shadow 3\map.cpp
+	"Map.h"
+	<SDL_image.h>
+	<fstream>
+	<iostream>
+
+1729138335 c:\project shadow 3\project shadow 3\map.h
+	<SDL.h>
+	<vector>
+
+1729138472 source:c:\project shadow 3\project shadow 3\eventmanager.cpp
+	"EventManager.h"
+
+1729138335 c:\project shadow 3\project shadow 3\eventmanager.h
+	<SDL.h>
+	<vector>
+	<functional>
+
+1729138420 source:c:\project shadow 3\project shadow 3\npc.cpp
+	"NPC.h"
+	<SDL_image.h>
+
+1729138335 c:\project shadow 3\project shadow 3\npc.h
+	<SDL.h>
+	<string>
+
+1729138545 source:c:\project shadow 3\project shadow 3\network.cpp
+	"Network.h"
+	<iostream>
+
+1729138545 c:\project shadow 3\project shadow 3\network.h
+	<string>
+	<SDL_net.h>
+
+1729113128 source:c:\project shadow 3\project shadow 3\physics.cpp
+	"Physics.h"
+
+1729138335 c:\project shadow 3\project shadow 3\physics.h
+	<SDL.h>
+
+1729138420 source:c:\project shadow 3\project shadow 3\powerup.cpp
+	"PowerUp.h"
+	<SDL_image.h>
+
+1729138335 c:\project shadow 3\project shadow 3\powerup.h
+	<SDL.h>
+
+1729138420 source:c:\project shadow 3\project shadow 3\projectile.cpp
+	"Projectile.h"
+	<SDL_image.h>
+
+1729138335 c:\project shadow 3\project shadow 3\projectile.h
+	<SDL.h>
+
+1729112937 source:c:\project shadow 3\project shadow 3\questsystem.cpp
+	"QuestSystem.h"
+	<iostream>
+
+1729112918 c:\project shadow 3\project shadow 3\questsystem.h
+	<string>
+	<vector>
+
+1729140057 source:c:\project shadow 3\project shadow 3\settings.cpp
+	"Settings.h"
+	<fstream>
+	<iostream>
+
+1729113031 c:\project shadow 3\project shadow 3\settings.h
+	<string>
+
+1729138655 source:c:\project shadow 3\project shadow 3\particlesystem.cpp
+	"ParticleSystem.h"
+
+1729138335 c:\project shadow 3\project shadow 3\particlesystem.h
+	<SDL.h>
+	<vector>
 

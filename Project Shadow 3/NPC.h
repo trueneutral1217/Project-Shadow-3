@@ -1,7 +1,7 @@
 #ifndef NPC_H
 #define NPC_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <string>
 
 class NPC {
@@ -10,7 +10,7 @@ public:
     ~NPC();
     void render(SDL_Renderer* renderer);
     const std::string& getDialogue() const;
-    
+
 private:
     SDL_Texture* texture;
     SDL_Rect srcRect, destRect;

@@ -1,7 +1,7 @@
 #ifndef PROJECTILE_H
 #define PROJECTILE_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 
 class Projectile {
 public:
@@ -9,7 +9,7 @@ public:
     ~Projectile();
     void update(float deltaTime);
     void render(SDL_Renderer* renderer);
-    
+
 private:
     SDL_Texture* texture;
     SDL_Rect srcRect, destRect;

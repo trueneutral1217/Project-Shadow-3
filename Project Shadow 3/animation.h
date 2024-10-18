@@ -1,7 +1,7 @@
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <vector>
 
 class Animation {
@@ -10,6 +10,7 @@ public:
     void addFrame(SDL_Texture* texture);
     void update(float deltaTime);
     void render(SDL_Renderer* renderer, int x, int y);
+    void render(SDL_Renderer* renderer);
 
 private:
     std::vector<SDL_Texture*> frames;

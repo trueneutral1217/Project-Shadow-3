@@ -1,7 +1,7 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <string>
 
 class Enemy {
@@ -10,7 +10,7 @@ public:
     ~Enemy();
     void update(float deltaTime);
     void render(SDL_Renderer* renderer);
-    
+
 private:
     SDL_Texture* texture;
     SDL_Rect srcRect, destRect;

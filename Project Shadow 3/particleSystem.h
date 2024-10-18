@@ -1,7 +1,7 @@
 #ifndef PARTICLESYSTEM_H
 #define PARTICLESYSTEM_H
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <vector>
 
 struct Particle {

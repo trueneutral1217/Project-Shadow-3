@@ -9,10 +9,13 @@ void Animation::addFrame(SDL_Texture* texture) {
 }
 
 void Animation::update(float deltaTime) {
+    if(currentFrame == 79)
+    {//splash animation finished
+        animationFinished = true;
+    }
     elapsedTime += deltaTime;
     if (elapsedTime >= frameTime) {
         currentFrame = (currentFrame + 1) % frameCount;
-        std::cout<<"\n currentFrame = "<<currentFrame;
         elapsedTime = 0.0f;
     }
 }

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1729274170 source:c:\project shadow 3\project shadow 3\main.cpp
+1729314171 source:c:\project shadow 3\project shadow 3\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -847,7 +847,7 @@
 	"Player.h"
 	<iostream>
 
-1729142744 c:\project shadow 3\project shadow 3\player.h
+1729312630 c:\project shadow 3\project shadow 3\player.h
 	"SDL.h"
 	"SDL_image.h"
 	"Inventory.h"
@@ -886,11 +886,11 @@
 1729138335 c:\project shadow 3\project shadow 3\ai.h
 	<SDL.h>
 
-1729274202 source:c:\project shadow 3\project shadow 3\animation.cpp
+1729314676 source:c:\project shadow 3\project shadow 3\animation.cpp
 	"Animation.h"
 	<iostream>
 
-1729274128 c:\project shadow 3\project shadow 3\animation.h
+1729312630 c:\project shadow 3\project shadow 3\animation.h
 	<SDL.h>
 	<vector>
 

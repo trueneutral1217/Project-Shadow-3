@@ -11,6 +11,7 @@ public:
     void update(float deltaTime);
     void render(SDL_Renderer* renderer, int x, int y);
     void render(SDL_Renderer* renderer);
+    bool animationFinished;
 
 private:
     std::vector<SDL_Texture*> frames;

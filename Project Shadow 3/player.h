@@ -20,6 +20,7 @@ public:
     void showPlayerInventory() const;
     float xVel, yVel;
     int xPos, yPos;
+    bool playerDead;
 private:
     SDL_Texture* texture;
     SDL_Rect srcRect, destRect;

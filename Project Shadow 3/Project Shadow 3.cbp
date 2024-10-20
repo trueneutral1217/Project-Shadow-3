@@ -62,6 +62,8 @@
 		<Unit filename="NPC.h" />
 		<Unit filename="animation.cpp" />
 		<Unit filename="animation.h" />
+		<Unit filename="button.cpp" />
+		<Unit filename="button.h" />
 		<Unit filename="collision.cpp" />
 		<Unit filename="collision.h" />
 		<Unit filename="enemy.cpp" />

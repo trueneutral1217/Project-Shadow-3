@@ -11,12 +11,20 @@ void Animation::addFrame(SDL_Texture* texture) {
 void Animation::update(float deltaTime) {
     if(currentFrame == 79)
     {//splash animation finished
-        animationFinished = true;
+
+        elapsedTime += deltaTime;
+        if(elapsedTime > 2500)
+        {
+            elapsedTime = 0.0f;
+            animationFinished = true;
+        }
     }
-    elapsedTime += deltaTime;
-    if (elapsedTime >= frameTime) {
-        currentFrame = (currentFrame + 1) % frameCount;
-        elapsedTime = 0.0f;
+    else{
+        elapsedTime += deltaTime;
+        if (elapsedTime >= frameTime) {
+            currentFrame = (currentFrame + 1) % frameCount;
+            elapsedTime = 0.0f;
+        }
     }
 }
 

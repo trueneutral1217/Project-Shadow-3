@@ -16,10 +16,10 @@ void Player::handleEvents(const SDL_Event& e) {
     if (e.type == SDL_KEYDOWN) {
         switch (e.key.keysym.sym) {
             case SDLK_w:
-                if(yVel>-400)
+                if(yVel>-340)
                 {
                     yVel--;
-                    std::cout<<"\n yVel: "<<yVel;
+                    //std::cout<<"\n yVel: "<<yVel;
                 } break;
             case SDLK_s:
                 if(yVel < 400)
@@ -29,14 +29,14 @@ void Player::handleEvents(const SDL_Event& e) {
                     {
                         yVel = 60;
                     }
-                    std::cout<<"\n yVel: "<<yVel;
+                    //std::cout<<"\n yVel: "<<yVel;
                 }
             break;
             case SDLK_a:
-                if(xVel > -400)
+                if(xVel > -340)
                 {
                     xVel--;
-                    std::cout<<"\n xVel: "<<xVel;
+                    //std::cout<<"\n xVel: "<<xVel;
                 }
                 break;
             case SDLK_d:
@@ -47,7 +47,7 @@ void Player::handleEvents(const SDL_Event& e) {
                     {
                         xVel = 60;
                     }
-                    std::cout<<"\n xVel: "<<xVel;
+                    //std::cout<<"\n xVel: "<<xVel;
                 }
                 break;
         }

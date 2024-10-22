@@ -9,7 +9,7 @@ void ParticleSystem::addParticle(const Particle& particle) {
         particles.push_back(particle);
     }
 }
-/* //std::remove_if was not declared in this scope.
+ //std::remove_if was not declared in this scope.
 void ParticleSystem::update(float deltaTime) {
     for (auto& particle : particles) {
         particle.x += particle.xVel * deltaTime;
@@ -20,7 +20,7 @@ void ParticleSystem::update(float deltaTime) {
     particles.erase(std::remove_if(particles.begin(), particles.end(), [](const Particle& p) {
         return p.lifetime <= 0;
     }), particles.end());
-}*/
+}
 
 void ParticleSystem::render(SDL_Renderer* renderer) {
     for (const auto& particle : particles) {

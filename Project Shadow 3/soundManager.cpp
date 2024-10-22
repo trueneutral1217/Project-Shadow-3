@@ -1,10 +1,14 @@
 #include "SoundManager.h"
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 SoundManager::SoundManager() {
     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) < 0) {
         std::cerr << "SDL_mixer could not initialize! SDL_mixer Error: " << Mix_GetError() << std::endl;
     }
+    Mix_HookMusicFinished(musicFinishedCallback);
+    std::srand(std::time(0));
 }
 
 SoundManager::~SoundManager() {
@@ -45,6 +49,7 @@ bool SoundManager::loadMusic(const std::string& id, const std::string& filename)
         return false;
     }
     music[id] = track;
+    musicIds.push_back(id);
     return true;
 }
 
@@ -56,4 +61,19 @@ void SoundManager::playMusic(const std::string& id) {
 
 void SoundManager::stopMusic() {
     Mix_HaltMusic();
+}
+
+void SoundManager::playRandomMusic(){
+    if(music.empty()) return;
+    int index = std::rand() % musicIds.size();
+    Mix_PlayMusic(music[musicIds[index]],1);
+    std::cout<<"\n playing track: "<<musicIds[index];
+}
+
+void SoundManager::onMusicEnd(){
+    playRandomMusic();
+}
+
+void SoundManager::musicFinishedCallback(){
+    SoundManager::getInstance().onMusicEnd();
 }

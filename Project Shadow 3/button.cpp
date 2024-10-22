@@ -20,7 +20,7 @@ void Button::update(int mouseX, int mouseY, bool mouseClicked) {
     if (hover && mouseClicked) {
         // Handle button click
         clicked = true;
-        std::cout << "Button clicked!" << std::endl;
+        std::cout << "\n Button clicked!" << std::endl;
     }
 }
 

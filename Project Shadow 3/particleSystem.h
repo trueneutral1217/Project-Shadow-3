@@ -3,6 +3,7 @@
 
 #include <SDL.h>
 #include <vector>
+#include <algorithm>
 
 struct Particle {
     float x, y;

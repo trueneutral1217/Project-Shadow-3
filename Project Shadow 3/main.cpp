@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include "player.h"
 #include "gameState.h"
 #include "soundManager.h"
@@ -14,9 +15,7 @@
 #include <cstdlib>
 
 //note, eventManager (eventManager seemed incomplete, ask Phaedra) and network have problems (network needs proper SDL libraries in place and linked).
-//particleSystem.cpp has a reference to std::remove_if and needs the library added.
-//most of the errors were being thrown as std::cerr, I've changed them all to std::cout, though I may load the library and put them
-//into play again.
+
 /*
 #include "AI.h"
 
@@ -110,6 +109,13 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
             if(button1.clicked)
             {
                 gameSTATE = IN_GAME;
+                std::cout<<"\n Generating map... \n";
+                for (int y = 0; y < height; ++y) {
+                    for (int x = 0; x < width; ++x) {
+                        std::cout << map[y][x] << " ";
+                    }
+                    std::cout << std::endl;
+                }
                 button1.clicked = false;
                 SoundManager::getInstance().playSound("bonus");
             }
@@ -117,13 +123,14 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
             {
                 //note that savegame variables should be loaded from file here
                 gameSTATE = IN_GAME;
+                /*
                 std::cout<<"\n Generating map...";
                 for (int y = 0; y < height; ++y) {
                     for (int x = 0; x < width; ++x) {
                         std::cout << map[y][x] << " ";
                     }
                     std::cout << std::endl;
-                }
+                }*/
                 button2.clicked = false;
                 SoundManager::getInstance().playSound("bonus");
             }
@@ -183,10 +190,19 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                  // Print map for visualization
                  for (int y = 0; y < height; ++y) {
                     for (int x = 0; x < width; ++x) {
-                        std::cout << map[y][x] << " ";
+
+                        //std::cout << map[y][x] << " ";
                         TextureManager::getInstance().renderTexture("groundTile",renderer,x*16,y*16,16,16);
+                        if(map[y][x] == 2)
+                        {
+                            TextureManager::getInstance().renderTexture("tree1",renderer,(x*16)-16,(y*16)-16,32,32);
+                        }
+                        else if(map[y][x] == 3)
+                        {
+                            TextureManager::getInstance().renderTexture("bush",renderer,x*16,y*16,16,16);
+                        }
                     }
-                    std::cout << std::endl;
+                    //std::cout << std::endl;
                 }
             /*
              TextureManager::getInstance().renderTexture("ground",renderer,0,0,256,192);
@@ -220,12 +236,12 @@ void generateMap(int width, int height, std::vector<std::vector<int>>& map) {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             float noise = perlin(x * 0.1, y * 0.1); // Scale noise for larger maps
-            if (noise > 0.7) {
-                map[y][x] = 1; // Example: 1 for water
-            } else if (noise > 0.4) {
-                map[y][x] = 1; // Example: 2 for grass
+            if (noise > 0.1) {
+                map[y][x] = 1; // Example: 1 for grass
+            } else if (noise > 0.05) {
+                map[y][x] = 2; // Example: 2 for tree
             } else {
-                map[y][x] = 1; // Example: 3 for mountains
+                map[y][x] = 3; // Example: 3 for bush
             }
         }
     }
@@ -250,7 +266,7 @@ int main(int argc, char* args[]) {
 
        // Create window in fullscreen mode
     SDL_Window* window = SDL_CreateWindow("Project Shadow 3", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 256, 192, SDL_WINDOW_RESIZABLE);//SDL_WINDOW_FULLSCREEN_DESKTOP);
-    SDL_SetWindowFullscreen( window, SDL_TRUE );
+    SDL_SetWindowFullscreen( window, SDL_FALSE );
     //SDL_Window* window = SDL_CreateWindow("Project Shadow 3", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
     if (window == nullptr) {
         printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
@@ -265,15 +281,31 @@ int main(int argc, char* args[]) {
     // Set logical size for the viewport
     SDL_RenderSetLogicalSize(renderer, 256, 192);
     // Load assets
-    TextureManager::getInstance().loadTexture("player", "images/ladyInBlue32x32.png", renderer);
-  SoundManager::getInstance().loadSound("bonus", "sounds/bonus.wav");
-  SoundManager::getInstance().loadMusic("background", "music/build.mp3");
 
+  //load sounds
+  SoundManager::getInstance().loadSound("bonus", "sounds/bonus.wav");
+  //SoundManager::getInstance().loadSound("bonus", "sounds/bonus.wav");
+  //SoundManager::getInstance().loadSound("bonus", "sounds/bonus.wav");
+  //SoundManager::getInstance().loadSound("bonus", "sounds/bonus.wav");
+  //load music
+  auto& soundManager=SoundManager::getInstance();
+  soundManager.loadMusic("build", "music/build.mp3");
+  soundManager.loadMusic("continue", "music/continue.mp3");
+  soundManager.loadMusic("midnight", "music/midnight.mp3");
+  soundManager.loadMusic("strut", "music/strut.mp3");
+    soundManager.loadMusic("progress", "music/gearsOfProgress.mp3");
+  soundManager.loadMusic("upbeat", "music/upbeatLoop.mp3");
+  soundManager.loadMusic("sand", "music/headInTheSand.mp3");
+
+  soundManager.playRandomMusic();
+  //load font
     TTF_Font* font = TTF_OpenFont("fonts/PublicPixel-z84yD.ttf", 8);
     if (font == nullptr) {
         printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
         return -1;
     }
+    //load textures
+    TextureManager::getInstance().loadTexture("player", "images/ladyInBlue32x32.png", renderer);
     TextureManager::getInstance().loadTextTexture("gameover", "GAME OVER!!!", {255, 255, 255}, font, renderer);
     TextureManager::getInstance().loadTextTexture("ps3", "Project Shadow 3", {255, 255, 255}, font, renderer);
     TextureManager::getInstance().loadTexture("mmbg","images/mainMenuBackground.png",renderer);
@@ -338,7 +370,7 @@ int main(int argc, char* args[]) {
     splash.addFrame(frameTexture);
     }
 
-    SoundManager::getInstance().playMusic("background");
+    //SoundManager::getInstance().playMusic("background");
 
     while (!quit) {
         endTick = SDL_GetTicks();

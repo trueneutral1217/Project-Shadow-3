@@ -1,8 +1,9 @@
 # depslib dependency file v1.0
-1729488610 source:c:\project shadow 3\project shadow 3\main.cpp
+1729632724 source:c:\project shadow 3\project shadow 3\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
+	<SDL_mixer.h>
 	"player.h"
 	"gameState.h"
 	"soundManager.h"
@@ -857,14 +858,17 @@
 	"Inventory.h"
 	<iostream>
 
-1729046380 source:c:\project shadow 3\project shadow 3\soundmanager.cpp
+1729629948 source:c:\project shadow 3\project shadow 3\soundmanager.cpp
 	"SoundManager.h"
 	<iostream>
+	<cstdlib>
+	<ctime>
 
-1729052952 c:\project shadow 3\project shadow 3\soundmanager.h
+1729629497 c:\project shadow 3\project shadow 3\soundmanager.h
 	<SDL_mixer.h>
 	<string>
 	<map>
+	<vector>
 
 1710799435 c:\mingw_dev_lib\sdl2_mixer-2.8.0\i686-w64-mingw32\include\sdl2\sdl_mixer.h
 	"SDL_stdinc.h"
@@ -997,14 +1001,15 @@
 1729113031 c:\project shadow 3\project shadow 3\settings.h
 	<string>
 
-1729138655 source:c:\project shadow 3\project shadow 3\particlesystem.cpp
+1729632908 source:c:\project shadow 3\project shadow 3\particlesystem.cpp
 	"ParticleSystem.h"
 
-1729138335 c:\project shadow 3\project shadow 3\particlesystem.h
+1729632908 c:\project shadow 3\project shadow 3\particlesystem.h
 	<SDL.h>
 	<vector>
+	<algorithm>
 
-1729396919 source:c:\project shadow 3\project shadow 3\button.cpp
+1729639246 source:c:\project shadow 3\project shadow 3\button.cpp
 	"button.h"
 	"texture.h"
 	<iostream>

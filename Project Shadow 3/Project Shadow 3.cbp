@@ -56,16 +56,20 @@
 		</Linker>
 		<Unit filename="AI.cpp" />
 		<Unit filename="AI.h" />
+		<Unit filename="CollisionBox.cpp" />
+		<Unit filename="CollisionBox.h" />
 		<Unit filename="HUD.cpp" />
 		<Unit filename="HUD.h" />
 		<Unit filename="NPC.cpp" />
 		<Unit filename="NPC.h" />
+		<Unit filename="ResourceNode.cpp" />
+		<Unit filename="ResourceNode.h" />
+		<Unit filename="Timer.cpp" />
+		<Unit filename="Timer.h" />
 		<Unit filename="animation.cpp" />
 		<Unit filename="animation.h" />
 		<Unit filename="button.cpp" />
 		<Unit filename="button.h" />
-		<Unit filename="collision.cpp" />
-		<Unit filename="collision.h" />
 		<Unit filename="enemy.cpp" />
 		<Unit filename="enemy.h" />
 		<Unit filename="eventManager.cpp" />

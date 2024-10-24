@@ -13,13 +13,22 @@
 #include <vector>
 #include <cmath>
 #include <cstdlib>
+#include <map>
+#include "Timer.h"
+#include "ResourceNode.h"
 
 //note, eventManager (eventManager seemed incomplete, ask Phaedra) and network have problems (network needs proper SDL libraries in place and linked).
+
+//set up collision boxes for player, trees, and bushes.
+//set up newGameCutScene, text textures for premise/backstory, need timer, and fast forward
+//on player clicks, add a skip intro button as well.
+//save/load map.
+//need slider for volume, background image, and back button for options_menu gamestate.
 
 /*
 #include "AI.h"
 
-#include "collision.h"
+
 #include "eventManager.h"
 #include "HUD.h"
 #include "map.h"
@@ -51,7 +60,13 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
     }
     //probably just temporary, I need a way to easily close the game while in development.
     if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
-        quit = true;
+            if(gameSTATE == MAIN_MENU){
+                quit = true;
+            }
+            else
+            {
+                gameSTATE = MAIN_MENU;
+            }
     }
     int mouseX, mouseY;
     bool mouseClicked = false;
@@ -60,6 +75,7 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
         //player clicks to skip splash screen.
         if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
             gameSTATE = MAIN_MENU;
+            SoundManager::getInstance().playSound("collect5");
         }
         break;
     case MAIN_MENU:
@@ -93,7 +109,15 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
      //Handle other events
 }
 
-void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,bool& quit, int height, int width, std::vector<std::vector<int>>& map) {
+void copyMap(const std::vector<std::vector<int>>& src, std::map<int, std::map<int, int>>& dest) {
+    for (int i = 0; i < src.size(); ++i) {
+        for (int j = 0; j < src[i].size(); ++j) {
+            dest[i][j] = src[i][j];
+        }
+    }
+}
+
+void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,bool& quit, int height, int width, std::vector<std::vector<int>>& map, std::map<int, std::map<int, int>>& tileMap,std::vector<ResourceNode>& resourceNodes,SDL_Renderer* renderer) {
 
     switch (gameSTATE) {
         case SPLASH:
@@ -102,6 +126,7 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
             splash.update(deltaTime);
             if (splash.animationFinished) {
                 gameSTATE = MAIN_MENU;
+                SoundManager::getInstance().playSound("collect5");
             }
             break;
         case MAIN_MENU:
@@ -113,9 +138,30 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
                 for (int y = 0; y < height; ++y) {
                     for (int x = 0; x < width; ++x) {
                         std::cout << map[y][x] << " ";
+                        if(map[y][x] == 2)
+                        {
+                            //TextureManager::getInstance().renderTexture("tree1",renderer,(x*16)-16,(y*16)-16,32,32);
+                            resourceNodes.emplace_back("images/tree1.png", renderer, (x*16)-16,(y*16)-16 , 32, 32);
+                        }
+                        else if(map[y][x] == 3)
+                        {
+                            //TextureManager::getInstance().renderTexture("bush",renderer,x*16,y*16,16,16);
+                            resourceNodes.emplace_back("images/bush1.png", renderer, x*16,y*16 , 16, 16);
+                        }
                     }
                     std::cout << std::endl;
                 }
+
+                copyMap(map, tileMap);
+
+                std::cout<<"\n Copying map to tileMap... \n";
+                for (int y = 0; y < height; ++y) {
+                    for (int x = 0; x < width; ++x) {
+                        std::cout << tileMap[y][x] << " ";
+                    }
+                    std::cout << std::endl;
+                }
+
                 button1.clicked = false;
                 SoundManager::getInstance().playSound("bonus");
             }
@@ -123,28 +169,21 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
             {
                 //note that savegame variables should be loaded from file here
                 gameSTATE = IN_GAME;
-                /*
-                std::cout<<"\n Generating map...";
-                for (int y = 0; y < height; ++y) {
-                    for (int x = 0; x < width; ++x) {
-                        std::cout << map[y][x] << " ";
-                    }
-                    std::cout << std::endl;
-                }*/
+                //map needs to be loaded from save here.
                 button2.clicked = false;
-                SoundManager::getInstance().playSound("bonus");
+                SoundManager::getInstance().playSound("birdchirp");
             }
             if(button3.clicked)
             {
                 gameSTATE = OPTIONS_MENU;
                 button3.clicked = false;
-                SoundManager::getInstance().playSound("bonus");
+                SoundManager::getInstance().playSound("compute");
             }
             if(button4.clicked)
             {
                 quit = true;
                 button4.clicked = false;
-                SoundManager::getInstance().playSound("bonus");
+                SoundManager::getInstance().playSound("fail");
             }
             break;
         case IN_GAME:
@@ -152,6 +191,11 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
             player.update(deltaTime / 1000.0f); // Convert milliseconds to seconds
             if (player.playerDead) {
                 gameSTATE = PLAYER_DEAD;
+            }
+            for (const auto& node : resourceNodes) {
+                if (player.getCollisionBox().intersects(node.getCollisionBox())) {
+                    // Handle collision with tree
+                }
             }
             break;
         case PLAYER_DEAD:
@@ -164,7 +208,7 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
     }
 }
 
-void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player& player, Button& button1, Button& button2, Button& button3, Button& button4, float& deltaTime, int height, int width, std::vector<std::vector<int>>& map) {
+void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player& player, Button& button1, Button& button2, Button& button3, Button& button4, float& deltaTime, int height, int width, std::vector<std::vector<int>>& map,std::vector<ResourceNode>& resourceNodes) {
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(renderer);
 
@@ -193,23 +237,30 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
 
                         //std::cout << map[y][x] << " ";
                         TextureManager::getInstance().renderTexture("groundTile",renderer,x*16,y*16,16,16);
+                        /*
                         if(map[y][x] == 2)
                         {
-                            TextureManager::getInstance().renderTexture("tree1",renderer,(x*16)-16,(y*16)-16,32,32);
+                            //TextureManager::getInstance().renderTexture("tree1",renderer,(x*16)-16,(y*16)-16,32,32);
+                            resourceNodes.emplace_back("tree1", renderer, (x*16)-16,(y*16)-16 , 32, 32);
                         }
                         else if(map[y][x] == 3)
                         {
-                            TextureManager::getInstance().renderTexture("bush",renderer,x*16,y*16,16,16);
-                        }
+                            //TextureManager::getInstance().renderTexture("bush",renderer,x*16,y*16,16,16);
+                            resourceNodes.emplace_back("bush", renderer, x*16,y*16 , 16, 16);
+                        }*/
+                        //resourceNodes.emplace_back("rock", renderer, , , 16, 16);
                     }
                     //std::cout << std::endl;
                 }
-            /*
-             TextureManager::getInstance().renderTexture("ground",renderer,0,0,256,192);
-             TextureManager::getInstance().renderTexture("tree1",renderer,100,100,32,32);
-            TextureManager::getInstance().renderTexture("tree2",renderer,(int)deltaTime,(int)deltaTime,32,32);
-            TextureManager::getInstance().renderTexture("bush",renderer,200,140,16,16);
-            TextureManager::getInstance().renderTexture("rock",renderer,170,60,16,16);*/
+                // Render resource nodes
+                for (auto& node : resourceNodes) {
+                    node.render(renderer);
+                }
+                /*
+                if(!cutSceneFinished){
+                    TextureManager::getInstance().renderTexture("newGameCutScene",renderer,0,0,256,192);
+                }*/
+
              player.render(renderer);
             break;
         case PLAYER_DEAD:
@@ -217,7 +268,7 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
              TextureManager::getInstance().renderTexture("gameover", renderer, (SCREEN_WIDTH/2)-50, 10, 100, 20);
             break;
         case OPTIONS_MENU:
-
+            TextureManager::getInstance().renderTexture("optionsMenuBackground",renderer,0,0,256,192);
             break;
     }
 
@@ -246,13 +297,33 @@ void generateMap(int width, int height, std::vector<std::vector<int>>& map) {
         }
     }
 }
+//std::map<int,std::map<int,int>>& tilemap
+//std::map<int, int>>& tileMap
+void generateTileMap(int width,int height,  std::vector<std::vector<int>>& map, std::map<int,std::map<int,int>>& tileMap){
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+
+            int temp;
+            temp = map[y][x];
+            //tileMap[y][x] = temp;
+
+                /*
+            float noise = perlin(x * 0.1, y * 0.1); // Scale noise for larger maps
+            if (noise > 0.1) {
+                tileMap[y][x] = 1; // Example: 1 for grass
+            } else if (noise > 0.05) {
+                tileMap[y][x] = 2; // Example: 2 for tree
+            } else {
+                tileMap[y][x] = 3; // Example: 3 for bush
+            }*/
+        }
+    }
+}
 
 int main(int argc, char* args[]) {
     const int width = 16;
     const int height = 12;
-    std::vector<std::vector<int>> map(height, std::vector<int>(width, 0));
 
-    generateMap(width, height, map);
     gameSTATE = SPLASH;
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
@@ -284,9 +355,11 @@ int main(int argc, char* args[]) {
 
   //load sounds
   SoundManager::getInstance().loadSound("bonus", "sounds/bonus.wav");
-  //SoundManager::getInstance().loadSound("bonus", "sounds/bonus.wav");
-  //SoundManager::getInstance().loadSound("bonus", "sounds/bonus.wav");
-  //SoundManager::getInstance().loadSound("bonus", "sounds/bonus.wav");
+  SoundManager::getInstance().loadSound("fail", "sounds/fail.wav");
+  SoundManager::getInstance().loadSound("compute", "sounds/compute.wav");
+  SoundManager::getInstance().loadSound("birdchirp", "sounds/birdchirp.wav");
+  SoundManager::getInstance().loadSound("blunk", "sounds/blunk.wav");
+  SoundManager::getInstance().loadSound("collect5", "sounds/collect5.wav");
   //load music
   auto& soundManager=SoundManager::getInstance();
   soundManager.loadMusic("build", "music/build.mp3");
@@ -315,7 +388,7 @@ int main(int argc, char* args[]) {
     TextureManager::getInstance().loadTexture("bowl","images/bowl.png",renderer);
     TextureManager::getInstance().loadTexture("bowlSoup","images/bowlSoup.png",renderer);
     TextureManager::getInstance().loadTexture("bunny","images/bunny1.png",renderer);
-    TextureManager::getInstance().loadTexture("bush","images/bush1.png",renderer);
+    TextureManager::getInstance().loadTexture("images/bush1.png","images/bush1.png",renderer);
     TextureManager::getInstance().loadTexture("cloud","images/cloud1.png",renderer);
     TextureManager::getInstance().loadTexture("cup","images/cup.png",renderer);
     TextureManager::getInstance().loadTexture("cupWater","images/cupWater.png",renderer);
@@ -328,11 +401,12 @@ int main(int argc, char* args[]) {
     TextureManager::getInstance().loadTexture("rock","images/rock1.png",renderer);
     TextureManager::getInstance().loadTexture("squirrel","images/squirrel1.png",renderer);
     TextureManager::getInstance().loadTexture("sun","images/sun1.png",renderer);
-    TextureManager::getInstance().loadTexture("tree1","images/tree1.png",renderer);
+    TextureManager::getInstance().loadTexture("images/tree1.png","images/tree1.png",renderer);
     TextureManager::getInstance().loadTexture("tree2","images/tree2.png",renderer);
     TextureManager::getInstance().loadTexture("walnuts","images/walnuts.png",renderer);
     TextureManager::getInstance().loadTexture("groundTile","images/tiles/groundTile.png",renderer);
-
+    TextureManager::getInstance().loadTexture("newGameCutScene","images/cutScenes/newGameCutSceneScaled256x192.png",renderer);
+    TextureManager::getInstance().loadTexture("optionsMenuBackground","images/optionsMenuBackgroundScaled256x192.png",renderer);
 
     Button button1("images/buttons/new.png", "images/buttons/newMO.png", renderer, 10, 10, 100, 50);
     Button button2("images/buttons/load.png", "images/buttons/loadMO.png", renderer, 10, 70, 100, 50);
@@ -341,8 +415,30 @@ int main(int argc, char* args[]) {
 
     Player player("images/ladyInBlue16x16.png", renderer, (SCREEN_WIDTH/2)-8,(SCREEN_HEIGHT/2)-8);
     player.playerDead = false;
+
+    // Initialize resource nodes
+    std::vector<ResourceNode> resourceNodes;
+
+
+    // Initialize tile map
+    std::map<int, std::map<int, int>> tileMap;
+
+    //initialize map
+    std::vector<std::vector<int>> map(height, std::vector<int>(width, 0));
+
+    //generate map
+    generateMap(width, height, map);
+    generateTileMap(width,height,map,tileMap);
     GameState gameState("save.dat");
+
     gameState.load(player);
+    // Populate tileMap with initial values or load it
+    gameState.loadTileMap(tileMap);
+
+    Timer myTimer;
+    myTimer.start();
+
+
     bool quit = false;
     SDL_Event e;
     Uint32 startTick, endTick;// deltaTime;
@@ -351,7 +447,7 @@ int main(int argc, char* args[]) {
 
 
     // Initialize animation with frame count and frame time
-    Animation splash(256, 192, 80, 100); // Frame size: 256x192, 80 frames, 100 ms per frame
+    Animation splash(256, 192, 80, 30); // Frame size: 256x192, 80 frames, 10 ms per frame
     splash.animationFinished = false;  //animation still needs to run.
     // Load frames in reverse order
     for (int i = 80; i > 0; --i) {
@@ -370,29 +466,32 @@ int main(int argc, char* args[]) {
     splash.addFrame(frameTexture);
     }
 
-    //SoundManager::getInstance().playMusic("background");
 
     while (!quit) {
         endTick = SDL_GetTicks();
 
         float deltaTime = static_cast<float>(endTick - startTick);
-        //deltaTime = (endTick - startTick)/ 1000.0f;
         startTick = endTick;
         while (SDL_PollEvent(&e) != 0) {
             handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4);
         }
-        update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,quit,height,width,map);
-        render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,deltaTime,height,width,map);
+        update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,quit,height,width,map,tileMap,resourceNodes,renderer);
+        render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,deltaTime,height,width,map,resourceNodes);
         endTick = SDL_GetTicks();
         deltaTime = endTick - startTick;
 
         if (deltaTime < 15) {
             SDL_Delay(15 - deltaTime); // Cap the frame rate to ~60 FPS
         }
+
+        Uint32 time = myTimer.getTicks();
+        //std::cout << "Timer: " << time << " ms" << std::endl;
     }
 
-    gameState.save(player);
 
+
+    gameState.save(player);
+    gameState.saveTileMap(tileMap);
     // Cleanup
     SoundManager::getInstance().stopMusic();
     TextureManager::getInstance().clearTextures();

@@ -2,7 +2,7 @@
 #include <iostream>
 
 Player::Player(const char* texturePath, SDL_Renderer* renderer, int x, int y)
-    : xPos(x), yPos(y), xVel(0), yVel(0) {
+    : xPos(x), yPos(y), xVel(0), yVel(0), collisionBox(x, y, 32, 32) {
     texture = IMG_LoadTexture(renderer, texturePath);
     srcRect = {0, 0, 16, 16}; // Assume the player sprite is 64x64 pixels
     destRect = {xPos, yPos, 16, 16};
@@ -70,6 +70,8 @@ void Player::update(float deltaTime) {
 
     destRect.x = xPos;
     destRect.y = yPos;
+
+    collisionBox = CollisionBox(xPos, yPos + 8, 16, 8); // Update collision box position
 }
 
 void Player::render(SDL_Renderer* renderer) {

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1729632724 source:c:\project shadow 3\project shadow 3\main.cpp
+1729810342 source:c:\project shadow 3\project shadow 3\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -15,8 +15,10 @@
 	<vector>
 	<cmath>
 	<cstdlib>
+	<map>
+	"Timer.h"
+	"ResourceNode.h"
 	"AI.h"
-	"collision.h"
 	"eventManager.h"
 	"HUD.h"
 	"map.h"
@@ -848,15 +850,16 @@
 	<vector>
 	<string>
 
-1729487845 source:c:\project shadow 3\project shadow 3\player.cpp
+1729808570 source:c:\project shadow 3\project shadow 3\player.cpp
 	"Player.h"
 	<iostream>
 
-1729312630 c:\project shadow 3\project shadow 3\player.h
+1729809045 c:\project shadow 3\project shadow 3\player.h
 	"SDL.h"
 	"SDL_image.h"
 	"Inventory.h"
 	<iostream>
+	"CollisionBox.h"
 
 1729629948 source:c:\project shadow 3\project shadow 3\soundmanager.cpp
 	"SoundManager.h"
@@ -879,13 +882,16 @@
 	"begin_code.h"
 	"close_code.h"
 
-1729046248 source:c:\project shadow 3\project shadow 3\gamestate.cpp
+1729741505 source:c:\project shadow 3\project shadow 3\gamestate.cpp
 	"GameState.h"
 	<iostream>
 
-1729046212 c:\project shadow 3\project shadow 3\gamestate.h
+1729741505 c:\project shadow 3\project shadow 3\gamestate.h
 	"Player.h"
 	<fstream>
+	<map>
+	<vector>
+	<string>
 
 1729113406 source:c:\project shadow 3\project shadow 3\ai.cpp
 	"AI.h"
@@ -1009,7 +1015,7 @@
 	<vector>
 	<algorithm>
 
-1729639246 source:c:\project shadow 3\project shadow 3\button.cpp
+1729740011 source:c:\project shadow 3\project shadow 3\button.cpp
 	"button.h"
 	"texture.h"
 	<iostream>
@@ -1017,4 +1023,26 @@
 1729393584 c:\project shadow 3\project shadow 3\button.h
 	<SDL.h>
 	<string>
+
+1729742117 source:c:\project shadow 3\project shadow 3\timer.cpp
+	"Timer.h"
+
+1729741922 c:\project shadow 3\project shadow 3\timer.h
+	<SDL.h>
+
+1729808987 c:\project shadow 3\project shadow 3\collisionbox.h
+	<SDL.h>
+
+1729808570 source:c:\project shadow 3\project shadow 3\collisionbox.cpp
+	"CollisionBox.h"
+
+1729809452 c:\project shadow 3\project shadow 3\resourcenode.h
+	<SDL.h>
+	<string>
+	"texture.h"
+	"CollisionBox.h"
+
+1729809849 source:c:\project shadow 3\project shadow 3\resourcenode.cpp
+	"ResourceNode.h"
+	"texture.h"
 

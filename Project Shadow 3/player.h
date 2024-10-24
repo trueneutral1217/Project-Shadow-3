@@ -5,6 +5,7 @@
 #include "SDL_image.h"
 #include "Inventory.h"
 #include <iostream>
+#include "CollisionBox.h"
 
 class Player {
     friend class GameState;
@@ -21,12 +22,16 @@ public:
     float xVel, yVel;
     int xPos, yPos;
     bool playerDead;
+    const CollisionBox& getCollisionBox() const {
+        return collisionBox;
+    }
 private:
     SDL_Texture* texture;
     SDL_Rect srcRect, destRect;
     //int xPos, yPos;
     //float xVel, yVel;
     Inventory inventory;
+    CollisionBox collisionBox;
 };
 
 #endif // PLAYER_H

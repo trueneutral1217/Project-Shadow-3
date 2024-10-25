@@ -2,9 +2,9 @@
 
 CollisionBox::CollisionBox(int x, int y, int w, int h) {
     rect.x = x;
-    rect.y = y;
+    rect.y = y+(h/2);
     rect.w = w;
-    rect.h = h;
+    rect.h = h/2;
 }
 
 bool CollisionBox::intersects(const CollisionBox& other) const {

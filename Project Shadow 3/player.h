@@ -21,10 +21,13 @@ public:
     void showPlayerInventory() const;
     float xVel, yVel;
     int xPos, yPos;
-    bool playerDead;
-    const CollisionBox& getCollisionBox() const {
-        return collisionBox;
-    }
+    void setPosition(int x, int y);
+    void getPosition(int& x, int& y) const;
+    const CollisionBox& getCollisionBox() const;
+
+    void decreaseHealth(int amount);
+    void increaseHealth(int amount);
+    int getHealth() const;
 private:
     SDL_Texture* texture;
     SDL_Rect srcRect, destRect;
@@ -32,6 +35,7 @@ private:
     //float xVel, yVel;
     Inventory inventory;
     CollisionBox collisionBox;
+    int health;
 };
 
 #endif // PLAYER_H

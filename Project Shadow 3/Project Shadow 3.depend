@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1729810342 source:c:\project shadow 3\project shadow 3\main.cpp
+1729832259 source:c:\project shadow 3\project shadow 3\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -850,11 +850,11 @@
 	<vector>
 	<string>
 
-1729808570 source:c:\project shadow 3\project shadow 3\player.cpp
+1729890516 source:c:\project shadow 3\project shadow 3\player.cpp
 	"Player.h"
 	<iostream>
 
-1729809045 c:\project shadow 3\project shadow 3\player.h
+1729890516 c:\project shadow 3\project shadow 3\player.h
 	"SDL.h"
 	"SDL_image.h"
 	"Inventory.h"
@@ -1033,16 +1033,16 @@
 1729808987 c:\project shadow 3\project shadow 3\collisionbox.h
 	<SDL.h>
 
-1729808570 source:c:\project shadow 3\project shadow 3\collisionbox.cpp
+1729830524 source:c:\project shadow 3\project shadow 3\collisionbox.cpp
 	"CollisionBox.h"
 
-1729809452 c:\project shadow 3\project shadow 3\resourcenode.h
+1729888911 c:\project shadow 3\project shadow 3\resourcenode.h
 	<SDL.h>
 	<string>
 	"texture.h"
 	"CollisionBox.h"
 
-1729809849 source:c:\project shadow 3\project shadow 3\resourcenode.cpp
+1729888928 source:c:\project shadow 3\project shadow 3\resourcenode.cpp
 	"ResourceNode.h"
 	"texture.h"
 

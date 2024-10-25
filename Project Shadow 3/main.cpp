@@ -53,7 +53,7 @@ GAMESTATE gameSTATE;
 
 //Other necessary includes and initializations
 
-void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4) {
+void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,SDL_Window* window ) {
     //user x'd out the window. possibly alt+F4'd.
     if (e.type == SDL_QUIT) {
         quit = true;
@@ -67,6 +67,9 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
             {
                 gameSTATE = MAIN_MENU;
             }
+    }
+    if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_f) {
+        SDL_SetWindowFullscreen( window, SDL_TRUE );
     }
     int mouseX, mouseY;
     bool mouseClicked = false;
@@ -92,7 +95,7 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
         player.handleEvents(e);
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q)
         {
-            gameSTATE = PLAYER_DEAD;
+            player.decreaseHealth(101);
         }
         break;
     case PLAYER_DEAD:
@@ -117,8 +120,10 @@ void copyMap(const std::vector<std::vector<int>>& src, std::map<int, std::map<in
     }
 }
 
-void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,bool& quit, int height, int width, std::vector<std::vector<int>>& map, std::map<int, std::map<int, int>>& tileMap,std::vector<ResourceNode>& resourceNodes,SDL_Renderer* renderer) {
+void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,bool& quit, int height, int width, std::vector<std::vector<int>>& map, std::map<int, std::map<int, int>>& tileMap,std::vector<ResourceNode>& resourceNodes,SDL_Renderer* renderer,bool& cutSceneFinished,Timer& myTimer) {
 
+int prevX, prevY;
+    player.getPosition(prevX, prevY);
     switch (gameSTATE) {
         case SPLASH:
             // Your animation update logic
@@ -154,16 +159,10 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
 
                 copyMap(map, tileMap);
 
-                std::cout<<"\n Copying map to tileMap... \n";
-                for (int y = 0; y < height; ++y) {
-                    for (int x = 0; x < width; ++x) {
-                        std::cout << tileMap[y][x] << " ";
-                    }
-                    std::cout << std::endl;
-                }
-
                 button1.clicked = false;
                 SoundManager::getInstance().playSound("bonus");
+                cutSceneFinished = false;
+                myTimer.start();
             }
             if(button2.clicked)
             {
@@ -188,13 +187,15 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
             break;
         case IN_GAME:
              //Logic for the main game
-            player.update(deltaTime / 1000.0f); // Convert milliseconds to seconds
-            if (player.playerDead) {
+            player.update((deltaTime / 1000.0f)); // Convert milliseconds to seconds
+            if (player.getHealth() <= 0) {
                 gameSTATE = PLAYER_DEAD;
             }
             for (const auto& node : resourceNodes) {
                 if (player.getCollisionBox().intersects(node.getCollisionBox())) {
-                    // Handle collision with tree
+                    // If a collision is detected, revert the player's position to the previous position
+                    player.setPosition(prevX, prevY);
+                    break;
                 }
             }
             break;
@@ -208,7 +209,7 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
     }
 }
 
-void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player& player, Button& button1, Button& button2, Button& button3, Button& button4, float& deltaTime, int height, int width, std::vector<std::vector<int>>& map,std::vector<ResourceNode>& resourceNodes) {
+void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player& player, Button& button1, Button& button2, Button& button3, Button& button4, float& deltaTime, int height, int width, std::vector<std::vector<int>>& map,std::vector<ResourceNode>& resourceNodes, bool& cutSceneFinished,Timer& myTimer) {
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(renderer);
 
@@ -234,34 +235,93 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                  // Print map for visualization
                  for (int y = 0; y < height; ++y) {
                     for (int x = 0; x < width; ++x) {
-
-                        //std::cout << map[y][x] << " ";
                         TextureManager::getInstance().renderTexture("groundTile",renderer,x*16,y*16,16,16);
-                        /*
-                        if(map[y][x] == 2)
-                        {
-                            //TextureManager::getInstance().renderTexture("tree1",renderer,(x*16)-16,(y*16)-16,32,32);
-                            resourceNodes.emplace_back("tree1", renderer, (x*16)-16,(y*16)-16 , 32, 32);
-                        }
-                        else if(map[y][x] == 3)
-                        {
-                            //TextureManager::getInstance().renderTexture("bush",renderer,x*16,y*16,16,16);
-                            resourceNodes.emplace_back("bush", renderer, x*16,y*16 , 16, 16);
-                        }*/
-                        //resourceNodes.emplace_back("rock", renderer, , , 16, 16);
                     }
-                    //std::cout << std::endl;
                 }
                 // Render resource nodes
                 for (auto& node : resourceNodes) {
                     node.render(renderer);
                 }
-                /*
-                if(!cutSceneFinished){
-                    TextureManager::getInstance().renderTexture("newGameCutScene",renderer,0,0,256,192);
-                }*/
 
-             player.render(renderer);
+                if(!cutSceneFinished){
+                    if(myTimer.getTicks()>=24000)
+                    {
+                        myTimer.stop();
+                        cutSceneFinished = true;
+                    }
+                    if(myTimer.getTicks() < 24000)
+                    {
+                        TextureManager::getInstance().renderTexture("nightCampfire",renderer,0,0,256,192);
+                        if(myTimer.getTicks() > 21000)
+                        {
+                            TextureManager::getInstance().renderTexture("CS12", renderer, 0, 170, 246, 20);
+                        }
+                        if(myTimer.getTicks() > 20000)
+                        {
+                            TextureManager::getInstance().renderTexture("CS11", renderer, 0, 140, 246, 20);
+                        }
+                        if(myTimer.getTicks() > 19000)
+                        {
+                            TextureManager::getInstance().renderTexture("CS10", renderer, 0, 110, 246, 20);
+                        }
+                    }
+                    if(myTimer.getTicks() < 18000)
+                    {
+                        TextureManager::getInstance().renderTexture("newGameCutScene",renderer,0,0,256,192);
+                        if(myTimer.getTicks() > 15000)
+                        {
+                            TextureManager::getInstance().renderTexture("CS9", renderer, 0, 170, 246, 20);
+                        }
+                        if(myTimer.getTicks() > 14000)
+                        {
+                            TextureManager::getInstance().renderTexture("CS8", renderer, 0, 140, 246, 20);
+                        }
+                        if(myTimer.getTicks() > 13000)
+                        {
+                            TextureManager::getInstance().renderTexture("CS7", renderer, 0, 110, 246, 20);
+                        }
+                    }
+                    if(myTimer.getTicks() < 12000)
+                    {
+
+                        TextureManager::getInstance().renderTexture("teleport",renderer,0,0,256,192);
+                        if(myTimer.getTicks() > 9000)
+                        {
+                            TextureManager::getInstance().renderTexture("CS6", renderer, 0, 170, 246, 20);
+                        }
+                        if(myTimer.getTicks() > 8000)
+                        {
+                            TextureManager::getInstance().renderTexture("CS5", renderer, 0, 140, 246, 20);
+                        }
+                        if(myTimer.getTicks() > 7000)
+                        {
+                            TextureManager::getInstance().renderTexture("CS4", renderer, 0, 110, 246, 20);
+                        }
+                    }
+
+                    if(myTimer.getTicks() < 6000){
+                        TextureManager::getInstance().renderTexture("shadowCouncil",renderer,0,0,256,192);
+                        if(myTimer.getTicks() > 3000)
+                        {
+                            TextureManager::getInstance().renderTexture("CS3", renderer, 0, 170, 246, 20);
+                        }
+                        if(myTimer.getTicks() > 2000)
+                        {
+                            TextureManager::getInstance().renderTexture("CS2", renderer, 0, 140, 246, 20);
+                        }
+                        if(myTimer.getTicks() > 1000)
+                        {
+                            TextureManager::getInstance().renderTexture("CS1", renderer, 0, 110, 246, 20);
+                        }
+
+
+                    }
+
+                }
+                if(cutSceneFinished){
+                    player.render(renderer);
+                }
+
             break;
         case PLAYER_DEAD:
              //Render player death screen
@@ -294,28 +354,6 @@ void generateMap(int width, int height, std::vector<std::vector<int>>& map) {
             } else {
                 map[y][x] = 3; // Example: 3 for bush
             }
-        }
-    }
-}
-//std::map<int,std::map<int,int>>& tilemap
-//std::map<int, int>>& tileMap
-void generateTileMap(int width,int height,  std::vector<std::vector<int>>& map, std::map<int,std::map<int,int>>& tileMap){
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-
-            int temp;
-            temp = map[y][x];
-            //tileMap[y][x] = temp;
-
-                /*
-            float noise = perlin(x * 0.1, y * 0.1); // Scale noise for larger maps
-            if (noise > 0.1) {
-                tileMap[y][x] = 1; // Example: 1 for grass
-            } else if (noise > 0.05) {
-                tileMap[y][x] = 2; // Example: 2 for tree
-            } else {
-                tileMap[y][x] = 3; // Example: 3 for bush
-            }*/
         }
     }
 }
@@ -377,10 +415,28 @@ int main(int argc, char* args[]) {
         printf( "Failed to load font! SDL_ttf Error: %s\n", TTF_GetError() );
         return -1;
     }
-    //load textures
-    TextureManager::getInstance().loadTexture("player", "images/ladyInBlue32x32.png", renderer);
+    //load text textures
     TextureManager::getInstance().loadTextTexture("gameover", "GAME OVER!!!", {255, 255, 255}, font, renderer);
     TextureManager::getInstance().loadTextTexture("ps3", "Project Shadow 3", {255, 255, 255}, font, renderer);
+
+    TextureManager::getInstance().loadTextTexture("CS1","Every year on the winter solstice",{255,0,0},font,renderer);
+    TextureManager::getInstance().loadTextTexture("CS2","the shadow council meets to discuss",{255,0,0},font,renderer);
+    TextureManager::getInstance().loadTextTexture("CS3","the future of humanity.",{255,0,0},font,renderer);
+
+    TextureManager::getInstance().loadTextTexture("CS4","Earth's ecosystem is doomed.",{255,0,0},font,renderer);
+    TextureManager::getInstance().loadTextTexture("CS5","So the shadow council teleports",{255,0,0},font,renderer);
+    TextureManager::getInstance().loadTextTexture("CS6","hand-picked humans off-world.",{255,0,0},font,renderer);
+
+    TextureManager::getInstance().loadTextTexture("CS7","They decide who gets sent to",{255,0,0},font,renderer);
+    TextureManager::getInstance().loadTextTexture("CS8","Proxima Centauri b as part of 'Project Shadow'",{255,0,0},font,renderer);
+    TextureManager::getInstance().loadTextTexture("CS9","which is the best hope of humanity's survival.",{255,0,0},font,renderer);
+
+    TextureManager::getInstance().loadTextTexture("CS10","Your mission, whether you like it or not,",{255,0,0},font,renderer);
+    TextureManager::getInstance().loadTextTexture("CS11","is to colonize Centauri b.",{255,0,0},font,renderer);
+    TextureManager::getInstance().loadTextTexture("CS12","Survive any way you can.",{255,0,0},font,renderer);
+
+    //load textures
+    TextureManager::getInstance().loadTexture("player", "images/ladyInBlue32x32.png", renderer);
     TextureManager::getInstance().loadTexture("mmbg","images/mainMenuBackground.png",renderer);
     TextureManager::getInstance().loadTexture("titlebg","images/titleBG.png",renderer);
     TextureManager::getInstance().loadTexture("ground","images/ground.png",renderer);
@@ -406,6 +462,9 @@ int main(int argc, char* args[]) {
     TextureManager::getInstance().loadTexture("walnuts","images/walnuts.png",renderer);
     TextureManager::getInstance().loadTexture("groundTile","images/tiles/groundTile.png",renderer);
     TextureManager::getInstance().loadTexture("newGameCutScene","images/cutScenes/newGameCutSceneScaled256x192.png",renderer);
+    TextureManager::getInstance().loadTexture("shadowCouncil","images/cutScenes/shadowCouncilScaled256x192.png",renderer);
+    TextureManager::getInstance().loadTexture("teleport","images/cutScenes/teleportScaled256x192.png",renderer);
+    TextureManager::getInstance().loadTexture("nightCampfire","images/cutScenes/nightCampfireScaled256x192.png",renderer);
     TextureManager::getInstance().loadTexture("optionsMenuBackground","images/optionsMenuBackgroundScaled256x192.png",renderer);
 
     Button button1("images/buttons/new.png", "images/buttons/newMO.png", renderer, 10, 10, 100, 50);
@@ -414,7 +473,6 @@ int main(int argc, char* args[]) {
     Button button4("images/buttons/exit.png","images/buttons/exitMO.png",renderer,156,14,100,50);
 
     Player player("images/ladyInBlue16x16.png", renderer, (SCREEN_WIDTH/2)-8,(SCREEN_HEIGHT/2)-8);
-    player.playerDead = false;
 
     // Initialize resource nodes
     std::vector<ResourceNode> resourceNodes;
@@ -428,7 +486,7 @@ int main(int argc, char* args[]) {
 
     //generate map
     generateMap(width, height, map);
-    generateTileMap(width,height,map,tileMap);
+
     GameState gameState("save.dat");
 
     gameState.load(player);
@@ -436,8 +494,9 @@ int main(int argc, char* args[]) {
     gameState.loadTileMap(tileMap);
 
     Timer myTimer;
-    myTimer.start();
 
+
+    bool cutSceneFinished;
 
     bool quit = false;
     SDL_Event e;
@@ -473,10 +532,10 @@ int main(int argc, char* args[]) {
         float deltaTime = static_cast<float>(endTick - startTick);
         startTick = endTick;
         while (SDL_PollEvent(&e) != 0) {
-            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4);
+            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,window);
         }
-        update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,quit,height,width,map,tileMap,resourceNodes,renderer);
-        render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,deltaTime,height,width,map,resourceNodes);
+        update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,quit,height,width,map,tileMap,resourceNodes,renderer,cutSceneFinished,myTimer);
+        render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,deltaTime,height,width,map,resourceNodes,cutSceneFinished,myTimer);
         endTick = SDL_GetTicks();
         deltaTime = endTick - startTick;
 

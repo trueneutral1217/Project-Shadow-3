@@ -12,11 +12,17 @@ public:
 
     void render(SDL_Renderer* renderer);
     const CollisionBox& getCollisionBox() const;
+    const CollisionBox& getInteractionBox() const;
 
 private:
+    CollisionBox interactionBox;
     std::string textureId;
     SDL_Texture* texture;
     CollisionBox collisionBox;
+    int xPos;
+    int yPos;
+    int w;
+    int h;
 };
 
 #endif // RESOURCENODE_H

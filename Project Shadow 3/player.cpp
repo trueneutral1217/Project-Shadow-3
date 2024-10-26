@@ -2,7 +2,7 @@
 #include <iostream>
 
 Player::Player(const char* texturePath, SDL_Renderer* renderer, int x, int y)
-    : xPos(x), yPos(y),health(100), xVel(0), yVel(0), collisionBox(x, y, 16, 16) {
+    : xPos(x), yPos(y),health(100), xVel(0), yVel(0), collisionBox(x, y, 16, 16), interactionBox(x - 1, y - 1, 18, 18) {
     texture = IMG_LoadTexture(renderer, texturePath);
     srcRect = {0, 0, 16, 16}; // Assume the player sprite is 64x64 pixels
     destRect = {xPos, yPos, 16, 16};
@@ -57,15 +57,12 @@ void Player::update(float deltaTime) {
 
     xPos += xVel * deltaTime;
     yPos += yVel * deltaTime;
-    //std::cout << "xPos: " << xPos << " yPos: " << yPos << std::endl;
-    //std::cout<<"\n xPos = " <<xPos<<"!\n";
 
     destRect.x = xPos;
     destRect.y = yPos;
 
     collisionBox = CollisionBox(xPos, yPos, 16, 16); // Update collision box position
-
-
+    interactionBox = CollisionBox(xPos - 1, yPos - 1, 18, 18);
 }
 
 void Player::render(SDL_Renderer* renderer) {
@@ -97,6 +94,10 @@ void Player::getPosition(int& x, int& y) const {
 
 const CollisionBox& Player::getCollisionBox() const {
         return collisionBox;
+}
+
+const CollisionBox& Player::getInteractionBox() const {
+    return interactionBox;
 }
 
 void Player::decreaseHealth(int amount) {

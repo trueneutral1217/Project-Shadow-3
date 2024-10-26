@@ -24,6 +24,7 @@ public:
     void setPosition(int x, int y);
     void getPosition(int& x, int& y) const;
     const CollisionBox& getCollisionBox() const;
+    const CollisionBox& getInteractionBox() const;
 
     void decreaseHealth(int amount);
     void increaseHealth(int amount);
@@ -35,6 +36,7 @@ private:
     //float xVel, yVel;
     Inventory inventory;
     CollisionBox collisionBox;
+    CollisionBox interactionBox;
     int health;
 };
 

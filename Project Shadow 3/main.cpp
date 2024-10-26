@@ -51,9 +51,19 @@ const int SCREEN_HEIGHT = 192;
 enum GAMESTATE { SPLASH, MAIN_MENU, IN_GAME, PLAYER_DEAD, OPTIONS_MENU };
 GAMESTATE gameSTATE;
 
-//Other necessary includes and initializations
 
-void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,SDL_Window* window ) {
+//player interacts with a resourcenode
+void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes) {
+    for (const auto& node : resourceNodes) {
+        if (player.getInteractionBox().intersects(node.getInteractionBox())) {
+            SoundManager::getInstance().playSound("collect2");
+            // Handle other interactions, like collecting resources
+        }
+    }
+}
+
+//Other necessary includes and initializations
+void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,SDL_Window* window,bool& fullSCREEN,bool& cutSceneFinished,std::vector<ResourceNode>& resourceNodes ) {
     //user x'd out the window. possibly alt+F4'd.
     if (e.type == SDL_QUIT) {
         quit = true;
@@ -68,9 +78,20 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                 gameSTATE = MAIN_MENU;
             }
     }
+
     if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_f) {
-        SDL_SetWindowFullscreen( window, SDL_TRUE );
+        if(fullSCREEN)
+        {
+            SDL_SetWindowFullscreen( window, SDL_FALSE );
+            fullSCREEN = false;
+        }
+        else
+        {
+            SDL_SetWindowFullscreen( window, SDL_TRUE );
+            fullSCREEN = true;
+        }
     }
+
     int mouseX, mouseY;
     bool mouseClicked = false;
     switch(gameSTATE){
@@ -92,6 +113,14 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
         button4.update(mouseX, mouseY, mouseClicked);
         break;
     case IN_GAME:
+        if (e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT) {
+            if(!cutSceneFinished){
+                cutSceneFinished = true;
+            }
+        }
+        if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_e) {
+            handleInteraction(player, resourceNodes);
+        }
         player.handleEvents(e);
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q)
         {
@@ -238,9 +267,11 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                         TextureManager::getInstance().renderTexture("groundTile",renderer,x*16,y*16,16,16);
                     }
                 }
-                // Render resource nodes
+                // Render resource nodes (behind player's texture)
                 for (auto& node : resourceNodes) {
-                    node.render(renderer);
+                    if (node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h <= player.getCollisionBox().getRect().y + player.getCollisionBox().getRect().h) {
+                        node.render(renderer);
+                    }
                 }
 
                 if(!cutSceneFinished){
@@ -320,6 +351,12 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                 }
                 if(cutSceneFinished){
                     player.render(renderer);
+                    //render resource nodes (in front of player).
+                    for (auto& node : resourceNodes) {
+                        if (node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h > player.getCollisionBox().getRect().y + player.getCollisionBox().getRect().h) {
+                            node.render(renderer);
+                        }
+                    }
                 }
 
             break;
@@ -357,6 +394,7 @@ void generateMap(int width, int height, std::vector<std::vector<int>>& map) {
         }
     }
 }
+
 
 int main(int argc, char* args[]) {
     const int width = 16;
@@ -398,6 +436,7 @@ int main(int argc, char* args[]) {
   SoundManager::getInstance().loadSound("birdchirp", "sounds/birdchirp.wav");
   SoundManager::getInstance().loadSound("blunk", "sounds/blunk.wav");
   SoundManager::getInstance().loadSound("collect5", "sounds/collect5.wav");
+  SoundManager::getInstance().loadSound("collect2", "sounds/collect2.wav");
   //load music
   auto& soundManager=SoundManager::getInstance();
   soundManager.loadMusic("build", "music/build.mp3");
@@ -474,6 +513,9 @@ int main(int argc, char* args[]) {
 
     Player player("images/ladyInBlue16x16.png", renderer, (SCREEN_WIDTH/2)-8,(SCREEN_HEIGHT/2)-8);
 
+    bool fullSCREEN;
+    fullSCREEN = false;
+
     // Initialize resource nodes
     std::vector<ResourceNode> resourceNodes;
 
@@ -532,7 +574,7 @@ int main(int argc, char* args[]) {
         float deltaTime = static_cast<float>(endTick - startTick);
         startTick = endTick;
         while (SDL_PollEvent(&e) != 0) {
-            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,window);
+            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,window,fullSCREEN,cutSceneFinished,resourceNodes);
         }
         update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,quit,height,width,map,tileMap,resourceNodes,renderer,cutSceneFinished,myTimer);
         render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,deltaTime,height,width,map,resourceNodes,cutSceneFinished,myTimer);

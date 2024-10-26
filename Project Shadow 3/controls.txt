@@ -1,0 +1,7 @@
+w = up
+a = left
+s = down
+d = right
+f = fullscreen toggle
+leftmousebutton = select/advance
+escape = back/exit

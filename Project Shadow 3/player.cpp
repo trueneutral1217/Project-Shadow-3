@@ -53,13 +53,26 @@ void Player::handleEvents(const SDL_Event& e) {
     }
 }
 
-void Player::update(float deltaTime) {
+void Player::update(float deltaTime, const SDL_Rect& cameraRect) {
 
     xPos += xVel * deltaTime;
     yPos += yVel * deltaTime;
 
     destRect.x = xPos;
     destRect.y = yPos;
+
+    if (xPos < cameraRect.x) {
+        xPos = cameraRect.x;
+    }
+    if (yPos < cameraRect.y) {
+        yPos = cameraRect.y;
+    }
+    if (xPos + collisionBox.getRect().w > cameraRect.x + cameraRect.w) {
+        xPos = cameraRect.x + cameraRect.w - collisionBox.getRect().w;
+    }
+    if (yPos + collisionBox.getRect().h > (cameraRect.y + cameraRect.h)-16) {
+        yPos = (cameraRect.y + cameraRect.h - collisionBox.getRect().h)-16;
+    }
 
     collisionBox = CollisionBox(xPos, yPos, 16, 16); // Update collision box position
     interactionBox = CollisionBox(xPos - 1, yPos - 1, 18, 18);
@@ -98,6 +111,10 @@ const CollisionBox& Player::getCollisionBox() const {
 
 const CollisionBox& Player::getInteractionBox() const {
     return interactionBox;
+}
+
+SDL_Texture* Player::getTexture() const {
+    return texture;
 }
 
 void Player::decreaseHealth(int amount) {

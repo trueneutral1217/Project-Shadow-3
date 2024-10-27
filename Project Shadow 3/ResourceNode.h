@@ -13,6 +13,7 @@ public:
     void render(SDL_Renderer* renderer);
     const CollisionBox& getCollisionBox() const;
     const CollisionBox& getInteractionBox() const;
+    SDL_Texture* getTexture() const;
 
 private:
     CollisionBox interactionBox;

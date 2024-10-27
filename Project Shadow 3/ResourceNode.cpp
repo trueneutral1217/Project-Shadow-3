@@ -23,3 +23,7 @@ const CollisionBox& ResourceNode::getCollisionBox() const {
 const CollisionBox& ResourceNode::getInteractionBox() const {
     return interactionBox;
 }
+
+SDL_Texture* ResourceNode::getTexture() const {
+    return texture;
+}

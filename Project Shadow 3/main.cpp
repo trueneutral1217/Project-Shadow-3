@@ -16,6 +16,7 @@
 #include <map>
 #include "Timer.h"
 #include "ResourceNode.h"
+#include "Camera.h"
 
 //note, eventManager (eventManager seemed incomplete, ask Phaedra) and network have problems (network needs proper SDL libraries in place and linked).
 
@@ -149,7 +150,33 @@ void copyMap(const std::vector<std::vector<int>>& src, std::map<int, std::map<in
     }
 }
 
-void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,bool& quit, int height, int width, std::vector<std::vector<int>>& map, std::map<int, std::map<int, int>>& tileMap,std::vector<ResourceNode>& resourceNodes,SDL_Renderer* renderer,bool& cutSceneFinished,Timer& myTimer) {
+void copyTileMapToMap(const std::map<int, std::map<int, int>>& tileMap, std::vector<std::vector<int>>& map) {
+    // Resize the vector to match the dimensions of the tileMap
+    int maxRow = 0;
+    int maxCol = 0;
+
+    for (const auto& row : tileMap) {
+        if (row.first > maxRow) {
+            maxRow = row.first;
+        }
+        for (const auto& cell : row.second) {
+            if (cell.first > maxCol) {
+                maxCol = cell.first;
+            }
+        }
+    }
+
+    map.resize(maxRow + 1, std::vector<int>(maxCol + 1, 0));
+
+    // Copy data from tileMap to map
+    for (const auto& row : tileMap) {
+        for (const auto& cell : row.second) {
+            map[row.first][cell.first] = cell.second;
+        }
+    }
+}
+
+void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,bool& quit, int height, int width, std::vector<std::vector<int>>& map, std::map<int, std::map<int, int>>& tileMap,std::vector<ResourceNode>& resourceNodes,SDL_Renderer* renderer,bool& cutSceneFinished,Timer& myTimer,Camera& camera,GameState& gameState) {
 
 int prevX, prevY;
     player.getPosition(prevX, prevY);
@@ -165,7 +192,7 @@ int prevX, prevY;
             break;
         case MAIN_MENU:
              //Logic for main menu
-            if(button1.clicked)
+            if(button1.clicked)//newgame button clicked
             {
                 gameSTATE = IN_GAME;
                 std::cout<<"\n Generating map... \n";
@@ -193,9 +220,12 @@ int prevX, prevY;
                 cutSceneFinished = false;
                 myTimer.start();
             }
-            if(button2.clicked)
+            if(button2.clicked)//loadgame button clicked
             {
-                //note that savegame variables should be loaded from file here
+                gameState.load(player);
+                // Populate tileMap with initial values or load it
+                gameState.loadTileMap(tileMap);
+                copyTileMapToMap(tileMap, map);
                 gameSTATE = IN_GAME;
                 //map needs to be loaded from save here.
                 button2.clicked = false;
@@ -216,7 +246,9 @@ int prevX, prevY;
             break;
         case IN_GAME:
              //Logic for the main game
-            player.update((deltaTime / 1000.0f)); // Convert milliseconds to seconds
+            player.update((deltaTime / 1000.0f),camera.getCameraRect()); // Convert milliseconds to seconds
+            camera.update(player.getCollisionBox().getRect().x, player.getCollisionBox().getRect().y);
+
             if (player.getHealth() <= 0) {
                 gameSTATE = PLAYER_DEAD;
             }
@@ -238,7 +270,7 @@ int prevX, prevY;
     }
 }
 
-void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player& player, Button& button1, Button& button2, Button& button3, Button& button4, float& deltaTime, int height, int width, std::vector<std::vector<int>>& map,std::vector<ResourceNode>& resourceNodes, bool& cutSceneFinished,Timer& myTimer) {
+void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player& player, Button& button1, Button& button2, Button& button3, Button& button4, float& deltaTime, int height, int width, std::vector<std::vector<int>>& map,std::vector<ResourceNode>& resourceNodes, bool& cutSceneFinished,Timer& myTimer,Camera& camera) {
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(renderer);
 
@@ -270,7 +302,12 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                 // Render resource nodes (behind player's texture)
                 for (auto& node : resourceNodes) {
                     if (node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h <= player.getCollisionBox().getRect().y + player.getCollisionBox().getRect().h) {
-                        node.render(renderer);
+                        //node.render(renderer);
+                        SDL_Rect renderRect = node.getCollisionBox().getRect();
+                        renderRect.x -= camera.getCameraRect().x;
+                        renderRect.y -= camera.getCameraRect().y;
+                        SDL_RenderCopy(renderer, node.getTexture(), nullptr, &renderRect);
+
                     }
                 }
 
@@ -350,11 +387,19 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
 
                 }
                 if(cutSceneFinished){
-                    player.render(renderer);
+                    //player.render(renderer);
+                    SDL_Rect playerRect = player.getCollisionBox().getRect();
+                    playerRect.x -= camera.getCameraRect().x;
+                    playerRect.y -= camera.getCameraRect().y;
+                    SDL_RenderCopy(renderer, player.getTexture(), nullptr, &playerRect);
                     //render resource nodes (in front of player).
                     for (auto& node : resourceNodes) {
                         if (node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h > player.getCollisionBox().getRect().y + player.getCollisionBox().getRect().h) {
-                            node.render(renderer);
+                            //node.render(renderer);
+                            SDL_Rect renderRect = node.getCollisionBox().getRect();
+                            renderRect.x -= camera.getCameraRect().x;
+                            renderRect.y -= camera.getCameraRect().y;
+                            SDL_RenderCopy(renderer, node.getTexture(), nullptr, &renderRect);
                         }
                     }
                 }
@@ -397,8 +442,11 @@ void generateMap(int width, int height, std::vector<std::vector<int>>& map) {
 
 
 int main(int argc, char* args[]) {
-    const int width = 16;
-    const int height = 12;
+    const int width = 48;//by tiles
+    const int height = 36;
+
+    int mapWidth = width*16; // by pixels
+    int mapHeight = height*16;
 
     gameSTATE = SPLASH;
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
@@ -511,7 +559,8 @@ int main(int argc, char* args[]) {
     Button button3("images/buttons/options.png", "images/buttons/optionsMO.png", renderer, 10, 130, 100, 50);
     Button button4("images/buttons/exit.png","images/buttons/exitMO.png",renderer,156,14,100,50);
 
-    Player player("images/ladyInBlue16x16.png", renderer, (SCREEN_WIDTH/2)-8,(SCREEN_HEIGHT/2)-8);
+    Player player("images/ladyInBlue16x16.png", renderer, (SCREEN_WIDTH+(SCREEN_WIDTH/2)),(SCREEN_HEIGHT+(SCREEN_HEIGHT/2)));
+    Camera camera(256, 192,mapWidth,mapHeight);
 
     bool fullSCREEN;
     fullSCREEN = false;
@@ -530,10 +579,6 @@ int main(int argc, char* args[]) {
     generateMap(width, height, map);
 
     GameState gameState("save.dat");
-
-    gameState.load(player);
-    // Populate tileMap with initial values or load it
-    gameState.loadTileMap(tileMap);
 
     Timer myTimer;
 
@@ -576,8 +621,8 @@ int main(int argc, char* args[]) {
         while (SDL_PollEvent(&e) != 0) {
             handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,window,fullSCREEN,cutSceneFinished,resourceNodes);
         }
-        update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,quit,height,width,map,tileMap,resourceNodes,renderer,cutSceneFinished,myTimer);
-        render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,deltaTime,height,width,map,resourceNodes,cutSceneFinished,myTimer);
+        update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,quit,height,width,map,tileMap,resourceNodes,renderer,cutSceneFinished,myTimer,camera,gameState);
+        render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,deltaTime,height,width,map,resourceNodes,cutSceneFinished,myTimer,camera);
         endTick = SDL_GetTicks();
         deltaTime = endTick - startTick;
 

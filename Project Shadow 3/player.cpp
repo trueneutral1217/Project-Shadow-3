@@ -4,7 +4,7 @@
 Player::Player(const char* texturePath, SDL_Renderer* renderer, int x, int y)
     : xPos(x), yPos(y),health(100), xVel(0), yVel(0), collisionBox(x, y, 16, 16), interactionBox(x - 1, y - 1, 18, 18) {
     texture = IMG_LoadTexture(renderer, texturePath);
-    srcRect = {0, 0, 16, 16}; // Assume the player sprite is 64x64 pixels
+    srcRect = {0, 0, 16, 16}; // Assume the player sprite is 16x16 pixels
     destRect = {xPos, yPos, 16, 16};
 }
 
@@ -127,4 +127,9 @@ void Player::increaseHealth(int amount) {
 
 int Player::getHealth() const {
     return health;
+}
+
+void Player::setHealth(int newHealth) {
+    health = newHealth;
+    std::cout<<"\n player health: "<<health;
 }

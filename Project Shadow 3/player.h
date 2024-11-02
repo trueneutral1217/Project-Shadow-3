@@ -29,6 +29,7 @@ public:
     void decreaseHealth(int amount);
     void increaseHealth(int amount);
     int getHealth() const;
+    void setHealth(int);
 private:
     SDL_Texture* texture;
     SDL_Rect srcRect, destRect;

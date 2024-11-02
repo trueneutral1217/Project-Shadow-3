@@ -4,6 +4,7 @@
 GameState::GameState(const std::string& saveFile) : saveFilePath(saveFile) {}
 //  std::vector<std::vector<int>>& map
 void GameState::save(const Player& player) {
+    std::cout<<"\n saving player";
     std::ofstream outFile(saveFilePath, std::ios::out | std::ios::binary);
     if (outFile.is_open()) {
         // Save player position
@@ -26,6 +27,7 @@ void GameState::save(const Player& player) {
 }
 
 void GameState::load(Player& player) {
+    std::cout<<"\n loading player";
     std::ifstream inFile(saveFilePath, std::ios::in | std::ios::binary);
     if (inFile.is_open()) {
         // Load player position
@@ -54,6 +56,7 @@ void GameState::load(Player& player) {
 }
 
 void GameState::saveTileMap(const std::map<int, std::map<int, int>>& tileMap) {
+    std::cout<<"\n saving Tilemap";
     std::ofstream out("tileMap.dat", std::ios::binary);
     if (!out.is_open()) {
         return;
@@ -74,6 +77,7 @@ void GameState::saveTileMap(const std::map<int, std::map<int, int>>& tileMap) {
 }
 
 void GameState::loadTileMap(std::map<int, std::map<int, int>>& tileMap) {
+    std::cout<<"\n loading tilemap";
     std::ifstream in("tileMap.dat", std::ios::binary);
     if (!in.is_open()) {
         return;

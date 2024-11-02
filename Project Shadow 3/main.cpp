@@ -64,7 +64,7 @@ void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes)
 }
 
 //Other necessary includes and initializations
-void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,SDL_Window* window,bool& fullSCREEN,bool& cutSceneFinished,std::vector<ResourceNode>& resourceNodes ) {
+void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,SDL_Window* window,bool& fullSCREEN,bool& cutSceneFinished,std::vector<ResourceNode>& resourceNodes,GameState& gameState, std::map<int, std::map<int, int>>& tileMap) {
     //user x'd out the window. possibly alt+F4'd.
     if (e.type == SDL_QUIT) {
         quit = true;
@@ -76,6 +76,11 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
             }
             else
             {
+                if(gameSTATE == IN_GAME)
+                {//if player is exiting IN_GAME gameSTATE, save the game.
+                    gameState.save(player);
+                    gameState.saveTileMap(tileMap);
+                }
                 gameSTATE = MAIN_MENU;
             }
     }
@@ -143,6 +148,7 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
 }
 
 void copyMap(const std::vector<std::vector<int>>& src, std::map<int, std::map<int, int>>& dest) {
+    std::cout<<"\n map copied to tilemap!";
     for (int i = 0; i < src.size(); ++i) {
         for (int j = 0; j < src[i].size(); ++j) {
             dest[i][j] = src[i][j];
@@ -151,6 +157,7 @@ void copyMap(const std::vector<std::vector<int>>& src, std::map<int, std::map<in
 }
 
 void copyTileMapToMap(const std::map<int, std::map<int, int>>& tileMap, std::vector<std::vector<int>>& map) {
+    std::cout<<"\n tilemap copied to map";
     // Resize the vector to match the dimensions of the tileMap
     int maxRow = 0;
     int maxCol = 0;
@@ -176,6 +183,50 @@ void copyTileMapToMap(const std::map<int, std::map<int, int>>& tileMap, std::vec
     }
 }
 
+// Perlin Noise Function
+float perlin(float x, float y) {
+    // Implementation of Perlin noise
+    // This is a placeholder. Replace it with a proper Perlin noise function
+    return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+}
+
+// Generate Procedural Map
+void generateMap(int width, int height, std::vector<std::vector<int>>& map) {
+    std::cout<<"\n map generated";
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            float noise = perlin(x * 0.1, y * 0.1); // Scale noise for larger maps
+            if (noise > 0.1) {
+                map[y][x] = 1; // Example: 1 for grass
+            } else if (noise > 0.05) {
+                map[y][x] = 2; // Example: 2 for tree
+            } else {
+                map[y][x] = 3; // Example: 3 for bush
+            }
+        }
+    }
+}
+
+placeResourceNodes(int width, int height, std::vector<std::vector<int>>& map,SDL_Renderer* renderer,std::vector<ResourceNode>& resourceNodes){
+    std::cout<<"\n placing resource nodes \n";
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            std::cout << map[y][x] << " ";
+            if(map[y][x] == 2)
+            {
+                //TextureManager::getInstance().renderTexture("tree1",renderer,(x*16)-16,(y*16)-16,32,32);
+                resourceNodes.emplace_back("images/tree1.png", renderer, (x*16)-16,(y*16)-16 , 32, 32);
+            }
+            else if(map[y][x] == 3)
+            {
+                //TextureManager::getInstance().renderTexture("bush",renderer,x*16,y*16,16,16);
+                resourceNodes.emplace_back("images/bush1.png", renderer, x*16,y*16 , 16, 16);
+            }
+        }
+        std::cout << std::endl;
+    }
+}
+
 void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,bool& quit, int height, int width, std::vector<std::vector<int>>& map, std::map<int, std::map<int, int>>& tileMap,std::vector<ResourceNode>& resourceNodes,SDL_Renderer* renderer,bool& cutSceneFinished,Timer& myTimer,Camera& camera,GameState& gameState) {
 
 int prevX, prevY;
@@ -195,23 +246,12 @@ int prevX, prevY;
             if(button1.clicked)//newgame button clicked
             {
                 gameSTATE = IN_GAME;
-                std::cout<<"\n Generating map... \n";
-                for (int y = 0; y < height; ++y) {
-                    for (int x = 0; x < width; ++x) {
-                        std::cout << map[y][x] << " ";
-                        if(map[y][x] == 2)
-                        {
-                            //TextureManager::getInstance().renderTexture("tree1",renderer,(x*16)-16,(y*16)-16,32,32);
-                            resourceNodes.emplace_back("images/tree1.png", renderer, (x*16)-16,(y*16)-16 , 32, 32);
-                        }
-                        else if(map[y][x] == 3)
-                        {
-                            //TextureManager::getInstance().renderTexture("bush",renderer,x*16,y*16,16,16);
-                            resourceNodes.emplace_back("images/bush1.png", renderer, x*16,y*16 , 16, 16);
-                        }
-                    }
-                    std::cout << std::endl;
-                }
+                //generate map
+                generateMap(width, height, map);
+                //set Player default starting position
+                player.setPosition((SCREEN_WIDTH+(SCREEN_WIDTH/2)),(SCREEN_HEIGHT+(SCREEN_HEIGHT/2)));
+                placeResourceNodes(width,height,map,renderer,resourceNodes);
+
 
                 copyMap(map, tileMap);
 
@@ -222,10 +262,14 @@ int prevX, prevY;
             }
             if(button2.clicked)//loadgame button clicked
             {
+                //prevent cutscene from playing on loadgame
+                cutSceneFinished = true;
+                //load player from save file
                 gameState.load(player);
                 // Populate tileMap with initial values or load it
                 gameState.loadTileMap(tileMap);
                 copyTileMapToMap(tileMap, map);
+                placeResourceNodes(width,height,map,renderer,resourceNodes);
                 gameSTATE = IN_GAME;
                 //map needs to be loaded from save here.
                 button2.clicked = false;
@@ -251,6 +295,7 @@ int prevX, prevY;
 
             if (player.getHealth() <= 0) {
                 gameSTATE = PLAYER_DEAD;
+                player.setHealth(100);
             }
             for (const auto& node : resourceNodes) {
                 if (player.getCollisionBox().intersects(node.getCollisionBox())) {
@@ -387,11 +432,17 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
 
                 }
                 if(cutSceneFinished){
-                    //player.render(renderer);
+
                     SDL_Rect playerRect = player.getCollisionBox().getRect();
                     playerRect.x -= camera.getCameraRect().x;
                     playerRect.y -= camera.getCameraRect().y;
                     SDL_RenderCopy(renderer, player.getTexture(), nullptr, &playerRect);
+                    //player.xPos -= camera.getCameraRect().x;
+                    //player.yPos -= camera.getCameraRect().y;
+                    /*
+                    player.getCollisionBox().getX() -= camera.getCameraRect().x;
+                    player.getCollisionBox().getY() -= camera.getCameraRect().y;
+                    player.render(renderer);*/
                     //render resource nodes (in front of player).
                     for (auto& node : resourceNodes) {
                         if (node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h > player.getCollisionBox().getRect().y + player.getCollisionBox().getRect().h) {
@@ -416,30 +467,6 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
 
     SDL_RenderPresent(renderer);
 }
-
-// Perlin Noise Function
-float perlin(float x, float y) {
-    // Implementation of Perlin noise
-    // This is a placeholder. Replace it with a proper Perlin noise function
-    return static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-}
-
-// Generate Procedural Map
-void generateMap(int width, int height, std::vector<std::vector<int>>& map) {
-    for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; ++x) {
-            float noise = perlin(x * 0.1, y * 0.1); // Scale noise for larger maps
-            if (noise > 0.1) {
-                map[y][x] = 1; // Example: 1 for grass
-            } else if (noise > 0.05) {
-                map[y][x] = 2; // Example: 2 for tree
-            } else {
-                map[y][x] = 3; // Example: 3 for bush
-            }
-        }
-    }
-}
-
 
 int main(int argc, char* args[]) {
     const int width = 48;//by tiles
@@ -575,8 +602,7 @@ int main(int argc, char* args[]) {
     //initialize map
     std::vector<std::vector<int>> map(height, std::vector<int>(width, 0));
 
-    //generate map
-    generateMap(width, height, map);
+
 
     GameState gameState("save.dat");
 
@@ -619,7 +645,7 @@ int main(int argc, char* args[]) {
         float deltaTime = static_cast<float>(endTick - startTick);
         startTick = endTick;
         while (SDL_PollEvent(&e) != 0) {
-            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,window,fullSCREEN,cutSceneFinished,resourceNodes);
+            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,window,fullSCREEN,cutSceneFinished,resourceNodes,gameState,tileMap);
         }
         update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,quit,height,width,map,tileMap,resourceNodes,renderer,cutSceneFinished,myTimer,camera,gameState);
         render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,deltaTime,height,width,map,resourceNodes,cutSceneFinished,myTimer,camera);

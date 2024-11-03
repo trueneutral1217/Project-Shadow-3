@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1730505520 source:c:\project shadow 3\project shadow 3\main.cpp
+1730675656 source:c:\project shadow 3\project shadow 3\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -427,18 +427,18 @@
 	"begin_code.h"
 	"close_code.h"
 
-1729053687 source:c:\project shadow 3\project shadow 3\texture.cpp
+1729050087 source:c:\project shadow 3\project shadow 3\texture.cpp
 	"texture.h"
 	<iostream>
 
-1729230277 c:\project shadow 3\project shadow 3\texture.h
+1729226677 c:\project shadow 3\project shadow 3\texture.h
 	<SDL.h>
 	<SDL_ttf.h>
 	"SDL_image.h"
 	<string>
 	<map>
 
-1710798057 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl.h
+1710794457 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl.h
 	"SDL_main.h"
 	"SDL_stdinc.h"
 	"SDL_assert.h"
@@ -476,12 +476,12 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798054 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_main.h
+1710794454 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_main.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_stdinc.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_stdinc.h
 	"SDL_config.h"
 	<sys/types.h>
 	<stdio.h>
@@ -513,29 +513,29 @@
 	<stdio.h>
 	"close_code.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_config.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_config.h
 	"SDL_platform.h"
 	<winsdkver.h>
 	<sdkddkver.h>
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_platform.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_platform.h
 	<AvailabilityMacros.h>
 	<TargetConditionals.h>
 	<winapifamily.h>
 	"begin_code.h"
 	"close_code.h"
 
-1710798054 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\begin_code.h
+1710794454 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\begin_code.h
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\close_code.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\close_code.h
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_assert.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_assert.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	<signal.h>
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_atomic.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_atomic.h
 	"SDL_stdinc.h"
 	"SDL_platform.h"
 	"begin_code.h"
@@ -543,7 +543,7 @@
 	<mbarrier.h>
 	"close_code.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_audio.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_audio.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_endian.h"
@@ -553,12 +553,12 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798054 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_error.h
+1710794454 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_error.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798054 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_endian.h
+1710794454 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_endian.h
 	"SDL_stdinc.h"
 	<intrin.h>
 	<endian.h>
@@ -567,13 +567,13 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_mutex.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_mutex.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_thread.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_thread.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_atomic.h"
@@ -584,18 +584,18 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_rwops.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_rwops.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798054 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_clipboard.h
+1710794454 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_clipboard.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798057 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_cpuinfo.h
+1710794457 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_cpuinfo.h
 	"SDL_stdinc.h"
 	<intrin.h>
 	<intrin.h>
@@ -617,7 +617,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798054 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_events.h
+1710794454 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_events.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
@@ -631,7 +631,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_video.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_video.h
 	"SDL_stdinc.h"
 	"SDL_pixels.h"
 	"SDL_rect.h"
@@ -639,13 +639,13 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798057 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_pixels.h
+1710794457 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_pixels.h
 	"SDL_stdinc.h"
 	"SDL_endian.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_rect.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_rect.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_pixels.h"
@@ -653,7 +653,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_surface.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_surface.h
 	"SDL_stdinc.h"
 	"SDL_pixels.h"
 	"SDL_rect.h"
@@ -662,11 +662,11 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_blendmode.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_blendmode.h
 	"begin_code.h"
 	"close_code.h"
 
-1710798054 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_keyboard.h
+1710794454 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_keyboard.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_keycode.h"
@@ -674,21 +674,21 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798054 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_keycode.h
+1710794454 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_keycode.h
 	"SDL_stdinc.h"
 	"SDL_scancode.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_scancode.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_scancode.h
 	"SDL_stdinc.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_mouse.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_mouse.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_joystick.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_joystick.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_guid.h"
@@ -696,13 +696,13 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798054 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_guid.h
+1710794454 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_guid.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_gamecontroller.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_gamecontroller.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_rwops.h"
@@ -711,17 +711,17 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_sensor.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_sensor.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_quit.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_quit.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_gesture.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_gesture.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
@@ -729,70 +729,70 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_touch.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_touch.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798057 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_filesystem.h
+1710794457 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_filesystem.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798054 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_haptic.h
+1710794454 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_haptic.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"SDL_joystick.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_hidapi.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_hidapi.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_hints.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_hints.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_loadso.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_loadso.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_log.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_log.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798057 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_messagebox.h
+1710794457 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_messagebox.h
 	"SDL_stdinc.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_metal.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_metal.h
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798054 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_power.h
+1710794454 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_power.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_render.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_render.h
 	"SDL_stdinc.h"
 	"SDL_rect.h"
 	"SDL_video.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_shape.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_shape.h
 	"SDL_stdinc.h"
 	"SDL_pixels.h"
 	"SDL_rect.h"
@@ -801,7 +801,7 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_system.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_system.h
 	"SDL_stdinc.h"
 	"SDL_keyboard.h"
 	"SDL_render.h"
@@ -809,72 +809,74 @@
 	"begin_code.h"
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_timer.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_timer.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798056 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_version.h
+1710794456 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_version.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798055 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_locale.h
+1710794455 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_locale.h
 	"SDL_stdinc.h"
 	"SDL_error.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710798053 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_misc.h
+1710794453 c:\mingw_dev_lib\sdl2-2.30.1\i686-w64-mingw32\include\sdl2\sdl_misc.h
 	"SDL_stdinc.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710799423 c:\mingw_dev_lib\sdl2_ttf-2.22.0\i686-w64-mingw32\include\sdl2\sdl_ttf.h
+1710795823 c:\mingw_dev_lib\sdl2_ttf-2.22.0\i686-w64-mingw32\include\sdl2\sdl_ttf.h
 	"SDL.h"
 	"begin_code.h"
 	"close_code.h"
 
-1710799097 c:\mingw_dev_lib\sdl2_image-2.8.2\i686-w64-mingw32\include\sdl2\sdl_image.h
+1710795497 c:\mingw_dev_lib\sdl2_image-2.8.2\i686-w64-mingw32\include\sdl2\sdl_image.h
 	"SDL.h"
 	"SDL_version.h"
 	"begin_code.h"
 	"close_code.h"
 
-1729046047 source:c:\project shadow 3\project shadow 3\inventory.cpp
+1729042447 source:c:\project shadow 3\project shadow 3\inventory.cpp
 	"Inventory.h"
 	<algorithm>
 	<iostream>
 
-1729053025 c:\project shadow 3\project shadow 3\inventory.h
+1729049425 c:\project shadow 3\project shadow 3\inventory.h
 	<vector>
 	<string>
 
-1730504417 source:c:\project shadow 3\project shadow 3\player.cpp
+1730675106 source:c:\project shadow 3\project shadow 3\player.cpp
 	"Player.h"
 	<iostream>
 
-1730504434 c:\project shadow 3\project shadow 3\player.h
+1730675084 c:\project shadow 3\project shadow 3\player.h
 	"SDL.h"
 	"SDL_image.h"
 	"Inventory.h"
 	<iostream>
 	"CollisionBox.h"
+	<vector>
+	"InventoryItem.h"
 
-1729629948 source:c:\project shadow 3\project shadow 3\soundmanager.cpp
+1729626348 source:c:\project shadow 3\project shadow 3\soundmanager.cpp
 	"SoundManager.h"
 	<iostream>
 	<cstdlib>
 	<ctime>
 
-1729629497 c:\project shadow 3\project shadow 3\soundmanager.h
+1729625897 c:\project shadow 3\project shadow 3\soundmanager.h
 	<SDL_mixer.h>
 	<string>
 	<map>
 	<vector>
 
-1710799435 c:\mingw_dev_lib\sdl2_mixer-2.8.0\i686-w64-mingw32\include\sdl2\sdl_mixer.h
+1710795835 c:\mingw_dev_lib\sdl2_mixer-2.8.0\i686-w64-mingw32\include\sdl2\sdl_mixer.h
 	"SDL_stdinc.h"
 	"SDL_rwops.h"
 	"SDL_audio.h"
@@ -883,29 +885,29 @@
 	"begin_code.h"
 	"close_code.h"
 
-1730505605 source:c:\project shadow 3\project shadow 3\gamestate.cpp
+1730675364 source:c:\project shadow 3\project shadow 3\gamestate.cpp
 	"GameState.h"
 	<iostream>
 
-1729741505 c:\project shadow 3\project shadow 3\gamestate.h
+1729737905 c:\project shadow 3\project shadow 3\gamestate.h
 	"Player.h"
 	<fstream>
 	<map>
 	<vector>
 	<string>
 
-1729113406 source:c:\project shadow 3\project shadow 3\ai.cpp
+1729109806 source:c:\project shadow 3\project shadow 3\ai.cpp
 	"AI.h"
 	<cmath>
 
-1729138335 c:\project shadow 3\project shadow 3\ai.h
+1729134735 c:\project shadow 3\project shadow 3\ai.h
 	<SDL.h>
 
-1729396219 source:c:\project shadow 3\project shadow 3\animation.cpp
+1729392619 source:c:\project shadow 3\project shadow 3\animation.cpp
 	"Animation.h"
 	<iostream>
 
-1729312630 c:\project shadow 3\project shadow 3\animation.h
+1729309030 c:\project shadow 3\project shadow 3\animation.h
 	<SDL.h>
 	<vector>
 
@@ -915,141 +917,144 @@
 1729138335 c:\project shadow 3\project shadow 3\collision.h
 	<SDL.h>
 
-1729138420 source:c:\project shadow 3\project shadow 3\enemy.cpp
+1729134820 source:c:\project shadow 3\project shadow 3\enemy.cpp
 	"Enemy.h"
 	<SDL_image.h>
 
-1729138335 c:\project shadow 3\project shadow 3\enemy.h
+1729134735 c:\project shadow 3\project shadow 3\enemy.h
 	<SDL.h>
 	<string>
 
-1729112208 source:c:\project shadow 3\project shadow 3\hud.cpp
+1729108608 source:c:\project shadow 3\project shadow 3\hud.cpp
 	"HUD.h"
 	<iostream>
 
-1729138335 c:\project shadow 3\project shadow 3\hud.h
+1729134735 c:\project shadow 3\project shadow 3\hud.h
 	<SDL.h>
 	<SDL_ttf.h>
 	<string>
 
-1729112972 source:c:\project shadow 3\project shadow 3\inventoryitem.cpp
+1730674988 source:c:\project shadow 3\project shadow 3\inventoryitem.cpp
 	"InventoryItem.h"
+	<ctime>
 
-1729112960 c:\project shadow 3\project shadow 3\inventoryitem.h
+1730674988 c:\project shadow 3\project shadow 3\inventoryitem.h
 	<string>
+	<vector>
+	<ctime>
 
-1729138420 source:c:\project shadow 3\project shadow 3\map.cpp
+1729134820 source:c:\project shadow 3\project shadow 3\map.cpp
 	"Map.h"
 	<SDL_image.h>
 	<fstream>
 	<iostream>
 
-1729138335 c:\project shadow 3\project shadow 3\map.h
+1729134735 c:\project shadow 3\project shadow 3\map.h
 	<SDL.h>
 	<vector>
 
-1729138472 source:c:\project shadow 3\project shadow 3\eventmanager.cpp
+1729134872 source:c:\project shadow 3\project shadow 3\eventmanager.cpp
 	"EventManager.h"
 
-1729138335 c:\project shadow 3\project shadow 3\eventmanager.h
+1729134735 c:\project shadow 3\project shadow 3\eventmanager.h
 	<SDL.h>
 	<vector>
 	<functional>
 
-1729138420 source:c:\project shadow 3\project shadow 3\npc.cpp
+1729134820 source:c:\project shadow 3\project shadow 3\npc.cpp
 	"NPC.h"
 	<SDL_image.h>
 
-1729138335 c:\project shadow 3\project shadow 3\npc.h
+1729134735 c:\project shadow 3\project shadow 3\npc.h
 	<SDL.h>
 	<string>
 
-1729138545 source:c:\project shadow 3\project shadow 3\network.cpp
+1729134945 source:c:\project shadow 3\project shadow 3\network.cpp
 	"Network.h"
 	<iostream>
 
-1729138545 c:\project shadow 3\project shadow 3\network.h
+1729134945 c:\project shadow 3\project shadow 3\network.h
 	<string>
 	<SDL_net.h>
 
-1729113128 source:c:\project shadow 3\project shadow 3\physics.cpp
+1729109528 source:c:\project shadow 3\project shadow 3\physics.cpp
 	"Physics.h"
 
-1729138335 c:\project shadow 3\project shadow 3\physics.h
+1729134735 c:\project shadow 3\project shadow 3\physics.h
 	<SDL.h>
 
-1729138420 source:c:\project shadow 3\project shadow 3\powerup.cpp
+1729134820 source:c:\project shadow 3\project shadow 3\powerup.cpp
 	"PowerUp.h"
 	<SDL_image.h>
 
-1729138335 c:\project shadow 3\project shadow 3\powerup.h
+1729134735 c:\project shadow 3\project shadow 3\powerup.h
 	<SDL.h>
 
-1729138420 source:c:\project shadow 3\project shadow 3\projectile.cpp
+1729134820 source:c:\project shadow 3\project shadow 3\projectile.cpp
 	"Projectile.h"
 	<SDL_image.h>
 
-1729138335 c:\project shadow 3\project shadow 3\projectile.h
+1729134735 c:\project shadow 3\project shadow 3\projectile.h
 	<SDL.h>
 
-1729112937 source:c:\project shadow 3\project shadow 3\questsystem.cpp
+1729109337 source:c:\project shadow 3\project shadow 3\questsystem.cpp
 	"QuestSystem.h"
 	<iostream>
 
-1729112918 c:\project shadow 3\project shadow 3\questsystem.h
+1729109318 c:\project shadow 3\project shadow 3\questsystem.h
 	<string>
 	<vector>
 
-1729140057 source:c:\project shadow 3\project shadow 3\settings.cpp
+1729136457 source:c:\project shadow 3\project shadow 3\settings.cpp
 	"Settings.h"
 	<fstream>
 	<iostream>
 
-1729113031 c:\project shadow 3\project shadow 3\settings.h
+1729109431 c:\project shadow 3\project shadow 3\settings.h
 	<string>
 
-1729632908 source:c:\project shadow 3\project shadow 3\particlesystem.cpp
+1729629308 source:c:\project shadow 3\project shadow 3\particlesystem.cpp
 	"ParticleSystem.h"
 
-1729632908 c:\project shadow 3\project shadow 3\particlesystem.h
+1729629308 c:\project shadow 3\project shadow 3\particlesystem.h
 	<SDL.h>
 	<vector>
 	<algorithm>
 
-1729740011 source:c:\project shadow 3\project shadow 3\button.cpp
+1729736411 source:c:\project shadow 3\project shadow 3\button.cpp
 	"button.h"
 	"texture.h"
 	<iostream>
 
-1729393584 c:\project shadow 3\project shadow 3\button.h
+1729389984 c:\project shadow 3\project shadow 3\button.h
 	<SDL.h>
 	<string>
 
-1729742117 source:c:\project shadow 3\project shadow 3\timer.cpp
+1729738517 source:c:\project shadow 3\project shadow 3\timer.cpp
 	"Timer.h"
 
-1729741922 c:\project shadow 3\project shadow 3\timer.h
+1729738322 c:\project shadow 3\project shadow 3\timer.h
 	<SDL.h>
 
-1730503832 c:\project shadow 3\project shadow 3\collisionbox.h
+1730500232 c:\project shadow 3\project shadow 3\collisionbox.h
 	<SDL.h>
 
-1730503832 source:c:\project shadow 3\project shadow 3\collisionbox.cpp
+1730500232 source:c:\project shadow 3\project shadow 3\collisionbox.cpp
 	"CollisionBox.h"
 
-1730063042 c:\project shadow 3\project shadow 3\resourcenode.h
+1730059442 c:\project shadow 3\project shadow 3\resourcenode.h
 	<SDL.h>
 	<string>
 	"texture.h"
 	"CollisionBox.h"
 
-1730063042 source:c:\project shadow 3\project shadow 3\resourcenode.cpp
+1730059442 source:c:\project shadow 3\project shadow 3\resourcenode.cpp
 	"ResourceNode.h"
 	"texture.h"
 
-1730065112 source:c:\project shadow 3\project shadow 3\camera.cpp
+1730061512 source:c:\project shadow 3\project shadow 3\camera.cpp
 	"Camera.h"
 
-1730065112 c:\project shadow 3\project shadow 3\camera.h
+1730061512 c:\project shadow 3\project shadow 3\camera.h
 	<SDL.h>
 

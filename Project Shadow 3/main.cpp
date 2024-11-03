@@ -196,12 +196,16 @@ void generateMap(int width, int height, std::vector<std::vector<int>>& map) {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             float noise = perlin(x * 0.1, y * 0.1); // Scale noise for larger maps
-            if (noise > 0.1) {
-                map[y][x] = 1; // Example: 1 for grass
+            if( noise > 0.15)
+            {
+                    map[y][x] = 1;
+            }
+            else if (noise > 0.1) {
+                map[y][x] = 2; // Example: 1 for grass
             } else if (noise > 0.05) {
-                map[y][x] = 2; // Example: 2 for tree
+                map[y][x] = 3; // Example: 2 for tree
             } else {
-                map[y][x] = 3; // Example: 3 for bush
+                map[y][x] = 4; // Example: 3 for bush
             }
         }
     }
@@ -212,15 +216,21 @@ placeResourceNodes(int width, int height, std::vector<std::vector<int>>& map,SDL
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             std::cout << map[y][x] << " ";
-            if(map[y][x] == 2)
+            if(map[y][x] == 1)
             {
-                //TextureManager::getInstance().renderTexture("tree1",renderer,(x*16)-16,(y*16)-16,32,32);
+                //these should be all the tiles without resource nodes
+            }
+            else if(map[y][x] == 2)
+            {
                 resourceNodes.emplace_back("images/tree1.png", renderer, (x*16)-16,(y*16)-16 , 32, 32);
             }
             else if(map[y][x] == 3)
             {
-                //TextureManager::getInstance().renderTexture("bush",renderer,x*16,y*16,16,16);
                 resourceNodes.emplace_back("images/bush1.png", renderer, x*16,y*16 , 16, 16);
+            }
+            else if(map[y][x] == 4)
+            {
+                resourceNodes.emplace_back("images/rock1.png",renderer,x*16,y*16,16,16);
             }
         }
         std::cout << std::endl;
@@ -436,17 +446,13 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                     SDL_Rect playerRect = player.getCollisionBox().getRect();
                     playerRect.x -= camera.getCameraRect().x;
                     playerRect.y -= camera.getCameraRect().y;
+                    playerRect.x -= 4;
+                    playerRect.y -= 8;
+                    playerRect.w = 16;
+                    playerRect.h = 16;
                     SDL_RenderCopy(renderer, player.getTexture(), nullptr, &playerRect);
-                    //player.xPos -= camera.getCameraRect().x;
-                    //player.yPos -= camera.getCameraRect().y;
-                    /*
-                    player.getCollisionBox().getX() -= camera.getCameraRect().x;
-                    player.getCollisionBox().getY() -= camera.getCameraRect().y;
-                    player.render(renderer);*/
-                    //render resource nodes (in front of player).
                     for (auto& node : resourceNodes) {
                         if (node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h > player.getCollisionBox().getRect().y + player.getCollisionBox().getRect().h) {
-                            //node.render(renderer);
                             SDL_Rect renderRect = node.getCollisionBox().getRect();
                             renderRect.x -= camera.getCameraRect().x;
                             renderRect.y -= camera.getCameraRect().y;
@@ -568,10 +574,10 @@ int main(int argc, char* args[]) {
     TextureManager::getInstance().loadTexture("pot3","images/pot3.png",renderer);
     TextureManager::getInstance().loadTexture("pot3water","images/pot3water.png",renderer);
     TextureManager::getInstance().loadTexture("purpleTurtle","images/purpleTurtle.png",renderer);
-    TextureManager::getInstance().loadTexture("rock","images/rock1.png",renderer);
+    //TextureManager::getInstance().loadTexture("rock","images/rock1.png",renderer);
     TextureManager::getInstance().loadTexture("squirrel","images/squirrel1.png",renderer);
     TextureManager::getInstance().loadTexture("sun","images/sun1.png",renderer);
-    TextureManager::getInstance().loadTexture("images/tree1.png","images/tree1.png",renderer);
+    //TextureManager::getInstance().loadTexture("images/tree1.png","images/tree1.png",renderer);
     TextureManager::getInstance().loadTexture("tree2","images/tree2.png",renderer);
     TextureManager::getInstance().loadTexture("walnuts","images/walnuts.png",renderer);
     TextureManager::getInstance().loadTexture("groundTile","images/tiles/groundTile.png",renderer);
@@ -638,6 +644,24 @@ int main(int argc, char* args[]) {
     splash.addFrame(frameTexture);
     }
 
+    // Initialize items with various properties
+    InventoryItem sword("Sword", "A sharp blade used for combat.", InventoryItem::EQUIPPABLE, true, false, -1);
+    InventoryItem potion("Potion", "A healing potion for emergencies.", InventoryItem::SOLID, false, true);
+    InventoryItem bandage("Bandage", "Used to treat wounds.", InventoryItem::SOLID, false, false, 3);
+    InventoryItem bottle("Bottle", "Can hold liquids.", InventoryItem::SOLID, false, false, -1, true, false, 0, 100); // Max volume of 100
+    InventoryItem box("Box", "Can hold solid items.", InventoryItem::SOLID, false, false, -1, false, true, 0, 50); // Max volume of 50
+    InventoryItem water("Water", "Essential for life.", InventoryItem::LIQUID, false, true, 1, true, false, 10); // Volume of 10
+    InventoryItem rock("Rock", "A solid object.", InventoryItem::SOLID, false, true, 1, false, true, 20); // Volume of 20
+
+    // Add items to the player's inventory
+    player.addItem(sword);
+    player.addItem(potion);
+    player.addItem(bandage);
+    player.addItem(bottle);
+    player.addItem(box);
+    player.addItem(water);
+    player.addItem(rock);
+
 
     while (!quit) {
         endTick = SDL_GetTicks();
@@ -646,8 +670,25 @@ int main(int argc, char* args[]) {
         startTick = endTick;
         while (SDL_PollEvent(&e) != 0) {
             handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,window,fullSCREEN,cutSceneFinished,resourceNodes,gameState,tileMap);
+
+            if (e.type == SDL_KEYDOWN) {
+                if (e.key.keysym.sym == SDLK_e) {
+                    player.equipItem("Sword"); // Equip the sword when 'e' is pressed
+                } else if (e.key.keysym.sym == SDLK_u) {
+                    player.useItem("Potion"); // Use the potion when 'u' is pressed
+                    player.useItem("Bandage"); // Use the bandage when 'u' is pressed
+                } else if (e.key.keysym.sym == SDLK_c) {
+                    player.addContainedItem("Bottle", water); // Add water to bottle when 'c' is pressed
+                    player.addContainedItem("Box", rock); // Add rock to box when 'c' is pressed
+                } else if (e.key.keysym.sym == SDLK_r) {
+                    player.removeContainedItem("Bottle", "Water"); // Remove water from bottle when 'r' is pressed
+                    player.removeContainedItem("Box", "Rock"); // Remove rock from box when 'r' is pressed
+                }
+            }
         }
+
         update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,quit,height,width,map,tileMap,resourceNodes,renderer,cutSceneFinished,myTimer,camera,gameState);
+        player.updateItemsState();
         render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,deltaTime,height,width,map,resourceNodes,cutSceneFinished,myTimer,camera);
         endTick = SDL_GetTicks();
         deltaTime = endTick - startTick;

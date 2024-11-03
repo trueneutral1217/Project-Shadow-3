@@ -11,14 +11,15 @@ void GameState::save(const Player& player) {
         outFile.write((char*)&player.xPos, sizeof(player.xPos));
         outFile.write((char*)&player.yPos, sizeof(player.yPos));
 
+        /*
         // Save inventory
-        int itemCount = player.inventory.items.size();
+        int itemCount = player.inventory.size();
         outFile.write((char*)&itemCount, sizeof(itemCount));
-        for (const auto& item : player.inventory.items) {
+        for (const auto& item : player.inventory) {
             int length = item.size();
             outFile.write((char*)&length, sizeof(length));
-            outFile.write(item.c_str(), length);
-        }
+            outFile.write(iventory.c_str(), length);
+        }*/
 
         outFile.close();
     } else {
@@ -36,6 +37,7 @@ void GameState::load(Player& player) {
         player.destRect.x = player.xPos;
         player.destRect.y = player.yPos;
 
+        /*
         // Load inventory
         int itemCount;
         inFile.read((char*)&itemCount, sizeof(itemCount));
@@ -47,7 +49,7 @@ void GameState::load(Player& player) {
             inFile.read(buffer, length);
             player.inventory.addItem(std::string(buffer, length));
             delete[] buffer;
-        }
+        }*/
 
         inFile.close();
     } else {

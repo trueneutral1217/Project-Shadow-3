@@ -366,6 +366,7 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                     }
                 }
 
+
                 if(!cutSceneFinished){
                     if(myTimer.getTicks()>=24000)
                     {
@@ -443,6 +444,18 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                 }
                 if(cutSceneFinished){
 
+                    /* The code below renders inventoryItem icons.  implement at HUD and when player viewing inventory.
+                    int xx, yy;
+                    player.getPosition(xx,yy);
+
+                    for(int i = player.getInventory().size()-1; i >= 0; i--){
+                        //std::cout<<"\n index: "<<i<<" itemName: "<<player.getInventory()[i].getName();
+                        std::cout<<"\n index: "<<i<<" iconTextureId: "<<player.getInventory()[i].getIconTextureId();
+                    }
+                    player.getInventory()[0].renderIcon(renderer,xx-16,yy-16);
+                    player.getInventory()[1].renderIcon(renderer,xx+16,yy+16);
+                    */
+
                     SDL_Rect playerRect = player.getCollisionBox().getRect();
                     playerRect.x -= camera.getCameraRect().x;
                     playerRect.y -= camera.getCameraRect().y;
@@ -459,6 +472,7 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                             SDL_RenderCopy(renderer, node.getTexture(), nullptr, &renderRect);
                         }
                     }
+
                 }
 
             break;
@@ -645,22 +659,27 @@ int main(int argc, char* args[]) {
     }
 
     // Initialize items with various properties
-    InventoryItem sword("Sword", "A sharp blade used for combat.", InventoryItem::EQUIPPABLE, true, false, -1);
-    InventoryItem potion("Potion", "A healing potion for emergencies.", InventoryItem::SOLID, false, true);
+    InventoryItem sword(renderer,"Sword", "A sharp blade used for combat.","images/icons/sword.png", InventoryItem::EQUIPPABLE, true, false, -1);
+    InventoryItem potion(renderer,"Potion", "A healing potion for emergencies.","images/icons/potion.png", InventoryItem::SOLID, false, true);
+
+    /*
     InventoryItem bandage("Bandage", "Used to treat wounds.", InventoryItem::SOLID, false, false, 3);
     InventoryItem bottle("Bottle", "Can hold liquids.", InventoryItem::SOLID, false, false, -1, true, false, 0, 100); // Max volume of 100
     InventoryItem box("Box", "Can hold solid items.", InventoryItem::SOLID, false, false, -1, false, true, 0, 50); // Max volume of 50
     InventoryItem water("Water", "Essential for life.", InventoryItem::LIQUID, false, true, 1, true, false, 10); // Volume of 10
     InventoryItem rock("Rock", "A solid object.", InventoryItem::SOLID, false, true, 1, false, true, 20); // Volume of 20
+    */
+
 
     // Add items to the player's inventory
     player.addItem(sword);
     player.addItem(potion);
+    /*
     player.addItem(bandage);
     player.addItem(bottle);
     player.addItem(box);
     player.addItem(water);
-    player.addItem(rock);
+    player.addItem(rock);*/
 
 
     while (!quit) {
@@ -678,11 +697,15 @@ int main(int argc, char* args[]) {
                     player.useItem("Potion"); // Use the potion when 'u' is pressed
                     player.useItem("Bandage"); // Use the bandage when 'u' is pressed
                 } else if (e.key.keysym.sym == SDLK_c) {
+                    /*
                     player.addContainedItem("Bottle", water); // Add water to bottle when 'c' is pressed
                     player.addContainedItem("Box", rock); // Add rock to box when 'c' is pressed
+                    */
                 } else if (e.key.keysym.sym == SDLK_r) {
+                    /*
                     player.removeContainedItem("Bottle", "Water"); // Remove water from bottle when 'r' is pressed
                     player.removeContainedItem("Box", "Rock"); // Remove rock from box when 'r' is pressed
+                    */
                 }
             }
         }
@@ -690,6 +713,8 @@ int main(int argc, char* args[]) {
         update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,quit,height,width,map,tileMap,resourceNodes,renderer,cutSceneFinished,myTimer,camera,gameState);
         player.updateItemsState();
         render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,deltaTime,height,width,map,resourceNodes,cutSceneFinished,myTimer,camera);
+
+
         endTick = SDL_GetTicks();
         deltaTime = endTick - startTick;
 

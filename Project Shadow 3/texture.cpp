@@ -1,7 +1,8 @@
 #include "texture.h"
 #include <iostream>
 
-TextureManager::TextureManager() {}
+TextureManager::TextureManager() {
+}
 
 TextureManager& TextureManager::getInstance() {
     static TextureManager instance;
@@ -53,3 +54,19 @@ void TextureManager::clearTextures() {
     }
     textures.clear();
 }
+
+void TextureManager::render(const std::string& id, SDL_Renderer* renderer, int x, int y, int width, int height, const SDL_Rect& cameraRect) {
+    if (textures.find(id) != textures.end()) {
+        SDL_Rect destRect = {x, y, width, height};
+        SDL_Rect renderQuad = { x - cameraRect.x, y - cameraRect.y, destRect.w, destRect.h };
+        SDL_RenderCopy(renderer, textures[id], nullptr, &renderQuad);
+    }
+}
+/*
+void TextureManager::render(const std::string& id,SDL_Renderer* renderer, const SDL_Rect& cameraRect, int xPos, int yPos) {
+    //this function pretty much made just for tile rending (including 16x16px size and the tile's position on the map (x,y))
+    SDL_Rect srcRect = {0,0, 16, 16};
+    SDL_Rect destRect = {xPos, yPos, 16, 16};
+    SDL_Rect renderQuad = { xPos - cameraRect.x, yPos - cameraRect.y, destRect.w, destRect.h };
+    SDL_RenderCopy(renderer, texture, &srcRect, &renderQuad);
+}*/

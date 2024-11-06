@@ -10,6 +10,7 @@ public:
     ~Map();
     void render(SDL_Renderer* renderer);
 
+
 private:
     std::vector<SDL_Texture*> tiles;
     int** map;

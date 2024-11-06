@@ -39,8 +39,9 @@ Map::~Map() {
 void Map::render(SDL_Renderer* renderer) {
     for (int i = 0; i < height; ++i) {
         for (int j = 0; j < width; ++j) {
-            SDL_Rect destRect = {j * 32, i * 32, 32, 32}; // Assume each tile is 32x32 pixels
+            SDL_Rect destRect = {j * 16, i * 16, 16, 16}; // Assume each tile is 16x16 pixels
             SDL_RenderCopy(renderer, tiles[map[i][j]], nullptr, &destRect);
         }
     }
 }
+

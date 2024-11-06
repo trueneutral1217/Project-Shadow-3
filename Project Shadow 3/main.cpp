@@ -19,9 +19,11 @@
 #include "Camera.h"
 #include "enemy.h"
 
+//socialist Americans don't pay income tax because they don't get representation.
+
 //note, eventManager (eventManager seemed incomplete, ask Phaedra) and network have problems (network needs proper SDL libraries in place and linked).
 
-//set up collision boxes for player, trees, and bushes.
+
 //set up newGameCutScene, text textures for premise/backstory, need timer, and fast forward
 //on player clicks, add a skip intro button as well.
 //save/load map.
@@ -55,17 +57,22 @@ GAMESTATE gameSTATE;
 
 
 //player interacts with a resourcenode
-void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes) {
+void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,Enemy& enemy) {
     for (const auto& node : resourceNodes) {
         if (player.getInteractionBox().intersects(node.getInteractionBox())) {
             SoundManager::getInstance().playSound("collect2");
             // Handle other interactions, like collecting resources
         }
     }
+    if(player.getInteractionBox().intersects(enemy.getCollisionBox()))
+    {
+        //enemy.dead();
+        enemy.~Enemy();
+    }
 }
 
 //Other necessary includes and initializations
-void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,SDL_Window* window,bool& fullSCREEN,bool& cutSceneFinished,std::vector<ResourceNode>& resourceNodes,GameState& gameState, std::map<int, std::map<int, int>>& tileMap) {
+void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,SDL_Window* window,bool& fullSCREEN,bool& cutSceneFinished,std::vector<ResourceNode>& resourceNodes,GameState& gameState, std::map<int, std::map<int, int>>& tileMap, Enemy& enemy) {
     //user x'd out the window. possibly alt+F4'd.
     if (e.type == SDL_QUIT) {
         quit = true;
@@ -126,7 +133,7 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
             }
         }
         if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_e) {
-            handleInteraction(player, resourceNodes);
+            handleInteraction(player, resourceNodes,enemy);
         }
         player.handleEvents(e);
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q)
@@ -301,18 +308,24 @@ int prevX, prevY;
             }
             break;
         case IN_GAME:
-             //Logic for the main game
-             enemy.update((deltaTime/1000.0f));
-            player.update((deltaTime / 1000.0f),camera.getCameraRect()); // Convert milliseconds to seconds
-            camera.update(player.getCollisionBox().getRect().x, player.getCollisionBox().getRect().y);
+            //Logic for the main game
+            enemy.update( ( deltaTime / 1000.0f ) );
+            player.update( ( deltaTime / 1000.0f ), camera.getCameraRect() ); // Convert milliseconds to seconds
+            camera.update( player.getCollisionBox().getRect().x, player.getCollisionBox().getRect().y );
 
-            if (player.getHealth() <= 0) {
+            if ( player.getHealth() <= 0 ) {
                 gameSTATE = PLAYER_DEAD;
                 player.setHealth(100);
             }
             for (const auto& node : resourceNodes) {
-                if (player.getCollisionBox().intersects(node.getCollisionBox())) {
+                if ( player.getCollisionBox().intersects(node.getCollisionBox()))  {
                     // If a collision is detected, revert the player's position to the previous position
+                    player.setPosition(prevX, prevY);
+                    break;
+                }
+                if( player.getCollisionBox().intersects(enemy.getCollisionBox() ) ){
+                    //if player collides with enemy
+                    player.decreaseHealth(5);
                     player.setPosition(prevX, prevY);
                     break;
                 }
@@ -320,6 +333,7 @@ int prevX, prevY;
             break;
         case PLAYER_DEAD:
              //Logic for when player is dead
+             resourceNodes.clear();
              //Possibly reset to MAIN_MENU or offer options for retry
             break;
         case OPTIONS_MENU:
@@ -351,15 +365,20 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
             break;
         case IN_GAME:
              //Render main game
+
+
+
                  // Print map for visualization
                  for (int y = 0; y < height; ++y) {
                     for (int x = 0; x < width; ++x) {
-                        TextureManager::getInstance().renderTexture("groundTile",renderer,x*16,y*16,16,16);
+                        TextureManager::getInstance().render("groundTile",renderer,x*16,y*16,16,16,camera.getCameraRect());
                     }
                 }
+
                 // Render resource nodes (behind player's texture)
                 for (auto& node : resourceNodes) {
-                    if (node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h <= player.getCollisionBox().getRect().y + player.getCollisionBox().getRect().h) {
+                    if ( (node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h <= player.getCollisionBox().getRect().y + player.getCollisionBox().getRect().h) || (node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h <= enemy.getCollisionBox().getRect().y + enemy.getCollisionBox().getRect().h )) {
+
                         //node.render(renderer);
                         SDL_Rect renderRect = node.getCollisionBox().getRect();
                         renderRect.x -= camera.getCameraRect().x;
@@ -368,8 +387,6 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
 
                     }
                 }
-
-
                 if(!cutSceneFinished){
                     if(myTimer.getTicks()>=24000)
                     {
@@ -425,7 +442,6 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                             TextureManager::getInstance().renderTexture("CS4", renderer, 0, 110, 246, 20);
                         }
                     }
-
                     if(myTimer.getTicks() < 6000){
                         TextureManager::getInstance().renderTexture("shadowCouncil",renderer,0,0,256,192);
                         if(myTimer.getTicks() > 3000)
@@ -440,27 +456,25 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                         {
                             TextureManager::getInstance().renderTexture("CS1", renderer, 0, 110, 246, 20);
                         }
-
-
                     }
-
                 }
                 if(cutSceneFinished){
-
-                    /* The code below renders inventoryItem icons.  implement at HUD and when player viewing inventory.
+                    // The code below renders inventoryItem icons.  implement at HUD and when player viewing inventory.
+                    /*
                     int xx, yy;
-                    player.getPosition(xx,yy);
+                    xx = 130;
+                    yy = 166;
+                    //player.getPosition(xx,yy);
 
                     for(int i = player.getInventory().size()-1; i >= 0; i--){
                         //std::cout<<"\n index: "<<i<<" itemName: "<<player.getInventory()[i].getName();
                         std::cout<<"\n index: "<<i<<" iconTextureId: "<<player.getInventory()[i].getIconTextureId();
                     }
-                    player.getInventory()[0].renderIcon(renderer,xx-16,yy-16);
-                    player.getInventory()[1].renderIcon(renderer,xx+16,yy+16);
-                    */
+                    player.getInventory()[0].renderIcon(renderer,xx-16,yy);
+                    player.getInventory()[1].renderIcon(renderer,xx,yy);*/
+
 
                     enemy.render(renderer,camera.getCameraRect());
-
                     SDL_Rect playerRect = player.getCollisionBox().getRect();
                     playerRect.x -= camera.getCameraRect().x;
                     playerRect.y -= camera.getCameraRect().y;
@@ -470,7 +484,7 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                     playerRect.h = 16;
                     SDL_RenderCopy(renderer, player.getTexture(), nullptr, &playerRect);
                     for (auto& node : resourceNodes) {
-                        if (node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h > player.getCollisionBox().getRect().y + player.getCollisionBox().getRect().h) {
+                        if ( ( node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h > player.getCollisionBox().getRect().y + player.getCollisionBox().getRect().h) || ( node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h > enemy.getCollisionBox().getRect().y + enemy.getCollisionBox().getRect().h ) ) {
                             SDL_Rect renderRect = node.getCollisionBox().getRect();
                             renderRect.x -= camera.getCameraRect().x;
                             renderRect.y -= camera.getCameraRect().y;
@@ -695,7 +709,7 @@ int main(int argc, char* args[]) {
         float deltaTime = static_cast<float>(endTick - startTick);
         startTick = endTick;
         while (SDL_PollEvent(&e) != 0) {
-            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,window,fullSCREEN,cutSceneFinished,resourceNodes,gameState,tileMap);
+            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,window,fullSCREEN,cutSceneFinished,resourceNodes,gameState,tileMap,enemy);
 
             if (e.type == SDL_KEYDOWN) {
                 if (e.key.keysym.sym == SDLK_e) {

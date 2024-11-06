@@ -15,10 +15,11 @@ public:
     void renderTexture(const std::string& id, SDL_Renderer* renderer, int x, int y, int width, int height);
     void clearTextures();
     std::map<std::string, SDL_Texture*> textures;
+    void render(const std::string& id,SDL_Renderer* renderer,int x, int y, int width, int height, const SDL_Rect& cameraRect);  // Render independently of the camera
 
 private:
     TextureManager();
-
+    SDL_Texture* texture;
 };
 
 #endif // TEXTUREMANAGER_H

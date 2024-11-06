@@ -2,7 +2,7 @@
 #include <iostream>
 
 Player::Player(const char* texturePath, SDL_Renderer* renderer, int x, int y)
-    : xPos(x), yPos(y),health(100), xVel(0), yVel(0), collisionBox(x+4, y+8, 8, 8), interactionBox(x + 3, y + 7, 10, 10) {
+    : xPos(x), yPos(y),health(100), xVel(0), yVel(0), collisionBox(x+4, y+8, 8, 8), interactionBox(x + 2, y + 6, 12, 12) {
     texture = IMG_LoadTexture(renderer, texturePath);
     srcRect = {0, 0, 16, 16}; // Assume the player sprite is 16x16 pixels
     destRect = {x, y, 16, 16};
@@ -217,6 +217,7 @@ SDL_Texture* Player::getTexture() const {
 
 void Player::decreaseHealth(int amount) {
     health -= amount;
+    std::cout<<"\n player health: "<<health;
 }
 
 void Player::increaseHealth(int amount) {
@@ -231,3 +232,4 @@ void Player::setHealth(int newHealth) {
     health = newHealth;
     std::cout<<"\n player health: "<<health;
 }
+

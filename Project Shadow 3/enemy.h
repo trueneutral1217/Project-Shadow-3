@@ -12,7 +12,7 @@ public:
     void update(float deltaTime);
     void render(SDL_Renderer* renderer, const SDL_Rect& cameraRect);  // Render independently of the camera
     void randomWalk();
-
+    void dead();
     const CollisionBox& getCollisionBox() const;  // Get the collision box
 
 private:

@@ -18,6 +18,8 @@ Enemy::Enemy(const char* texturePath, SDL_Renderer* renderer, int x, int y)
 
 Enemy::~Enemy() {
     SDL_DestroyTexture(texture);
+    CollisionBox dead(0,0,0,0);
+    collisionBox = dead;
 }
 
 void Enemy::update(float deltaTime) {
@@ -48,6 +50,10 @@ void Enemy::randomWalk() {
         case 2: xPos -= moveDistance; break;  // Move left
         case 3: xPos += moveDistance; break;  // Move right
     }
+}
+
+void Enemy::dead(){
+
 }
 
 const CollisionBox& Enemy::getCollisionBox() const {

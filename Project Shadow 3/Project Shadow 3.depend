@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1730853217 source:c:\project shadow 3\project shadow 3\main.cpp
+1730881021 source:c:\project shadow 3\project shadow 3\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -428,11 +428,11 @@
 	"begin_code.h"
 	"close_code.h"
 
-1729050087 source:c:\project shadow 3\project shadow 3\texture.cpp
+1730877619 source:c:\project shadow 3\project shadow 3\texture.cpp
 	"texture.h"
 	<iostream>
 
-1729226677 c:\project shadow 3\project shadow 3\texture.h
+1730877740 c:\project shadow 3\project shadow 3\texture.h
 	<SDL.h>
 	<SDL_ttf.h>
 	"SDL_image.h"
@@ -852,7 +852,7 @@
 	<vector>
 	<string>
 
-1730851572 source:c:\project shadow 3\project shadow 3\player.cpp
+1730881399 source:c:\project shadow 3\project shadow 3\player.cpp
 	"Player.h"
 	<iostream>
 
@@ -918,13 +918,13 @@
 1729138335 c:\project shadow 3\project shadow 3\collision.h
 	<SDL.h>
 
-1730852883 source:c:\project shadow 3\project shadow 3\enemy.cpp
+1730881119 source:c:\project shadow 3\project shadow 3\enemy.cpp
 	"Enemy.h"
 	"texture.h"
 	<cstdlib>
 	<ctime>
 
-1730852809 c:\project shadow 3\project shadow 3\enemy.h
+1730880440 c:\project shadow 3\project shadow 3\enemy.h
 	<SDL.h>
 	<string>
 	"CollisionBox.h"
@@ -938,23 +938,23 @@
 	<SDL_ttf.h>
 	<string>
 
-1730766076 source:c:\project shadow 3\project shadow 3\inventoryitem.cpp
+1730879339 source:c:\project shadow 3\project shadow 3\inventoryitem.cpp
 	"InventoryItem.h"
 	"Texture.h"
 	<ctime>
 
-1730766076 c:\project shadow 3\project shadow 3\inventoryitem.h
+1730879339 c:\project shadow 3\project shadow 3\inventoryitem.h
 	<string>
 	<vector>
 	<SDL.h>
 
-1729134820 source:c:\project shadow 3\project shadow 3\map.cpp
+1730878892 source:c:\project shadow 3\project shadow 3\map.cpp
 	"Map.h"
 	<SDL_image.h>
 	<fstream>
 	<iostream>
 
-1729134735 c:\project shadow 3\project shadow 3\map.h
+1730878892 c:\project shadow 3\project shadow 3\map.h
 	<SDL.h>
 	<vector>
 

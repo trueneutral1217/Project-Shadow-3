@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1730764221 source:c:\project shadow 3\project shadow 3\main.cpp
+1730853217 source:c:\project shadow 3\project shadow 3\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -19,6 +19,7 @@
 	"Timer.h"
 	"ResourceNode.h"
 	"Camera.h"
+	"enemy.h"
 	"AI.h"
 	"eventManager.h"
 	"HUD.h"
@@ -851,11 +852,11 @@
 	<vector>
 	<string>
 
-1730676026 source:c:\project shadow 3\project shadow 3\player.cpp
+1730851572 source:c:\project shadow 3\project shadow 3\player.cpp
 	"Player.h"
 	<iostream>
 
-1730675084 c:\project shadow 3\project shadow 3\player.h
+1730851578 c:\project shadow 3\project shadow 3\player.h
 	"SDL.h"
 	"SDL_image.h"
 	"Inventory.h"
@@ -917,13 +918,16 @@
 1729138335 c:\project shadow 3\project shadow 3\collision.h
 	<SDL.h>
 
-1729134820 source:c:\project shadow 3\project shadow 3\enemy.cpp
+1730852883 source:c:\project shadow 3\project shadow 3\enemy.cpp
 	"Enemy.h"
-	<SDL_image.h>
+	"texture.h"
+	<cstdlib>
+	<ctime>
 
-1729134735 c:\project shadow 3\project shadow 3\enemy.h
+1730852809 c:\project shadow 3\project shadow 3\enemy.h
 	<SDL.h>
 	<string>
+	"CollisionBox.h"
 
 1729108608 source:c:\project shadow 3\project shadow 3\hud.cpp
 	"HUD.h"
@@ -1037,10 +1041,10 @@
 1729738322 c:\project shadow 3\project shadow 3\timer.h
 	<SDL.h>
 
-1730500232 c:\project shadow 3\project shadow 3\collisionbox.h
+1730852809 c:\project shadow 3\project shadow 3\collisionbox.h
 	<SDL.h>
 
-1730500232 source:c:\project shadow 3\project shadow 3\collisionbox.cpp
+1730852809 source:c:\project shadow 3\project shadow 3\collisionbox.cpp
 	"CollisionBox.h"
 
 1730059442 c:\project shadow 3\project shadow 3\resourcenode.h

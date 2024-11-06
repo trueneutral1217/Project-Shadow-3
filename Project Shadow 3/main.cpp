@@ -17,6 +17,7 @@
 #include "Timer.h"
 #include "ResourceNode.h"
 #include "Camera.h"
+#include "enemy.h"
 
 //note, eventManager (eventManager seemed incomplete, ask Phaedra) and network have problems (network needs proper SDL libraries in place and linked).
 
@@ -149,8 +150,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
 
 void copyMap(const std::vector<std::vector<int>>& src, std::map<int, std::map<int, int>>& dest) {
     std::cout<<"\n map copied to tilemap!";
-    for (int i = 0; i < src.size(); ++i) {
-        for (int j = 0; j < src[i].size(); ++j) {
+    for (size_t i = 0; i < src.size(); ++i) {
+        for (size_t j = 0; j < src[i].size(); ++j) {
             dest[i][j] = src[i][j];
         }
     }
@@ -235,9 +236,10 @@ placeResourceNodes(int width, int height, std::vector<std::vector<int>>& map,SDL
         }
         std::cout << std::endl;
     }
+    return 0;
 }
 
-void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,bool& quit, int height, int width, std::vector<std::vector<int>>& map, std::map<int, std::map<int, int>>& tileMap,std::vector<ResourceNode>& resourceNodes,SDL_Renderer* renderer,bool& cutSceneFinished,Timer& myTimer,Camera& camera,GameState& gameState) {
+void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,bool& quit, int height, int width, std::vector<std::vector<int>>& map, std::map<int, std::map<int, int>>& tileMap,std::vector<ResourceNode>& resourceNodes,SDL_Renderer* renderer,bool& cutSceneFinished,Timer& myTimer,Camera& camera,GameState& gameState, Enemy& enemy) {
 
 int prevX, prevY;
     player.getPosition(prevX, prevY);
@@ -300,6 +302,7 @@ int prevX, prevY;
             break;
         case IN_GAME:
              //Logic for the main game
+             enemy.update((deltaTime/1000.0f));
             player.update((deltaTime / 1000.0f),camera.getCameraRect()); // Convert milliseconds to seconds
             camera.update(player.getCollisionBox().getRect().x, player.getCollisionBox().getRect().y);
 
@@ -325,7 +328,7 @@ int prevX, prevY;
     }
 }
 
-void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player& player, Button& button1, Button& button2, Button& button3, Button& button4, float& deltaTime, int height, int width, std::vector<std::vector<int>>& map,std::vector<ResourceNode>& resourceNodes, bool& cutSceneFinished,Timer& myTimer,Camera& camera) {
+void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player& player, Button& button1, Button& button2, Button& button3, Button& button4, float& deltaTime, int height, int width, std::vector<std::vector<int>>& map,std::vector<ResourceNode>& resourceNodes, bool& cutSceneFinished,Timer& myTimer,Camera& camera, Enemy& enemy) {
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(renderer);
 
@@ -455,6 +458,8 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                     player.getInventory()[0].renderIcon(renderer,xx-16,yy-16);
                     player.getInventory()[1].renderIcon(renderer,xx+16,yy+16);
                     */
+
+                    enemy.render(renderer,camera.getCameraRect());
 
                     SDL_Rect playerRect = player.getCollisionBox().getRect();
                     playerRect.x -= camera.getCameraRect().x;
@@ -609,6 +614,8 @@ int main(int argc, char* args[]) {
     Player player("images/ladyInBlue16x16.png", renderer, (SCREEN_WIDTH+(SCREEN_WIDTH/2)),(SCREEN_HEIGHT+(SCREEN_HEIGHT/2)));
     Camera camera(256, 192,mapWidth,mapHeight);
 
+    Enemy enemy("images/squirrel1.png",renderer,100,100);
+
     bool fullSCREEN;
     fullSCREEN = false;
 
@@ -634,7 +641,7 @@ int main(int argc, char* args[]) {
     bool quit = false;
     SDL_Event e;
     Uint32 startTick, endTick;// deltaTime;
-    float deltaTime;
+    //float deltaTime;
     startTick = SDL_GetTicks();
 
 
@@ -710,9 +717,9 @@ int main(int argc, char* args[]) {
             }
         }
 
-        update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,quit,height,width,map,tileMap,resourceNodes,renderer,cutSceneFinished,myTimer,camera,gameState);
+        update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,quit,height,width,map,tileMap,resourceNodes,renderer,cutSceneFinished,myTimer,camera,gameState,enemy);
         player.updateItemsState();
-        render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,deltaTime,height,width,map,resourceNodes,cutSceneFinished,myTimer,camera);
+        render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,deltaTime,height,width,map,resourceNodes,cutSceneFinished,myTimer,camera,enemy);
 
 
         endTick = SDL_GetTicks();
@@ -722,7 +729,7 @@ int main(int argc, char* args[]) {
             SDL_Delay(15 - deltaTime); // Cap the frame rate to ~60 FPS
         }
 
-        Uint32 time = myTimer.getTicks();
+        //Uint32 time = myTimer.getTicks();
         //std::cout << "Timer: " << time << " ms" << std::endl;
     }
 

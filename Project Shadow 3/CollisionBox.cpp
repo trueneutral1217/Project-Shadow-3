@@ -14,3 +14,8 @@ bool CollisionBox::intersects(const CollisionBox& other) const {
 const SDL_Rect& CollisionBox::getRect() const {
     return rect;
 }
+
+void CollisionBox::updatePosition(int newX, int newY) {
+    rect.x = newX;
+    rect.y = newY;
+}

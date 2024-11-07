@@ -309,7 +309,7 @@ int prevX, prevY;
             break;
         case IN_GAME:
             //Logic for the main game
-            enemy.update( ( deltaTime / 1000.0f ) );
+            enemy.update( ( deltaTime / 1000.0f ) , player.getCollisionBox().getRect().x, player.getCollisionBox().getRect().y );
             player.update( ( deltaTime / 1000.0f ), camera.getCameraRect() ); // Convert milliseconds to seconds
             camera.update( player.getCollisionBox().getRect().x, player.getCollisionBox().getRect().y );
 

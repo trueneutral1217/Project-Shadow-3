@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1730881021 source:c:\project shadow 3\project shadow 3\main.cpp
+1730955023 source:c:\project shadow 3\project shadow 3\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -901,7 +901,7 @@
 	"AI.h"
 	<cmath>
 
-1729134735 c:\project shadow 3\project shadow 3\ai.h
+1730955843 c:\project shadow 3\project shadow 3\ai.h
 	<SDL.h>
 
 1729392619 source:c:\project shadow 3\project shadow 3\animation.cpp
@@ -924,7 +924,7 @@
 	<cstdlib>
 	<ctime>
 
-1730880440 c:\project shadow 3\project shadow 3\enemy.h
+1730961079 c:\project shadow 3\project shadow 3\enemy.h
 	<SDL.h>
 	<string>
 	"CollisionBox.h"

@@ -7,6 +7,7 @@
 #include <cstdlib>
 //#include <ctime>
 #include <iostream>
+#include <ctime>
 
 struct Particle {
     float x, y;

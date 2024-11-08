@@ -293,7 +293,7 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
         case SPLASH:
             // Your animation update logic
             splash.update(deltaTime);
-            //sparkles.update(deltaTime);
+            sparkles.update(deltaTime);
             if (splash.animationFinished) {
                 gameSTATE = MAIN_MENU;
                 SoundManager::getInstance().playSound("collect5");
@@ -397,7 +397,7 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
         case SPLASH:
              //Your rendering code for animation
              splash.render(renderer);
-            //sparkles.render(renderer);
+            sparkles.render(renderer);
             break;
         case MAIN_MENU:
             //Render main menu options
@@ -533,10 +533,13 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                         //std::cout<<"\n index: "<<i<<" itemName: "<<player.getInventory()[i].getName();
                         std::cout<<"\n index: "<<i<<" iconTextureId: "<<player.getInventory()[i].getIconTextureId();
                     }*/
-                    player.getInventory()[0].renderIcon(renderer,64,174);
-                    player.getInventory()[1].renderIcon(renderer,80,174);
-                    player.getInventory()[2].renderIcon(renderer,92,174);
-                    player.getInventory()[3].renderIcon(renderer,105,174);
+                    for(int i = 0; i < player.getInventory().size(); ++i)
+                    {
+                        player.getInventory()[i].renderIcon(renderer,((i*16) + 64),174);
+                        //player.getInventory()[1].renderIcon(renderer,80,174);
+                        //player.getInventory()[2].renderIcon(renderer,92,174);
+                        //player.getInventory()[3].renderIcon(renderer,105,174);
+                    }
                 }
 
             break;
@@ -699,7 +702,7 @@ int main(int argc, char* args[]) {
 
     Enemy enemy("images/squirrel1.png",renderer,100,100);
 
-    ParticleSystem sparkles(5);
+    ParticleSystem sparkles(100);
     //sparkles.createParticles();
 
 
@@ -770,10 +773,10 @@ int main(int argc, char* args[]) {
 
 
     // Add items to the player's inventory
-    player.addItem(sword);
-    player.addItem(potion);
-    player.addItem(stone);
-    player.addItem(walnuts);
+    //player.addItem(sword);
+    //player.addItem(potion);
+    //player.addItem(stone);
+    //player.addItem(walnuts);
     /*
     player.addItem(bandage);
     player.addItem(bottle);
@@ -792,10 +795,10 @@ int main(int argc, char* args[]) {
 
             if (e.type == SDL_KEYDOWN) {
                 if (e.key.keysym.sym == SDLK_e) {
-                    player.equipItem("Sword"); // Equip the sword when 'e' is pressed
+                    //player.equipItem("Sword"); // Equip the sword when 'e' is pressed
                 } else if (e.key.keysym.sym == SDLK_u) {
-                    player.useItem("Potion"); // Use the potion when 'u' is pressed
-                    player.useItem("Bandage"); // Use the bandage when 'u' is pressed
+                    //player.useItem("Potion"); // Use the potion when 'u' is pressed
+                    //player.useItem("Bandage"); // Use the bandage when 'u' is pressed
                 } else if (e.key.keysym.sym == SDLK_c) {
                     /*
                     player.addContainedItem("Bottle", water); // Add water to bottle when 'c' is pressed

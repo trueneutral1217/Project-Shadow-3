@@ -16,7 +16,8 @@ public:
     void clearTextures();
     std::map<std::string, SDL_Texture*> textures;
     void render(const std::string& id,SDL_Renderer* renderer,int x, int y, int width, int height, const SDL_Rect& cameraRect);  // Render independently of the camera
-
+    void setAlpha(const std::string& id, Uint8 alpha);
+    SDL_Texture* getTexture(const std::string& id);
 private:
     TextureManager();
     SDL_Texture* texture;

@@ -31,16 +31,14 @@ void Enemy::update(float deltaTime, int x, int y ) {
         if(aggroRange(x,y))
         {
             //avoidPlayer(x,y);
-            seekPlayer(x,y);
-            std::cout<<"\n seeking player";
+            avoidPlayer(x,y);
         }
         else
         {
             randomWalk();
-            std::cout<<"\n random walk";
         }
         walkTimer = 0.0f;
-        walkDuration = std::rand() % 2 + 1;  // Reset walk duration
+        walkDuration = ((std::rand() % 4) + 1.0f)/((std::rand()%8)+1.0f);  // Reset walk duration
     }
     collisionBox.updatePosition(xPos, yPos);  // Update collision box position
 
@@ -57,13 +55,34 @@ void Enemy::render(SDL_Renderer* renderer, const SDL_Rect& cameraRect) {
 }
 
 void Enemy::randomWalk() {
+    std::cout<<"\n random walk";
     int direction = std::rand() % 4;  // Random direction (0: up, 1: down, 2: left, 3: right)
     int moveDistance = 5;  // Distance to move in each step
     switch (direction) {
-        case 0: yPos -= moveDistance; break;  // Move up
-        case 1: yPos += moveDistance; break;  // Move down
-        case 2: xPos -= moveDistance; break;  // Move left
-        case 3: xPos += moveDistance; break;  // Move right
+        case 0:
+            if(yPos > 0)//keep in bounds of map
+            {
+                yPos -= moveDistance;
+            }
+            break;  // Move up
+        case 1:
+            if(yPos < 576)
+            {
+                yPos += moveDistance;
+            }
+            break;  // Move down
+        case 2:
+            if(xPos > 0)
+            {
+                xPos -= moveDistance;
+            }
+            break;  // Move left
+        case 3:
+            if(xPos < 762)
+            {
+                xPos += moveDistance;
+            }
+            break;  // Move right
     }
 }
 
@@ -110,6 +129,7 @@ bool Enemy::aggroRange(int x, int y)
 
 void Enemy::seekPlayer(int x, int y){
     //std::cout<<"\n xPos - x = "<<(xPos - x);
+    std::cout<<"\n seeking player";
     int distance = 100;//aggro range
     if(x>xPos)//player is right of enemy
     {
@@ -207,6 +227,7 @@ void Enemy::seekPlayer(int x, int y){
 
 void Enemy::avoidPlayer(int x, int y){
     //std::cout<<"\n xPos - x = "<<(xPos - x);
+    std::cout<<"\n avoiding player";
     int distance = 100;
     if(x>xPos)//player is right of enemy
     {
@@ -216,7 +237,10 @@ void Enemy::avoidPlayer(int x, int y){
             {
                 if(  (x - xPos) < distance  )//if player is less than 30 pixels right of enemy
                 {
-                    xPos-=5;//move enemy 5 pixels left.
+                    if(xPos > 0)
+                    {
+                        xPos-=5;//move enemy 5 pixels left.
+                    }
                 }
             }
         }
@@ -226,7 +250,10 @@ void Enemy::avoidPlayer(int x, int y){
             {
                 if((x-xPos) < distance)//player is less than 30 pix right of enemy
                 {
-                    xPos-=5;//move enemy 5 pixels left
+                    if(xPos > 0)
+                    {
+                        xPos-=5;//move enemy 5 pixels left
+                    }
                 }
             }
         }
@@ -239,7 +266,10 @@ void Enemy::avoidPlayer(int x, int y){
             {
                 if((xPos - x) < distance)//enemy is less than 30 pixels right of player
                 {
-                    xPos+=5;
+                    if(xPos < 762)
+                    {
+                        xPos+=5;
+                    }
                 }
             }
         }
@@ -249,7 +279,10 @@ void Enemy::avoidPlayer(int x, int y){
             {
                 if((xPos-x)<distance)//enemy is less than 30 pixels right of player
                 {
-                    xPos+=5;
+                    if(xPos < 762)
+                    {
+                        xPos+=5;
+                    }
                 }
             }
         }
@@ -262,7 +295,10 @@ void Enemy::avoidPlayer(int x, int y){
             {
                 if((y-yPos)<distance)//player is less than 30 px below enemy
                 {
-                    yPos-=5;//move enemy 5 px up
+                    if(yPos > 0)
+                    {
+                        yPos-=5;//move enemy 5 px up
+                    }
                 }
             }
         }
@@ -272,7 +308,10 @@ void Enemy::avoidPlayer(int x, int y){
             {
                 if((y-yPos)<distance) // less than 30 px below enemy
                 {
-                    yPos-=5;//move enemy up 5 px
+                    if(yPos > 0)
+                    {
+                        yPos-=5;//move enemy up 5 px
+                    }
                 }
             }
         }
@@ -285,7 +324,10 @@ void Enemy::avoidPlayer(int x, int y){
             {
                 if((yPos-y) < distance)//player is less than 30 px above enemy
                 {
-                    yPos+=5;//move enemy down 5 px
+                    if(yPos < 576)
+                    {
+                        yPos+=5;//move enemy down 5 px
+                    }
                 }
             }
         }
@@ -295,17 +337,20 @@ void Enemy::avoidPlayer(int x, int y){
             {
                 if((yPos-y) < distance)//player is less than 30 px above enemy
                 {
-                    yPos+=5;//move enemy down 5 px
+                    if(yPos<576)
+                    {
+                        yPos+=5;//move enemy down 5 px
+                    }
                 }
             }
         }
     }
 }
 
-void Enemy::dead(){
-
-}
-
 const CollisionBox& Enemy::getCollisionBox() const {
     return collisionBox;
+}
+
+SDL_Texture* Enemy::getTexture() const {
+    return texture;
 }

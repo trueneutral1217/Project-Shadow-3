@@ -17,8 +17,8 @@ public:
     bool aggroRange(int x, int y);
     void seekPlayer(int x, int y);
     void avoidPlayer(int x, int y);
-    void dead();
     const CollisionBox& getCollisionBox() const;  // Get the collision box
+    SDL_Texture* getTexture() const;
 
 private:
     SDL_Texture* texture;
@@ -28,7 +28,7 @@ private:
     CollisionBox collisionBox;  // Add a collision box
 
     float walkTimer;
-    int walkDuration;
+    float walkDuration;
 };
 
 #endif // ENEMY_H

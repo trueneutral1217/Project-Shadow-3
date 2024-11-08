@@ -58,7 +58,7 @@ GAMESTATE gameSTATE;
 
 
 //player interacts with a resourcenode
-void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,Enemy& enemy) {
+void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,std::vector<Enemy>& squirrels) {
     for (const auto& node : resourceNodes) {
         if (player.getInteractionBox().intersects(node.getInteractionBox())) {
             SoundManager::getInstance().playSound("collect2");
@@ -78,15 +78,19 @@ void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,
             // Handle other interactions, like collecting resources
         }
     }
-    if(player.getInteractionBox().intersects(enemy.getCollisionBox()))
+    for(int i = 0; i < squirrels.size(); ++i)
     {
-        //enemy.dead();
-        enemy.~Enemy();
+        if(player.getInteractionBox().intersects(squirrels[i].getCollisionBox()))
+        {
+            //enemy.dead();
+            squirrels.erase(squirrels.begin() + i);
+        }
     }
+
 }
 
 //Other necessary includes and initializations
-void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,SDL_Window* window,bool& fullSCREEN,bool& displayControls,bool& cutSceneFinished,std::vector<ResourceNode>& resourceNodes,GameState& gameState, std::map<int, std::map<int, int>>& tileMap, Enemy& enemy) {
+void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,SDL_Window* window,bool& fullSCREEN,bool& displayControls,bool& cutSceneFinished,std::vector<ResourceNode>& resourceNodes,GameState& gameState, std::map<int, std::map<int, int>>& tileMap,std::vector<Enemy>& squirrels) {
     //user x'd out the window. possibly alt+F4'd.
     if (e.type == SDL_QUIT) {
         quit = true;
@@ -147,7 +151,7 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
             }
         }
         if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_e) {
-            handleInteraction(player, resourceNodes,enemy);
+            handleInteraction(player, resourceNodes,squirrels);
         }
         player.handleEvents(e);
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q)
@@ -285,7 +289,7 @@ placeResourceNodes(int width, int height, std::vector<std::vector<int>>& map,SDL
     return 0;
 }
 
-void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,bool& quit, int height, int width, std::vector<std::vector<int>>& map, std::map<int, std::map<int, int>>& tileMap,std::vector<ResourceNode>& resourceNodes,SDL_Renderer* renderer,bool& displayControls, bool& cutSceneFinished,Timer& myTimer,Camera& camera,GameState& gameState, Enemy& enemy,ParticleSystem& sparkles)
+void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,bool& quit, int height, int width, std::vector<std::vector<int>>& map, std::map<int, std::map<int, int>>& tileMap,std::vector<ResourceNode>& resourceNodes,SDL_Renderer* renderer,bool& displayControls, bool& cutSceneFinished,Timer& myTimer,Camera& camera,GameState& gameState, std::vector<Enemy>& squirrels,ParticleSystem& sparkles)
 {
     int prevX, prevY;
     player.getPosition(prevX, prevY);
@@ -345,7 +349,12 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
             break;
         case IN_GAME:
             //Logic for the main game
-            enemy.update( ( deltaTime / 1000.0f ) , player.getCollisionBox().getRect().x, player.getCollisionBox().getRect().y );
+            if(cutSceneFinished){
+                for(int i = 0; i < squirrels.size(); ++ i)
+                {
+                    squirrels[i].update( ( deltaTime / 1000.0f ) , player.getCollisionBox().getRect().x, player.getCollisionBox().getRect().y );
+                }
+            }
             player.update( ( deltaTime / 1000.0f ), camera.getCameraRect() ); // Convert milliseconds to seconds
             camera.update( player.getCollisionBox().getRect().x, player.getCollisionBox().getRect().y );
 
@@ -359,7 +368,10 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
                     player.setPosition(prevX, prevY);
                     break;
                 }
-                if( player.getCollisionBox().intersects(enemy.getCollisionBox() ) ){
+            }
+            for(int i = 0; i < squirrels.size(); ++i)
+            {
+                if( player.getCollisionBox().intersects(squirrels[i].getCollisionBox() ) ){
                     //if player collides with enemy
                     player.decreaseHealth(5);
                     player.setPosition(prevX, prevY);
@@ -389,7 +401,7 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
     }
 }
 
-void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player& player, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5, float& deltaTime, int height, int width, std::vector<std::vector<int>>& map,std::vector<ResourceNode>& resourceNodes,bool& displayControls, bool& cutSceneFinished,Timer& myTimer,Camera& camera, Enemy& enemy,ParticleSystem& sparkles) {
+void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player& player, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5, float& deltaTime, int height, int width, std::vector<std::vector<int>>& map,std::vector<ResourceNode>& resourceNodes,bool& displayControls, bool& cutSceneFinished,Timer& myTimer,Camera& camera, std::vector<Enemy>& squirrels,ParticleSystem& sparkles) {
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(renderer);
 
@@ -420,7 +432,7 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                 }
                 // Render resource nodes (behind player's texture)
                 for (auto& node : resourceNodes) {
-                    if ( (node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h <= player.getCollisionBox().getRect().y + player.getCollisionBox().getRect().h) || (node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h <= enemy.getCollisionBox().getRect().y + enemy.getCollisionBox().getRect().h )) {
+                    if ( node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h <= player.getCollisionBox().getRect().y + player.getCollisionBox().getRect().h ) {
                         //node.render(renderer);
                         SDL_Rect renderRect = node.getCollisionBox().getRect();
                         renderRect.x -= camera.getCameraRect().x;
@@ -501,9 +513,14 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                 }
                 if(cutSceneFinished){
 
-
-
-                    enemy.render(renderer,camera.getCameraRect());
+                    for(int i = 0; i < squirrels.size(); ++i)
+                    {
+                        //squirrels[i].render(renderer,camera.getCameraRect());
+                        SDL_Rect renderRect = squirrels[i].getCollisionBox().getRect();
+                        renderRect.x -= camera.getCameraRect().x;
+                        renderRect.y -= camera.getCameraRect().y;
+                        SDL_RenderCopy(renderer, squirrels[i].getTexture(), nullptr, &renderRect);
+                    }
                     SDL_Rect playerRect = player.getCollisionBox().getRect();
                     playerRect.x -= camera.getCameraRect().x;
                     playerRect.y -= camera.getCameraRect().y;
@@ -513,7 +530,7 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                     playerRect.h = 16;
                     SDL_RenderCopy(renderer, player.getTexture(), nullptr, &playerRect);
                     for (auto& node : resourceNodes) {
-                        if ( ( node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h > player.getCollisionBox().getRect().y + player.getCollisionBox().getRect().h) || ( node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h > enemy.getCollisionBox().getRect().y + enemy.getCollisionBox().getRect().h ) ) {
+                        if (  node.getCollisionBox().getRect().y + node.getCollisionBox().getRect().h > player.getCollisionBox().getRect().y + player.getCollisionBox().getRect().h  ) {
                             SDL_Rect renderRect = node.getCollisionBox().getRect();
                             renderRect.x -= camera.getCameraRect().x;
                             renderRect.y -= camera.getCameraRect().y;
@@ -690,6 +707,7 @@ int main(int argc, char* args[]) {
     TextureManager::getInstance().loadTexture("nightCampfire","images/cutScenes/nightCampfireScaled256x192.png",renderer);
     TextureManager::getInstance().loadTexture("optionsMenuBackground","images/optionsMenuBackgroundScaled256x192.png",renderer);
     TextureManager::getInstance().loadTexture("HUD","images/HUD/HUD.png",renderer);
+    TextureManager::getInstance().setAlpha("HUD", 204); // 204 is 80% of 255
 
     Button button1("images/buttons/new.png", "images/buttons/newMO.png", renderer, 10, 10, 100, 50);
     Button button2("images/buttons/load.png", "images/buttons/loadMO.png", renderer, 10, 70, 100, 50);
@@ -700,7 +718,30 @@ int main(int argc, char* args[]) {
     Player player("images/ladyInBlue16x16.png", renderer, (SCREEN_WIDTH+(SCREEN_WIDTH/2)),(SCREEN_HEIGHT+(SCREEN_HEIGHT/2)));
     Camera camera(256, 192,mapWidth,mapHeight);
 
-    Enemy enemy("images/squirrel1.png",renderer,100,100);
+    std::vector<Enemy> squirrels;//("images/squirrel1.png",renderer,100,100);
+    int squirrelMax = 8; //std::rand() % 8;
+    int squirrelX;
+    int squirrelY;
+    //squirrelMax += 1;
+    std::cout<<"\n squirrelMax = "<<squirrelMax<<"\n";
+
+    std::srand(std::time(0));
+    squirrelX = std::rand() % 768;
+    squirrelY = std::rand() % 576;
+    for(int i = 0; i < squirrelMax; ++i)
+    {
+
+        std::cout<<"\n squirrelX = "<<squirrelX;
+        std::cout<<"\n squirrelY = "<<squirrelY<<"\n";
+        squirrels.emplace_back("images/squirrel1.png",renderer,squirrelX,squirrelY);
+        std::srand(squirrelX);
+        squirrelX = std::rand() % 768;
+        squirrelY = std::rand() % 576;
+    }
+
+    //resourceNodes.emplace_back("images/",renderer,x*16,y*16,16,16);
+    //resourceNodes.emplace_back("images/",renderer,x*16,y*16,16,16);
+
 
     ParticleSystem sparkles(100);
     //sparkles.createParticles();
@@ -791,7 +832,7 @@ int main(int argc, char* args[]) {
         float deltaTime = static_cast<float>(endTick - startTick);
         startTick = endTick;
         while (SDL_PollEvent(&e) != 0) {
-            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,button5,window,fullSCREEN,displayControls,cutSceneFinished,resourceNodes,gameState,tileMap,enemy);
+            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,button5,window,fullSCREEN,displayControls,cutSceneFinished,resourceNodes,gameState,tileMap,squirrels);
 
             if (e.type == SDL_KEYDOWN) {
                 if (e.key.keysym.sym == SDLK_e) {
@@ -813,9 +854,9 @@ int main(int argc, char* args[]) {
             }
         }
 
-        update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,button5,quit,height,width,map,tileMap,resourceNodes,renderer,displayControls,cutSceneFinished,myTimer,camera,gameState,enemy,sparkles);
+        update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,button5,quit,height,width,map,tileMap,resourceNodes,renderer,displayControls,cutSceneFinished,myTimer,camera,gameState,squirrels,sparkles);
         player.updateItemsState();
-        render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,button5,deltaTime,height,width,map,resourceNodes,displayControls,cutSceneFinished,myTimer,camera,enemy,sparkles);
+        render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,button5,deltaTime,height,width,map,resourceNodes,displayControls,cutSceneFinished,myTimer,camera,squirrels,sparkles);
 
 
         endTick = SDL_GetTicks();

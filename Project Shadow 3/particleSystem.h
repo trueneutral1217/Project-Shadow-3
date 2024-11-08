@@ -4,6 +4,9 @@
 #include <SDL.h>
 #include <vector>
 #include <algorithm>
+#include <cstdlib>
+//#include <ctime>
+#include <iostream>
 
 struct Particle {
     float x, y;
@@ -19,6 +22,7 @@ public:
     void addParticle(const Particle& particle);
     void update(float deltaTime);
     void render(SDL_Renderer* renderer);
+    void createParticles();
 
 private:
     std::vector<Particle> particles;

@@ -27,3 +27,7 @@ const CollisionBox& ResourceNode::getInteractionBox() const {
 SDL_Texture* ResourceNode::getTexture() const {
     return texture;
 }
+/*
+std::string ResourceNode::getTextureId(){
+    return textureId;
+}*/

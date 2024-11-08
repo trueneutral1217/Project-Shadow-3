@@ -5,6 +5,8 @@
 #include <string>
 #include "CollisionBox.h"  // Include the CollisionBox header
 
+//Enemies need to drop items when butchered (bones, pelts, meat, sinew)
+
 class Enemy {
 public:
     Enemy(const char* texturePath, SDL_Renderer* renderer, int x, int y);

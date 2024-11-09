@@ -55,7 +55,7 @@ void Enemy::render(SDL_Renderer* renderer, const SDL_Rect& cameraRect) {
 }
 
 void Enemy::randomWalk() {
-    std::cout<<"\n random walk";
+    //std::cout<<"\n random walk";
     int direction = std::rand() % 4;  // Random direction (0: up, 1: down, 2: left, 3: right)
     int moveDistance = 5;  // Distance to move in each step
     switch (direction) {
@@ -129,7 +129,7 @@ bool Enemy::aggroRange(int x, int y)
 
 void Enemy::seekPlayer(int x, int y){
     //std::cout<<"\n xPos - x = "<<(xPos - x);
-    std::cout<<"\n seeking player";
+    //std::cout<<"\n seeking player";
     int distance = 100;//aggro range
     if(x>xPos)//player is right of enemy
     {
@@ -227,7 +227,7 @@ void Enemy::seekPlayer(int x, int y){
 
 void Enemy::avoidPlayer(int x, int y){
     //std::cout<<"\n xPos - x = "<<(xPos - x);
-    std::cout<<"\n avoiding player";
+    //std::cout<<"\n avoiding player";
     int distance = 100;
     if(x>xPos)//player is right of enemy
     {

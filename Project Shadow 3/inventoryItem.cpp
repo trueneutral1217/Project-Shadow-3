@@ -1,13 +1,16 @@
 #include "InventoryItem.h"
 #include "Texture.h" // Include the texture manager
 #include <ctime>
+#include <iostream>
 
 InventoryItem::InventoryItem(SDL_Renderer* renderer,const std::string& name, const std::string& description,const std::string& iconTextureId, ItemType type, bool equippable, bool singleUse, int maxUses, bool canContainLiquids, bool canContainSolids, int volume, int maxVolume, ItemState initialState)
     : name(name), description(description),iconTextureId(iconTextureId), type(type), equippable(equippable), singleUse(singleUse), maxUses(maxUses), currentUses(maxUses == -1 ? -1 : maxUses), liquidContainer(canContainLiquids), solidContainer(canContainSolids), volume(volume), maxVolume(maxVolume), currentVolume(0), state(initialState), creationTime(std::time(nullptr))
     {
-    TextureManager& textureManager = TextureManager::getInstance();
-    textureManager.loadTexture(iconTextureId, iconTextureId, renderer);
-    texture = textureManager.textures[iconTextureId];
+        TextureManager& textureManager = TextureManager::getInstance();
+        textureManager.loadTexture(iconTextureId, iconTextureId, renderer);
+        texture = textureManager.textures[iconTextureId];
+        y=174;
+
     }
 
 const std::string& InventoryItem::getName() const {
@@ -102,13 +105,43 @@ void InventoryItem::renderIcon(SDL_Renderer* renderer, int x, int y) const {
 }
 
 void InventoryItem::useItem() {
+    std::cout<<"\n currentUses: "<<currentUses;
     if (currentUses > 0 || currentUses == -1) {
         if (currentUses > 0) {
-            --currentUses;
+            currentUses--;
+            if(currentUses == 0)
+            {
+                name = "";
+                SDL_Texture* tempTexture;
+                texture = tempTexture;
+            }
         }
     }
+
 }
 
 SDL_Texture* InventoryItem::getTexture() const {
     return texture;
+}
+
+void InventoryItem::removeItem() {
+
+}
+
+void InventoryItem::setX(int newX)
+{
+    x = newX;
+}
+
+void InventoryItem::setY(int newY)
+{
+    y = newY;
+}
+int InventoryItem::getX()
+{
+    return x;
+}
+int InventoryItem::getY()
+{
+    return y;
 }

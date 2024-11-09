@@ -18,12 +18,18 @@ public:
     void handleEvents(const SDL_Event& e);
     void update(float deltaTime, const SDL_Rect& cameraRect);
     void render(SDL_Renderer* renderer);
-    /*
-    void addItemToInventory(const std::string& item);
+
+    //void addItemToInventory(const std::string& item);
     void removeItemFromInventory(const std::string& item);
-    void showPlayerInventory() const;*/
+    void showPlayerInventory() const;
+
+    /*
+    void setItemX(int newX);
+    */
+    int getItemX(int index);
 
     void addItem(const InventoryItem& item);
+    void removeItem();
     void equipItem(const std::string& itemName);
     void unequipItem();
     void useItem(const std::string& itemName);
@@ -43,12 +49,16 @@ public:
     void increaseHealth(int amount);
     int getHealth() const;
     void setHealth(int);
+    int getInventorySize();
+    int getMaxInventorySize();
+
 private:
     SDL_Texture* texture;
     SDL_Rect srcRect, destRect;
     //int xPos, yPos;
     //float xVel, yVel;
-
+    int maxInventorySize;
+    int inventorySize;
     CollisionBox collisionBox;
     CollisionBox interactionBox;
     int health;

@@ -6,6 +6,8 @@ Player::Player(const char* texturePath, SDL_Renderer* renderer, int x, int y)
     texture = IMG_LoadTexture(renderer, texturePath);
     srcRect = {0, 0, 16, 16}; // Assume the player sprite is 16x16 pixels
     destRect = {x, y, 16, 16};
+    inventorySize=0;
+    maxInventorySize=2;
 }
 
 Player::~Player() {
@@ -81,23 +83,47 @@ void Player::update(float deltaTime, const SDL_Rect& cameraRect) {
 void Player::render(SDL_Renderer* renderer) {
     SDL_RenderCopy(renderer, texture, &srcRect, &destRect);
 }
+
+int Player::getInventorySize(){
+    return inventorySize;
+}
+
+int Player::getMaxInventorySize(){
+    return maxInventorySize;
+}
 /*
 void Player::addItemToInventory(const std::string& item) {
     inventory.addItem(item);
-}
+}*/
 
 void Player::removeItemFromInventory(const std::string& item) {
-    inventory.removeItem(item);
+    //inventory.removeItem(item);
+    if(inventorySize > 0)
+    {
+        inventory.pop_back();
+        inventorySize--;
+    }
 }
 
 void Player::showPlayerInventory() const {
-    inventory.showInventory();
-}*/
+//    inventory.showInventory();
+}
 
 // Method to add an item to the player's inventory
 void Player::addItem(const InventoryItem& item) {
+    //item.setX(64+(16*inventorySize));
     inventory.push_back(item); // Add the item to the inventory
-    std::cout << "Added item: " << item.getName() << std::endl;
+    inventory.back().setX(64+(16*inventorySize));
+    std::cout << "\n Added item: " << item.getName() << std::endl;
+    //setX(64+(16*inventorySize));
+    inventorySize++;
+
+}
+
+int Player::getItemX(int index){
+    int theX;
+    theX = inventory.at(index).getX();
+    return theX;
 }
 
 // Method to equip an item by name
@@ -123,6 +149,12 @@ void Player::unequipItem() {
 
 // Method to use an item by name
 void Player::useItem(const std::string& itemName) {
+    std::cout<<"\n player Health: "<<health;
+    /*
+    if(inventory.size()==1)
+    {
+        inventory.clear();
+    }*/
     auto it = inventory.begin();
     while (it != inventory.end()) {
         if (it->getName() == itemName) {
@@ -195,7 +227,7 @@ void Player::setPosition(int x, int y) {
     this->xPos = x;
     this->yPos = y;
     collisionBox = CollisionBox(x+4, y+8, 8, 8);
-    interactionBox = CollisionBox(x+3, y+7,10,10);
+    interactionBox = CollisionBox(x, y+4,14,14);
 }
 
 void Player::getPosition(int& x, int& y) const {

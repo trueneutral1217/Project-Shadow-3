@@ -14,7 +14,7 @@ public:
     const CollisionBox& getCollisionBox() const;
     const CollisionBox& getInteractionBox() const;
     SDL_Texture* getTexture() const;
-   // std::string getTextureId();
+    std::string getTextureId() const;
 
 private:
     CollisionBox interactionBox;

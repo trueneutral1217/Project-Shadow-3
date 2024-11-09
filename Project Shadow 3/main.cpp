@@ -58,23 +58,35 @@ GAMESTATE gameSTATE;
 
 
 //player interacts with a resourcenode
-void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,std::vector<Enemy>& squirrels) {
-    for (const auto& node : resourceNodes) {
-        if (player.getInteractionBox().intersects(node.getInteractionBox())) {
+void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,std::vector<Enemy>& squirrels, InventoryItem& stone, InventoryItem& branch, InventoryItem& walnuts) {
+    //for (const auto& node : resourceNodes) {
+     for (int i = 0; i < resourceNodes.size(); i++) {
+            //i++;
+        if (player.getInteractionBox().intersects(resourceNodes[i].getInteractionBox())) {
             SoundManager::getInstance().playSound("collect2");
-            /*
-            if(node.getTextureId() == "Stone")
+            int iSize = player.getInventory().size();
+            if(player.getInventorySize()<player.getMaxInventorySize())
             {
-                player.addItem(stone);
+                if(resourceNodes[i].getTextureId() == "images/stone1.png")
+                {
+                    player.addItem(stone);
+                    //player.getInventory()[iSize].setY(174);
+                    //player.getInventory()[iSize].setX(64 + (16*(iSize)));
+
+                    resourceNodes.erase(resourceNodes.begin()+i);
+                }
+                if(resourceNodes[i].getTextureId() == "images/branch1.png")
+                {
+                    player.addItem(branch);
+                    resourceNodes.erase(resourceNodes.begin()+i);
+                }
+                if(resourceNodes[i].getTextureId() == "images/walnuts.png")
+                {
+                    player.addItem(walnuts);
+                    resourceNodes.erase(resourceNodes.begin()+i);
+                }
             }
-            if(node.getTextureId() == "Branch")
-            {
-                //player.addItem(branch);
-            }
-            if(node.getTextureId() == "Walnuts")
-            {
-                player.addItem(walnuts);
-            }*/
+
             // Handle other interactions, like collecting resources
         }
     }
@@ -90,7 +102,7 @@ void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,
 }
 
 //Other necessary includes and initializations
-void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,SDL_Window* window,bool& fullSCREEN,bool& displayControls,bool& cutSceneFinished,std::vector<ResourceNode>& resourceNodes,GameState& gameState, std::map<int, std::map<int, int>>& tileMap,std::vector<Enemy>& squirrels) {
+void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,SDL_Window* window,bool& fullSCREEN,bool& displayControls,bool& cutSceneFinished,std::vector<ResourceNode>& resourceNodes,GameState& gameState, std::map<int, std::map<int, int>>& tileMap,std::vector<Enemy>& squirrels, InventoryItem& stone, InventoryItem& branch, InventoryItem& walnuts) {
     //user x'd out the window. possibly alt+F4'd.
     if (e.type == SDL_QUIT) {
         quit = true;
@@ -126,6 +138,7 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
 
     int mouseX, mouseY;
     bool mouseClicked = false;
+    bool mouseOver = false;
     switch(gameSTATE){
     case SPLASH:
         //player clicks to skip splash screen.
@@ -151,7 +164,23 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
             }
         }
         if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_e) {
-            handleInteraction(player, resourceNodes,squirrels);
+            handleInteraction(player, resourceNodes,squirrels,stone,branch,walnuts);
+        }
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_1){
+            if(player.getInventory()[0].getName() == walnuts.getName()){
+                player.increaseHealth(100);
+                std::cout<<"\n used walnuts";
+                player.removeItemFromInventory("Walnuts");
+                std::cout<<"\n removed walnuts.";
+            }
+        }
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_2){
+            if(player.getInventory()[1].getName() == walnuts.getName()){
+                player.increaseHealth(100);
+                std::cout<<"\n used walnuts";
+                player.removeItemFromInventory("Walnuts");
+                std::cout<<"\n removed walnuts.";
+            }
         }
         player.handleEvents(e);
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q)
@@ -550,13 +579,33 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                         //std::cout<<"\n index: "<<i<<" itemName: "<<player.getInventory()[i].getName();
                         std::cout<<"\n index: "<<i<<" iconTextureId: "<<player.getInventory()[i].getIconTextureId();
                     }*/
-                    for(int i = 0; i < player.getInventory().size(); ++i)
-                    {
-                        player.getInventory()[i].renderIcon(renderer,((i*16) + 64),174);
-                        //player.getInventory()[1].renderIcon(renderer,80,174);
-                        //player.getInventory()[2].renderIcon(renderer,92,174);
-                        //player.getInventory()[3].renderIcon(renderer,105,174);
+
+                    /*
+                    if(player.getInventory().size() > 3){
+                        player.getInventory()[3].renderIcon(renderer,105,174);
                     }
+                    if(player.getInventory().size() > 2){
+                        player.getInventory()[2].renderIcon(renderer,92,174);
+                    }
+                    if(player.getInventory().size() > 1){
+                        player.getInventory()[1].renderIcon(renderer,80,174);
+                    }
+                    if(player.getInventory().size() > 0)
+                    {
+                        */
+                        for(int i = 0; i < player.getInventory().size(); i++)
+                        {
+                            //std::cout<<"\n player.getInventory().size() = "<<player.getInventory().size();
+                            //player.getInventory()[i].renderIcon(renderer,((i*16) + 64),174);
+                            int tempX = player.getItemX(i);
+                            player.getInventory()[i].renderIcon(renderer,tempX,174);
+                            //player.getInventory()[1].renderIcon(renderer,80,174);
+                            //player.getInventory()[2].renderIcon(renderer,92,174);
+                            //player.getInventory()[3].renderIcon(renderer,105,174);
+                        }
+                        /*
+                        player.getInventory()[0].renderIcon(renderer,64,174);
+                    }*/
                 }
 
             break;
@@ -739,13 +788,7 @@ int main(int argc, char* args[]) {
         squirrelY = std::rand() % 576;
     }
 
-    //resourceNodes.emplace_back("images/",renderer,x*16,y*16,16,16);
-    //resourceNodes.emplace_back("images/",renderer,x*16,y*16,16,16);
-
-
     ParticleSystem sparkles(100);
-    //sparkles.createParticles();
-
 
     bool fullSCREEN;
     fullSCREEN = false;
@@ -801,30 +844,9 @@ int main(int argc, char* args[]) {
     // Initialize items with various properties
     InventoryItem sword(renderer,"Sword", "A sharp blade used for combat.","images/icons/sword.png", InventoryItem::EQUIPPABLE, true, false, -1);
     InventoryItem potion(renderer,"Potion", "A healing potion for emergencies.","images/icons/potion.png", InventoryItem::SOLID, false, true);
-    InventoryItem stone(renderer,"Stone","Smaller than a boulder, larger than a pebble.","images/stone1.png",InventoryItem::SOLID,false,false,-1,false,false,5,-1);
+    InventoryItem stone(renderer,"Stone","Smaller than a boulder, larger than a pebble.","images/stone1.png",InventoryItem::SOLID,false,false,-1,false,false,5,5,InventoryItem::FRESH);
     InventoryItem walnuts(renderer,"Walnuts","Shells like walnuts, taste like walnuts.","images/walnuts.png",InventoryItem::SOLID,false,true,-1,false,false,1,-1,InventoryItem::FRESH);
-        //TextureManager::getInstance().loadTexture("walnuts","images/walnuts.png",renderer);
-    /*
-    InventoryItem bandage("Bandage", "Used to treat wounds.", InventoryItem::SOLID, false, false, 3);
-    InventoryItem bottle("Bottle", "Can hold liquids.", InventoryItem::SOLID, false, false, -1, true, false, 0, 100); // Max volume of 100
-    InventoryItem box("Box", "Can hold solid items.", InventoryItem::SOLID, false, false, -1, false, true, 0, 50); // Max volume of 50
-    InventoryItem water("Water", "Essential for life.", InventoryItem::LIQUID, false, true, 1, true, false, 10); // Volume of 10
-    InventoryItem rock("Rock", "A solid object.", InventoryItem::SOLID, false, true, 1, false, true, 20); // Volume of 20
-    */
-
-
-    // Add items to the player's inventory
-    //player.addItem(sword);
-    //player.addItem(potion);
-    //player.addItem(stone);
-    //player.addItem(walnuts);
-    /*
-    player.addItem(bandage);
-    player.addItem(bottle);
-    player.addItem(box);
-    player.addItem(water);
-    player.addItem(rock);*/
-
+    InventoryItem branch(renderer,"Branch","A branch from a tree","images/branch1.png",InventoryItem::SOLID,false,false,-1,false,false,5,5,InventoryItem::FRESH);
 
     while (!quit) {
         endTick = SDL_GetTicks();
@@ -832,7 +854,7 @@ int main(int argc, char* args[]) {
         float deltaTime = static_cast<float>(endTick - startTick);
         startTick = endTick;
         while (SDL_PollEvent(&e) != 0) {
-            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,button5,window,fullSCREEN,displayControls,cutSceneFinished,resourceNodes,gameState,tileMap,squirrels);
+            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,button5,window,fullSCREEN,displayControls,cutSceneFinished,resourceNodes,gameState,tileMap,squirrels,stone,branch,walnuts);
 
             if (e.type == SDL_KEYDOWN) {
                 if (e.key.keysym.sym == SDLK_e) {

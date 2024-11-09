@@ -32,8 +32,14 @@ public:
     void renderIcon(SDL_Renderer* renderer, int x, int y) const; // New method to render the icon
     void useItem();
     SDL_Texture* getTexture() const;
+    void removeItem();
+    void setX(int newX);
+    void setY(int newY);
+    int getX();
+    int getY();
 
 private:
+    int x,y;
     std::string name;
     std::string description;
     ItemType type;

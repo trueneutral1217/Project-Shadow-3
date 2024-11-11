@@ -2,7 +2,7 @@
 #include <iostream>
 
 Player::Player(const char* texturePath, SDL_Renderer* renderer, int x, int y)
-    : xPos(x), yPos(y),health(100), xVel(0), yVel(0), collisionBox(x+4, y+8, 8, 8), interactionBox(x + 2, y + 6, 12, 12) {
+    : xPos(x), yPos(y),thirst(100),hunger(100),health(100), xVel(0), yVel(0), collisionBox(x+4, y+8, 8, 8), interactionBox(x + 2, y + 6, 12, 12) {
     texture = IMG_LoadTexture(renderer, texturePath);
     srcRect = {0, 0, 16, 16}; // Assume the player sprite is 16x16 pixels
     destRect = {x, y, 16, 16};
@@ -265,3 +265,20 @@ void Player::setHealth(int newHealth) {
     std::cout<<"\n player health: "<<health;
 }
 
+int Player::getThirst() const {
+    return thirst;
+}
+
+void Player::setThirst(int newThirst) {
+    thirst = newThirst;
+    std::cout<<"\n player thirst: "<<thirst;
+}
+
+int Player::getHunger() const {
+    return hunger;
+}
+
+void Player::setHunger(int newHunger) {
+    hunger = newHunger;
+    std::cout<<"\n player hunger: "<<hunger;
+}

@@ -22,7 +22,7 @@
 
 //socialist Americans don't pay income tax because they don't get representation.
 
-//note, eventManager (eventManager seemed incomplete, ask Phaedra) and network have problems (network needs proper SDL libraries in place and linked).
+//note, eventManager (eventManager seemed incomplete, ask Phaedra) and network class has problems (network needs proper SDL libraries in place and linked).
 
 
 //set up newGameCutScene, text textures for premise/backstory, need timer, and fast forward
@@ -102,7 +102,7 @@ void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,
 }
 
 //Other necessary includes and initializations
-void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,SDL_Window* window,bool& fullSCREEN,bool& displayControls,bool& cutSceneFinished,std::vector<ResourceNode>& resourceNodes,GameState& gameState, std::map<int, std::map<int, int>>& tileMap,std::vector<Enemy>& squirrels, InventoryItem& stone, InventoryItem& branch, InventoryItem& walnuts) {
+void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,SDL_Window* window,bool& fullSCREEN,bool& displayControls,bool& cutSceneFinished,std::vector<ResourceNode>& resourceNodes,GameState& gameState, std::map<int, std::map<int, int>>& tileMap,std::vector<Enemy>& squirrels, InventoryItem& stone, InventoryItem& branch, InventoryItem& walnuts,bool& inventoryMenu) {
     //user x'd out the window. possibly alt+F4'd.
     if (e.type == SDL_QUIT) {
         quit = true;
@@ -165,6 +165,15 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
         }
         if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_e) {
             handleInteraction(player, resourceNodes,squirrels,stone,branch,walnuts);
+        }
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_i){
+            if(!inventoryMenu){
+                    std::cout<<"\n inventoryMenu was false, but is now true.";
+                inventoryMenu = true;
+            }else{
+                inventoryMenu = false;
+            }
+
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_1){
             if(player.getInventory()[0].getName() == walnuts.getName()){
@@ -318,7 +327,7 @@ placeResourceNodes(int width, int height, std::vector<std::vector<int>>& map,SDL
     return 0;
 }
 
-void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,bool& quit, int height, int width, std::vector<std::vector<int>>& map, std::map<int, std::map<int, int>>& tileMap,std::vector<ResourceNode>& resourceNodes,SDL_Renderer* renderer,bool& displayControls, bool& cutSceneFinished,Timer& myTimer,Camera& camera,GameState& gameState, std::vector<Enemy>& squirrels,ParticleSystem& sparkles)
+void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,bool& quit, int height, int width, std::vector<std::vector<int>>& map, std::map<int, std::map<int, int>>& tileMap,std::vector<ResourceNode>& resourceNodes,SDL_Renderer* renderer,bool& displayControls, bool& cutSceneFinished,Timer& myTimer,Camera& camera,GameState& gameState, std::vector<Enemy>& squirrels,ParticleSystem& sparkles,int& currentThirstBarPixels,int& currentHungerBarPixels,int& currentHealthBarPixels)
 {
     int prevX, prevY;
     player.getPosition(prevX, prevY);
@@ -387,6 +396,10 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
             player.update( ( deltaTime / 1000.0f ), camera.getCameraRect() ); // Convert milliseconds to seconds
             camera.update( player.getCollisionBox().getRect().x, player.getCollisionBox().getRect().y );
 
+            currentThirstBarPixels = (int)(.59*player.getThirst());
+            currentHungerBarPixels = (int)(.59*player.getHunger());
+            currentHealthBarPixels = (int)(.59*player.getHealth());
+
             if ( player.getHealth() <= 0 ) {
                 gameSTATE = PLAYER_DEAD;
                 player.setHealth(100);
@@ -430,7 +443,7 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
     }
 }
 
-void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player& player, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5, float& deltaTime, int height, int width, std::vector<std::vector<int>>& map,std::vector<ResourceNode>& resourceNodes,bool& displayControls, bool& cutSceneFinished,Timer& myTimer,Camera& camera, std::vector<Enemy>& squirrels,ParticleSystem& sparkles) {
+void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player& player, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5, float& deltaTime, int height, int width, std::vector<std::vector<int>>& map,std::vector<ResourceNode>& resourceNodes,bool& displayControls, bool& cutSceneFinished,Timer& myTimer,Camera& camera, std::vector<Enemy>& squirrels,ParticleSystem& sparkles,int& currentThirstBarPixels,int& currentHungerBarPixels,int& currentHealthBarPixels,bool& inventoryMenu) {
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(renderer);
 
@@ -567,6 +580,14 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                         }
                     }
                     TextureManager::getInstance().renderTexture("HUD",renderer,0,0,256,192);
+                    //std::cout<<"\n currentThirstBarPixels: "<<currentThirstBarPixels;
+                    TextureManager::getInstance().renderTexture("thirstBar",renderer,194,3,currentThirstBarPixels,5);
+                    TextureManager::getInstance().renderTexture("hungerBar",renderer,194,9,currentHungerBarPixels,5);
+                    TextureManager::getInstance().renderTexture("healthBar",renderer,194,15,currentHealthBarPixels,5);
+                    if(inventoryMenu)
+                    {
+                        TextureManager::getInstance().renderTexture("inventoryMenu",renderer,5,59,158,93);
+                    }
 
                     // The code below renders inventoryItem icons.  implement at HUD and when player viewing inventory.
 
@@ -599,6 +620,10 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                             //player.getInventory()[i].renderIcon(renderer,((i*16) + 64),174);
                             int tempX = player.getItemX(i);
                             player.getInventory()[i].renderIcon(renderer,tempX,174);
+                            if(inventoryMenu)
+                            {
+                                player.getInventory()[i].renderIcon(renderer,39 + (i*16),83);
+                            }
                             //player.getInventory()[1].renderIcon(renderer,80,174);
                             //player.getInventory()[2].renderIcon(renderer,92,174);
                             //player.getInventory()[3].renderIcon(renderer,105,174);
@@ -758,6 +783,18 @@ int main(int argc, char* args[]) {
     TextureManager::getInstance().loadTexture("HUD","images/HUD/HUD.png",renderer);
     TextureManager::getInstance().setAlpha("HUD", 204); // 204 is 80% of 255
 
+    TextureManager::getInstance().loadTexture("thirstBar","images/HUD/thirstBar.png",renderer);
+    TextureManager::getInstance().setAlpha("thirstBar", 204); // 204 is 80% of 255
+
+    TextureManager::getInstance().loadTexture("hungerBar","images/HUD/hungerBar.png",renderer);
+    TextureManager::getInstance().setAlpha("hungerBar", 204); // 204 is 80% of 255
+
+    TextureManager::getInstance().loadTexture("healthBar","images/HUD/healthBar.png",renderer);
+    TextureManager::getInstance().setAlpha("healthBar", 204); // 204 is 80% of 255
+
+    TextureManager::getInstance().loadTexture("inventoryMenu","images/HUD/inventoryMenu.png",renderer);
+    TextureManager::getInstance().setAlpha("inventoryMenu",204);
+
     Button button1("images/buttons/new.png", "images/buttons/newMO.png", renderer, 10, 10, 100, 50);
     Button button2("images/buttons/load.png", "images/buttons/loadMO.png", renderer, 10, 70, 100, 50);
     Button button3("images/buttons/options.png", "images/buttons/optionsMO.png", renderer, 10, 130, 100, 50);
@@ -793,6 +830,9 @@ int main(int argc, char* args[]) {
     bool fullSCREEN;
     fullSCREEN = false;
 
+    bool inventoryMenu;//display inventory if true
+    inventoryMenu = false;
+
     // Initialize resource nodes
     std::vector<ResourceNode> resourceNodes;
 
@@ -803,6 +843,10 @@ int main(int argc, char* args[]) {
     //initialize map
     std::vector<std::vector<int>> map(height, std::vector<int>(width, 0));
 
+    int maxBarPixels = 59;
+    int currentThirstBarPixels = 59;
+    int currentHungerBarPixels = 59;
+    int currentHealthBarPixels = 59;
 
 
     GameState gameState("save.dat");
@@ -854,7 +898,7 @@ int main(int argc, char* args[]) {
         float deltaTime = static_cast<float>(endTick - startTick);
         startTick = endTick;
         while (SDL_PollEvent(&e) != 0) {
-            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,button5,window,fullSCREEN,displayControls,cutSceneFinished,resourceNodes,gameState,tileMap,squirrels,stone,branch,walnuts);
+            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,button5,window,fullSCREEN,displayControls,cutSceneFinished,resourceNodes,gameState,tileMap,squirrels,stone,branch,walnuts,inventoryMenu);
 
             if (e.type == SDL_KEYDOWN) {
                 if (e.key.keysym.sym == SDLK_e) {
@@ -876,9 +920,9 @@ int main(int argc, char* args[]) {
             }
         }
 
-        update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,button5,quit,height,width,map,tileMap,resourceNodes,renderer,displayControls,cutSceneFinished,myTimer,camera,gameState,squirrels,sparkles);
+        update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,button5,quit,height,width,map,tileMap,resourceNodes,renderer,displayControls,cutSceneFinished,myTimer,camera,gameState,squirrels,sparkles,currentThirstBarPixels,currentHungerBarPixels,currentHealthBarPixels);
         player.updateItemsState();
-        render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,button5,deltaTime,height,width,map,resourceNodes,displayControls,cutSceneFinished,myTimer,camera,squirrels,sparkles);
+        render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,button5,deltaTime,height,width,map,resourceNodes,displayControls,cutSceneFinished,myTimer,camera,squirrels,sparkles,currentThirstBarPixels,currentHungerBarPixels,currentHealthBarPixels,inventoryMenu);
 
 
         endTick = SDL_GetTicks();

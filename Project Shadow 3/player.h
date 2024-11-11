@@ -49,6 +49,10 @@ public:
     void increaseHealth(int amount);
     int getHealth() const;
     void setHealth(int);
+    int getThirst() const;
+    void setThirst(int);
+    int getHunger() const;
+    void setHunger(int);
     int getInventorySize();
     int getMaxInventorySize();
 
@@ -61,7 +65,7 @@ private:
     int inventorySize;
     CollisionBox collisionBox;
     CollisionBox interactionBox;
-    int health;
+    int health,hunger,thirst;
     std::vector<InventoryItem> inventory; // List of items in the player's inventory
     InventoryItem* equippedItem; // Pointer to the currently equipped item
 

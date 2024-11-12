@@ -55,14 +55,19 @@ public:
     void setHealth(int);
     int getThirst() const;
     void setThirst(int);
+    void decreaseThirst(int amount);
+    void increaseThirst(int amount);
     int getHunger() const;
     void setHunger(int);
+    void decreaseHunger(int amount);//note, decrease not good for player.
+    void increaseHunger(int amount);//player ate something
     int getInventorySize();
     int getMaxInventorySize();
 
 private:
     SDL_Texture* texture;
     SDL_Rect srcRect, destRect;
+    float hungerAccumulation;
     //int xPos, yPos;
     //float xVel, yVel;
     int maxInventorySize;

@@ -7,7 +7,8 @@ Player::Player(const char* texturePath, SDL_Renderer* renderer, int x, int y)
     srcRect = {0, 0, 16, 16}; // Assume the player sprite is 16x16 pixels
     destRect = {x, y, 16, 16};
     inventorySize=0;
-    maxInventorySize=2;
+    maxInventorySize=24;
+    hungerAccumulation = 0.0f;
 }
 
 Player::~Player() {
@@ -71,7 +72,13 @@ void Player::handleEvents(const SDL_Event& e) {
 }
 
 void Player::update(float deltaTime, const SDL_Rect& cameraRect) {
-
+    hungerAccumulation+=deltaTime;
+    //std::cout<<"\n hungerAccumulation: "<<hungerAccumulation;
+    if(hungerAccumulation >= 3)
+    {
+        decreaseHunger(1);
+        hungerAccumulation = 0.0f;
+    }
     xPos += xVel * deltaTime;
     yPos += yVel * deltaTime;
 
@@ -329,6 +336,14 @@ void Player::setThirst(int newThirst) {
     thirst = newThirst;
     std::cout<<"\n player thirst: "<<thirst;
 }
+void Player::decreaseThirst(int amount) {
+    thirst -= amount;
+    std::cout<<"\n player thirst: "<<thirst;
+}
+
+void Player::increaseThirst(int amount) {
+    thirst += amount;
+}
 
 int Player::getHunger() const {
     return hunger;
@@ -336,5 +351,14 @@ int Player::getHunger() const {
 
 void Player::setHunger(int newHunger) {
     hunger = newHunger;
+    std::cout<<"\n player hunger: "<<hunger;
+}
+void Player::decreaseHunger(int amount) {
+    hunger -= amount;
+    std::cout<<"\n player hunger: "<<hunger;
+}
+
+void Player::increaseHunger(int amount) {
+    hunger += amount;
     std::cout<<"\n player hunger: "<<hunger;
 }

@@ -98,6 +98,7 @@ void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,
         {
             //enemy.dead();
             squirrels.erase(squirrels.begin() + i);
+            SoundManager::getInstance().playSound("bwah");
         }
     }
 
@@ -189,10 +190,21 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                     {
                         player.setHealth(100);
                     }
-
+                }
+                if(player.getHunger()<100)
+                {
+                    if(player.getHunger() < 90)
+                    {
+                        player.increaseHunger(10);
+                    }
+                    else
+                    {
+                        player.setHunger(100);
+                    }
                 }
                 //player.increaseHealth(100);
                 std::cout<<"\n used walnuts";
+                SoundManager::getInstance().playSound("powerUp");
                 //player.removeItemFromInventory("Walnuts");
                 player.removeItemFromInventory();
                 std::cout<<"\n removed walnuts.";
@@ -211,8 +223,20 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                         player.setHealth(100);
                     }
                 }
+                if(player.getHunger()<100)
+                {
+                    if(player.getHunger() < 90)
+                    {
+                        player.increaseHunger(10);
+                    }
+                    else
+                    {
+                        player.setHunger(100);
+                    }
+                }
                 //player.increaseHealth(100);
                 std::cout<<"\n used walnuts";
+                SoundManager::getInstance().playSound("powerUp");
                 //player.removeItemFromInventory("Walnuts");
                 player.removeItemFromInventory();
                 std::cout<<"\n removed walnuts.";
@@ -326,7 +350,7 @@ placeResourceNodes(int width, int height, std::vector<std::vector<int>>& map,SDL
             }
             else if(map[y][x] == 2)
             {
-                resourceNodes.emplace_back("images/tree1.png", renderer, (x*16)-16,(y*16)-16 , 32, 32);
+                resourceNodes.emplace_back("images/tree1.png", renderer, (x*16),(y*16) , 32, 32);
             }
             else if(map[y][x] == 3)
             {
@@ -419,8 +443,9 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
                 {
                     squirrels[i].update( ( deltaTime / 1000.0f ) , player.getCollisionBox().getRect().x, player.getCollisionBox().getRect().y );
                 }
+                player.update( ( deltaTime / 1000.0f ), camera.getCameraRect() ); // Convert milliseconds to seconds
             }
-            player.update( ( deltaTime / 1000.0f ), camera.getCameraRect() ); // Convert milliseconds to seconds
+
             camera.update( player.getCollisionBox().getRect().x, player.getCollisionBox().getRect().y );
 
             currentThirstBarPixels = (int)(.59*player.getThirst());
@@ -443,6 +468,7 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
                 if( player.getCollisionBox().intersects(squirrels[i].getCollisionBox() ) ){
                     //if player collides with enemy
                     player.decreaseHealth(1);
+                    SoundManager::getInstance().playSound("ouch");
                     player.setPosition(prevX, prevY);
                     break;
                 }
@@ -510,6 +536,20 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                         SDL_Rect renderRect = node.getCollisionBox().getRect();
                         renderRect.x -= camera.getCameraRect().x;
                         renderRect.y -= camera.getCameraRect().y;
+                        if(node.getTextureId() == "images/tree1.png")
+                        {
+                            //std::cout<<"\n node.getCollisionBox().getRect().x = "<<node.getCollisionBox().getRect().x<<" renderRect.x = "<<renderRect.x;
+                            renderRect.y -=16;
+
+                            //std::cout<<"\n node.getCollisionBox().getRect().y = "<<node.getCollisionBox().getRect().y<<" renderRect.y = "<<renderRect.y;
+                            renderRect.h = 32;
+                            renderRect.w = 32;
+                        }
+                        else
+                        {
+                            renderRect.h = 16;
+                            renderRect.w = 16;
+                        }
                         SDL_RenderCopy(renderer, node.getTexture(), nullptr, &renderRect);
                     }
                 }
@@ -592,6 +632,8 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                         SDL_Rect renderRect = squirrels[i].getCollisionBox().getRect();
                         renderRect.x -= camera.getCameraRect().x;
                         renderRect.y -= camera.getCameraRect().y;
+                        renderRect.w = 16;
+                        renderRect.h = 16;
                         SDL_RenderCopy(renderer, squirrels[i].getTexture(), nullptr, &renderRect);
                     }
                     SDL_Rect playerRect = player.getCollisionBox().getRect();
@@ -607,6 +649,19 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                             SDL_Rect renderRect = node.getCollisionBox().getRect();
                             renderRect.x -= camera.getCameraRect().x;
                             renderRect.y -= camera.getCameraRect().y;
+                            if(node.getTextureId() == "images/tree1.png")
+                            {
+                                //std::cout<<"\n node.getCollisionBox().getRect().x = "<<node.getCollisionBox().getRect().x<<" renderRect.x = "<<renderRect.x;
+                                renderRect.y -=16;
+                                //std::cout<<"\n node.getCollisionBox().getRect().y = "<<node.getCollisionBox().getRect().y<<" renderRect.y = "<<renderRect.y;
+                                renderRect.h = 32;
+                                renderRect.w = 32;
+                            }
+                            else
+                            {
+                                renderRect.h = 16;
+                                renderRect.w = 16;
+                            }
                             SDL_RenderCopy(renderer, node.getTexture(), nullptr, &renderRect);
                         }
                     }
@@ -617,7 +672,7 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                     TextureManager::getInstance().renderTexture("healthBar",renderer,194,15,currentHealthBarPixels,5);
                     if(inventoryMenu)
                     {
-                        TextureManager::getInstance().renderTexture("inventoryMenu",renderer,5,59,158,93);
+                        TextureManager::getInstance().renderTexture("inventoryMenu",renderer,5,59,178,93);
                     }
 
                     // The code below renders inventoryItem icons.  implement at HUD and when player viewing inventory.
@@ -650,10 +705,25 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                             //std::cout<<"\n player.getInventory().size() = "<<player.getInventory().size();
                             //player.getInventory()[i].renderIcon(renderer,((i*16) + 64),174);
                             int tempX = player.getItemX(i);
-                            player.getInventory()[i].renderIcon(renderer,tempX,174);
+                            //hotbar items
+                            if(i<8){
+                                player.getInventory()[i].renderIcon(renderer,tempX,174);
+                            }
+
                             if(inventoryMenu)
                             {
-                                player.getInventory()[i].renderIcon(renderer,39 + (i*16),83);
+                                if(i>=8 && i < 16)
+                                {
+                                    player.getInventory()[i].renderIcon(renderer,39 + ((i-8)*17),83);
+                                }
+                                if(i>=16 && i < 24)
+                                {
+                                    player.getInventory()[i].renderIcon(renderer,39 + ((i-16)*17),99);
+                                }
+                                if(i>=24)
+                                {
+                                    player.getInventory()[i].renderIcon(renderer,39 + ((i-24)*17),115);
+                                }
                             }
                             //player.getInventory()[1].renderIcon(renderer,80,174);
                             //player.getInventory()[2].renderIcon(renderer,92,174);
@@ -682,6 +752,7 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                 TextureManager::getInstance().renderTexture("e", renderer, 5, 155, 95, 10);
                 TextureManager::getInstance().renderTexture("f", renderer, 5, 170, 75, 10);
                 TextureManager::getInstance().renderTexture("lmb", renderer, 5, 65, 176, 10);
+                TextureManager::getInstance().renderTexture("i", renderer, 5, 50, 95, 10);
             }
             break;
     }
@@ -733,6 +804,10 @@ int main(int argc, char* args[]) {
   SoundManager::getInstance().loadSound("blunk", "sounds/blunk.wav");
   SoundManager::getInstance().loadSound("collect5", "sounds/collect5.wav");
   SoundManager::getInstance().loadSound("collect2", "sounds/collect2.wav");
+  SoundManager::getInstance().loadSound("bwah","sounds/bwah.wav");
+  SoundManager::getInstance().loadSound("ouch","sounds/ouch.wav");
+  SoundManager::getInstance().loadSound("powerUp","sounds/Powerup.wav");
+
   //load music
   auto& soundManager=SoundManager::getInstance();
   soundManager.loadMusic("build", "music/build.mp3");
@@ -779,6 +854,7 @@ int main(int argc, char* args[]) {
     TextureManager::getInstance().loadTextTexture("e","e: interact with object",{255,0,0},font,renderer);
     TextureManager::getInstance().loadTextTexture("f","f: toggle fullscreen",{255,0,0},font,renderer);
     TextureManager::getInstance().loadTextTexture("lmb","left mouse button: advance cutscenes",{255,0,0},font,renderer);
+    TextureManager::getInstance().loadTextTexture("i","open/close Inventory",{255,0,0},font,renderer);
 
     //load textures
     TextureManager::getInstance().loadTexture("player", "images/ladyInBlue32x32.png", renderer);
@@ -830,7 +906,7 @@ int main(int argc, char* args[]) {
     Button button2("images/buttons/load.png", "images/buttons/loadMO.png", renderer, 10, 70, 100, 50);
     Button button3("images/buttons/options.png", "images/buttons/optionsMO.png", renderer, 10, 130, 100, 50);
     Button button4("images/buttons/exit.png","images/buttons/exitMO.png",renderer,156,14,100,50);
-    Button button5("images/buttons/controls.png","images/buttons/controlsMO.png",renderer,25,25,100,50);
+    Button button5("images/buttons/controls.png","images/buttons/controlsMO.png",renderer,5,5,100,50);
 
     Player player("images/ladyInBlue16x16.png", renderer, (SCREEN_WIDTH+(SCREEN_WIDTH/2)),(SCREEN_HEIGHT+(SCREEN_HEIGHT/2)));
     Camera camera(256, 192,mapWidth,mapHeight);

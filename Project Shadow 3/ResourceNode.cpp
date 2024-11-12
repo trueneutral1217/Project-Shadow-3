@@ -2,7 +2,7 @@
 #include "texture.h"
 
 ResourceNode::ResourceNode(const std::string& textureId, SDL_Renderer* renderer, int x, int y, int width, int height)
-    : textureId(textureId), collisionBox(x, y, width, height), interactionBox(x - 1, y - 1, width + 2, height + 2) {
+    : textureId(textureId), collisionBox((x+2), (y+(height/2)), width-4, (height/2)), interactionBox((x - 2), ((y+(height/2))-2), (width + 4), ((height/2) + 4)) {
     xPos = x;
     yPos = y;
     w = width;

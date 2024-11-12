@@ -60,6 +60,8 @@
 		<Unit filename="Camera.h" />
 		<Unit filename="CollisionBox.cpp" />
 		<Unit filename="CollisionBox.h" />
+		<Unit filename="DroppedItem.cpp" />
+		<Unit filename="DroppedItem.h" />
 		<Unit filename="HUD.cpp" />
 		<Unit filename="HUD.h" />
 		<Unit filename="NPC.cpp" />

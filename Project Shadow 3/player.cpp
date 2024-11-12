@@ -52,7 +52,22 @@ void Player::handleEvents(const SDL_Event& e) {
             case SDLK_a: xVel = 0; break;
             case SDLK_d: xVel = 0; break;
         }
-    }
+    }/*
+    if (e.type == SDL_MOUSEBUTTONDOWN) {
+        if (e.button.button == SDL_BUTTON_RIGHT) {
+            int mouseX = e.button.x;
+            int mouseY = e.button.y;
+
+            // Check which item is clicked
+            for (size_t i = 0; i < inventory.size(); ++i) {
+                //SDL_Rect itemRect = {  position of item in inventory/hotbar  };
+                if (SDL_PointInRect(&SDL_Point{ mouseX, mouseY }, &itemRect)) {
+                    dropItem(i);
+                    break;
+                }
+            }
+        }
+    }*/
 }
 
 void Player::update(float deltaTime, const SDL_Rect& cameraRect) {
@@ -78,6 +93,20 @@ void Player::update(float deltaTime, const SDL_Rect& cameraRect) {
 
     collisionBox = CollisionBox(xPos+4, yPos+8, 8, 8); // Update collision box position
     interactionBox = CollisionBox(xPos +3, yPos + 7 , 10, 10);
+
+    /*
+    // Check for nearby dropped items to pick up
+    for (auto& item : droppedItems) {
+        if (SDL_HasIntersection(collisionBox.getRect(), &SDL_Rect{item.getX(), item.getY(), 16, 16})) {
+            pickUpItem(item);
+        }
+    }
+
+    // Remove picked up items from the vector
+    droppedItems.erase(std::remove_if(droppedItems.begin(), droppedItems.end(), [this](const DroppedItem& item) {
+        return SDL_HasIntersection(&collisionBox.getRect(), &SDL_Rect{item.getX(), item.getY(), 16, 16});
+    }), droppedItems.end());
+    */
 }
 
 void Player::render(SDL_Renderer* renderer) {
@@ -96,7 +125,8 @@ void Player::addItemToInventory(const std::string& item) {
     inventory.addItem(item);
 }*/
 
-void Player::removeItemFromInventory(const std::string& item) {
+//void Player::removeItemFromInventory(const std::string& item) {
+void Player::removeItemFromInventory() {
     //inventory.removeItem(item);
     if(inventorySize > 0)
     {
@@ -119,6 +149,32 @@ void Player::addItem(const InventoryItem& item) {
     inventorySize++;
 
 }
+
+void Player::dropItem(int itemIndex){
+    if (itemIndex >= 0 && itemIndex < inventory.size())
+    {
+    InventoryItem item = inventory[itemIndex];
+    inventory.erase(inventory.begin() + itemIndex);
+    // Create a dropped item entity at the player's position
+    // You can use item.getName() and item.getTexture() to create the dropped item entity
+    }
+}
+/*
+void Player::pickUpItem(std::vector<DroppedItem>& droppedItems)
+{
+    for (auto it = droppedItems.begin(); it != droppedItems.end(); )
+    {
+        if (SDL_HasIntersection(&collisionBox.getRect(), &it->getCollisionBox()))
+        {
+            addItem(it->getItem());
+            it = droppedItems.erase(it);
+            // Remove the picked-up item
+        }
+        else {
+            ++it;
+        }
+    }
+}*/
 
 int Player::getItemX(int index){
     int theX;

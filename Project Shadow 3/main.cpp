@@ -30,6 +30,8 @@
 //save/load map.
 //need slider for volume, background image, and back button for options_menu gamestate.
 
+//resourceNodes aren't rendering at full size.  inventoryItems are.  find and eliminate the discrepancy.
+
 /*
 #include "AI.h"
 
@@ -177,23 +179,48 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_1){
             if(player.getInventory()[0].getName() == walnuts.getName()){
-                player.increaseHealth(100);
+                if(player.getHealth() < 100)
+                {
+                    if(player.getHealth() < 90)
+                    {
+                        player.increaseHealth(10);
+                    }
+                    else
+                    {
+                        player.setHealth(100);
+                    }
+
+                }
+                //player.increaseHealth(100);
                 std::cout<<"\n used walnuts";
-                player.removeItemFromInventory("Walnuts");
+                //player.removeItemFromInventory("Walnuts");
+                player.removeItemFromInventory();
                 std::cout<<"\n removed walnuts.";
             }
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_2){
             if(player.getInventory()[1].getName() == walnuts.getName()){
-                player.increaseHealth(100);
+                if(player.getHealth() < 100)
+                {
+                    if(player.getHealth() < 90)
+                    {
+                        player.increaseHealth(10);
+                    }
+                    else
+                    {
+                        player.setHealth(100);
+                    }
+                }
+                //player.increaseHealth(100);
                 std::cout<<"\n used walnuts";
-                player.removeItemFromInventory("Walnuts");
+                //player.removeItemFromInventory("Walnuts");
+                player.removeItemFromInventory();
                 std::cout<<"\n removed walnuts.";
             }
         }
         player.handleEvents(e);
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q)
-        {
+        {//this button is just to test player death
             player.decreaseHealth(101);
         }
         break;
@@ -415,7 +442,7 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
             {
                 if( player.getCollisionBox().intersects(squirrels[i].getCollisionBox() ) ){
                     //if player collides with enemy
-                    player.decreaseHealth(5);
+                    player.decreaseHealth(1);
                     player.setPosition(prevX, prevY);
                     break;
                 }
@@ -424,6 +451,10 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
         case PLAYER_DEAD:
              //Logic for when player is dead
              resourceNodes.clear();
+             for(int i = 0; i < player.getInventory().size(); i++)
+            {
+                player.removeItemFromInventory();
+            }
              //Possibly reset to MAIN_MENU or offer options for retry
             break;
         case OPTIONS_MENU:

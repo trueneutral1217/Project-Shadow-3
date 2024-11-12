@@ -8,6 +8,7 @@
 #include "CollisionBox.h"
 #include <vector>
 #include "InventoryItem.h"
+#include "DroppedItem.h"
 
 class Player {
     friend class GameState;
@@ -20,12 +21,15 @@ public:
     void render(SDL_Renderer* renderer);
 
     //void addItemToInventory(const std::string& item);
-    void removeItemFromInventory(const std::string& item);
+    void removeItemFromInventory();
     void showPlayerInventory() const;
 
     /*
     void setItemX(int newX);
     */
+    void dropItem(int itemIndex);
+    //void pickUpItem(std::vector<DroppedItem>& droppedItems);
+    void pickUpItem(DroppedItem& item);
     int getItemX(int index);
 
     void addItem(const InventoryItem& item);
@@ -68,6 +72,7 @@ private:
     int health,hunger,thirst;
     std::vector<InventoryItem> inventory; // List of items in the player's inventory
     InventoryItem* equippedItem; // Pointer to the currently equipped item
+    std::vector<DroppedItem> droppedItems; // Track dropped items
 
 };
 

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1731301320 source:c:\project shadow 3\project shadow 3\main.cpp
+1731369127 source:c:\project shadow 3\project shadow 3\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -852,11 +852,11 @@
 	<vector>
 	<string>
 
-1731297004 source:c:\project shadow 3\project shadow 3\player.cpp
+1731368742 source:c:\project shadow 3\project shadow 3\player.cpp
 	"Player.h"
 	<iostream>
 
-1731295972 c:\project shadow 3\project shadow 3\player.h
+1731371251 c:\project shadow 3\project shadow 3\player.h
 	"SDL.h"
 	"SDL_image.h"
 	"Inventory.h"
@@ -864,6 +864,7 @@
 	"CollisionBox.h"
 	<vector>
 	"InventoryItem.h"
+	"DroppedItem.h"
 
 1729626348 source:c:\project shadow 3\project shadow 3\soundmanager.cpp
 	"SoundManager.h"
@@ -1067,4 +1068,13 @@
 
 1730061512 c:\project shadow 3\project shadow 3\camera.h
 	<SDL.h>
+
+1731371785 c:\project shadow 3\project shadow 3\droppeditem.h
+	<SDL.h>
+	"InventoryItem.h"
+	<cstdlib>
+	<algorithm>
+
+1731371241 source:c:\project shadow 3\project shadow 3\droppeditem.cpp
+	"DroppedItem.h"
 

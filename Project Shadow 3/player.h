@@ -10,6 +10,8 @@
 #include "InventoryItem.h"
 #include "DroppedItem.h"
 
+//add melee skill when player defeats an enemy.
+
 class Player {
     friend class GameState;
 
@@ -36,6 +38,19 @@ public:
     void removeItem();
     void equipItem(const std::string& itemName);
     void unequipItem();
+
+    /*
+    void unhotBarItem1();
+    void unhotBarItem2();
+    void unhotBarItem3();
+    void unhotBarItem4();
+    void unhotBarItem5();
+    void unhotBarItem6();
+    void unhotBarItem7();
+    void unhotBarItem8();*/
+
+
+
     void useItem(const std::string& itemName);
     void updateItemsState();
     bool addContainedItem(const std::string& containerName, const InventoryItem& item);
@@ -76,6 +91,16 @@ private:
     CollisionBox interactionBox;
     int health,hunger,thirst;
     std::vector<InventoryItem> inventory; // List of items in the player's inventory
+    /*
+    bool hotBar1empty,hotBar2empty,hotBar3empty,hotBar4empty,hotBar5empty,hotBar6empty,hotBar7empty,hotBar8empty;
+    InventoryItem* hotBarItem1;
+    InventoryItem* hotBarItem2;
+    InventoryItem* hotBarItem3;
+    InventoryItem* hotBarItem4;
+    InventoryItem* hotBarItem5;
+    InventoryItem* hotBarItem6;
+    InventoryItem* hotBarItem7;
+    InventoryItem* hotBarItem8;*/
     InventoryItem* equippedItem; // Pointer to the currently equipped item
     std::vector<DroppedItem> droppedItems; // Track dropped items
 

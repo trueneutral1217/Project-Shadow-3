@@ -8,7 +8,7 @@ Enemy::Enemy(const char* texturePath, SDL_Renderer* renderer, int x, int y)
     : xPos(x), yPos(y), xVel(0.0f), yVel(0.0f), collisionBox(x, y, 16, 16) {  // Initialize collision box
     texture = IMG_LoadTexture(renderer, texturePath);  // Load texture
     std::srand(std::time(0));  // Seed for random number generation
-
+    texturePathString = texturePath;
     walkTimer = 0.0f;
     walkDuration = std::rand() % 2 + 1;  // Random duration between 1 and 2 seconds
 
@@ -31,7 +31,15 @@ void Enemy::update(float deltaTime, int x, int y ) {
         if(aggroRange(x,y))
         {
             //avoidPlayer(x,y);
-            avoidPlayer(x,y);
+            if(texturePathString == "images/squirrel1.png")
+            {
+                avoidPlayer(x,y);
+            }
+            else if(texturePathString == "images/bunny1.png")
+            {
+                seekPlayer(x,y);
+            }
+
         }
         else
         {

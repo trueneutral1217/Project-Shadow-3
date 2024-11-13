@@ -9,6 +9,7 @@ Player::Player(const char* texturePath, SDL_Renderer* renderer, int x, int y)
     inventorySize=0;
     maxInventorySize=24;
     hungerAccumulation = 0.0f;
+    //hotBar1empty = hotBar2empty = hotBar3empty= hotBar4empty= hotBar5empty=hotBar6empty=hotBar7empty=hotBar8empty=false;
 }
 
 Player::~Player() {
@@ -150,7 +151,7 @@ void Player::showPlayerInventory() const {
 void Player::addItem(const InventoryItem& item) {
     //item.setX(64+(16*inventorySize));
     inventory.push_back(item); // Add the item to the inventory
-    inventory.back().setX(64+(16*inventorySize));
+    inventory.back().setX(64+(15*inventorySize));
     std::cout << "\n Added item: " << item.getName() << std::endl;
     //setX(64+(16*inventorySize));
     inventorySize++;
@@ -194,12 +195,61 @@ void Player::equipItem(const std::string& itemName) {
     for (auto& item : inventory) {
         if (item.getName() == itemName && item.isEquippable()) {
             equippedItem = &item; // Set the equipped item
-            std::cout << "Equipped item: " << itemName << std::endl;
+            std::cout << "\n Equipped item: " << itemName;
             return;
         }
     }
-    std::cout << "Item not found or not equippable: " << itemName <<std::endl;
+    std::cout << "\n Item not found or not equippable: " << itemName;
 }
+/*
+void Player::setHotBarItem(const std::string& itemName){
+    for(auto& item : inventory){
+        if(item.getName() == itemName && item.isSingeUse()){
+            if(hotBar1empty){
+                hotBarItem1 = &item;
+                std::cout<<"\n HotBar 1 item: "<<itemName;
+                hotBar1empty = false;
+            }
+            else if(hotBar2empty){
+                hotBarItem2 = &item;
+                std::cout<<"\n HotBar 2 item: "<<itemName;
+                hotBar2empty = false;
+            }
+            else if(hotBar3empty){
+                hotBarItem3 = &item;
+                std::cout<<"\n HotBar 3 item: "<<itemName;
+                hotBar3empty = false;
+            }
+            else if(hotBar4empty){
+                hotBarItem4 = &item;
+                std::cout<<"\n HotBar 4 item: "<<itemName;
+                hotBar4empty = false;
+            }
+            else if(hotBar5empty){
+                hotBarItem5 = &item;
+                std::cout<<"\n HotBar 5 item: "<<itemName;
+                hotBar5empty = false;
+            }
+            else if(hotBar6empty){
+                hotBarItem6 = &item;
+                std::cout<<"\n HotBar 6 item: "<<itemName;
+                hotBar6empty = false;
+            }
+            else if(hotBar7empty){
+                hotBarItem7 = &item;
+                std::cout<<"\n HotBar 7 item: "<<itemName;
+                hotBar7empty = false;
+            }
+            else if(hotBar8empty){
+                hotBarItem8 = &item;
+                std::cout<<"\n HotBar 8 item: "<<itemName;
+                hotBar8empty = false;
+            }
+        }
+
+    }
+}*/
+
 // Method to unequip the currently equipped item
 void Player::unequipItem() {
     if (equippedItem) {
@@ -209,6 +259,96 @@ void Player::unequipItem() {
         std::cout << "No item is currently equipped" << std::endl;
     }
 }
+
+/*
+void Player::unhotBarItem1(){
+    if(hotBarItem1){
+            std::cout<<"\n hotbaritem1: " << hotBarItem1->getName();
+        hotBarItem1 = nullptr;
+        hotBar1empty = true;
+    }
+    else{
+        std::cout<<"\n no item in hotbar 1 slot!";
+    }
+}
+
+void Player::unhotBarItem2(){
+    if(hotBarItem2){
+            std::cout<<"\n hotbaritem2: " << hotBarItem2->getName();
+        hotBarItem2 = nullptr;
+        hotBar2empty = true;
+    }
+    else{
+        std::cout<<"\n no item in hotbar 2 slot!";
+    }
+}
+
+void Player::unhotBarItem3(){
+    if(hotBarItem3){
+            std::cout<<"\n hotbaritem3: " << hotBarItem3->getName();
+        hotBarItem3 = nullptr;
+        hotBar3empty = true;
+    }
+    else{
+        std::cout<<"\n no item in hotbar 3 slot!";
+    }
+}
+
+void Player::unhotBarItem4(){
+    if(hotBarItem4){
+            std::cout<<"\n hotbaritem4: " << hotBarItem4->getName();
+        hotBarItem4 = nullptr;
+        hotBar4empty = true;
+    }
+    else{
+        std::cout<<"\n no item in hotbar 4 slot!";
+    }
+}
+
+void Player::unhotBarItem5(){
+    if(hotBarItem5){
+            std::cout<<"\n hotbaritem5: " << hotBarItem5->getName();
+        hotBarItem5 = nullptr;
+        hotBar5empty = true;
+    }
+    else{
+        std::cout<<"\n no item in hotbar 5 slot!";
+    }
+}
+
+void Player::unhotBarItem6(){
+    if(hotBarItem6){
+            std::cout<<"\n hotbaritem6: " << hotBarItem6->getName();
+        hotBarItem6 = nullptr;
+        hotBar6empty = true;
+    }
+    else{
+        std::cout<<"\n no item in hotbar 6 slot!";
+    }
+}
+
+void Player::unhotBarItem7(){
+    if(hotBarItem7){
+            std::cout<<"\n hotbaritem7: " << hotBarItem7->getName();
+        hotBarItem7 = nullptr;
+        hotBar7empty = true;
+    }
+    else{
+        std::cout<<"\n no item in hotbar 7 slot!";
+    }
+}
+
+void Player::unhotBarItem8(){
+    if(hotBarItem8){
+            std::cout<<"\n hotbaritem8: " << hotBarItem8->getName();
+        hotBarItem8 = nullptr;
+        hotBar8empty = true;
+    }
+    else{
+        std::cout<<"\n no item in hotbar 8 slot!";
+    }
+}
+*/
 
 // Method to use an item by name
 void Player::useItem(const std::string& itemName) {
@@ -226,7 +366,31 @@ void Player::useItem(const std::string& itemName) {
             if ((it->isSingleUse() || it->getUsesRemaining() == 0) && it->getUsesRemaining() != -1) {
                 if (equippedItem == &(*it)) {
                     unequipItem(); // Unequip the item if it was equipped
+                }/*
+                if(hotBarItem1 == &(*it)){
+                    unhotBarItem1();
                 }
+                if(hotBarItem2 == &(*it)){
+                    unhotBarItem2();
+                }
+                if(hotBarItem3 == &(*it)){
+                    unhotBarItem3();
+                }
+                if(hotBarItem4 == &(*it)){
+                    unhotBarItem4();
+                }
+                if(hotBarItem5 == &(*it)){
+                    unhotBarItem5();
+                }
+                if(hotBarItem6 == &(*it)){
+                    unhotBarItem6();
+                }
+                if(hotBarItem7 == &(*it)){
+                    unhotBarItem7();
+                }
+                if(hotBarItem8 == &(*it)){
+                    unhotBarItem8();
+                }*/
                 it = inventory.erase(it); // Remove the item from the inventory
                 std::cout << "Removed item: " << itemName << std::endl;
             } else {

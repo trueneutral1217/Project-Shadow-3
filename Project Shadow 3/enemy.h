@@ -21,6 +21,7 @@ public:
     SDL_Texture* getTexture() const;
 
 private:
+    std::string texturePathString;
     SDL_Texture* texture;
     SDL_Rect srcRect, destRect;
     int xPos, yPos;

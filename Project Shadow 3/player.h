@@ -9,6 +9,8 @@
 #include <vector>
 #include "InventoryItem.h"
 #include "DroppedItem.h"
+#include <cmath>
+#include <cstdlib>
 
 //add melee skill when player defeats an enemy.
 
@@ -24,6 +26,7 @@ public:
 
     //void addItemToInventory(const std::string& item);
     void removeItemFromInventory();
+    void removeItemFromHotBar();
     void showPlayerInventory() const;
 
     /*
@@ -32,10 +35,12 @@ public:
     void dropItem(int itemIndex);
     //void pickUpItem(std::vector<DroppedItem>& droppedItems);
     void pickUpItem(DroppedItem& item);
-    int getItemX(int index);
+    int getInventoryItemX(int index);
+    int getHotBarItemX(int index);
 
     void addItem(const InventoryItem& item);
-    void removeItem();
+    void addHotBarItem(const InventoryItem& item);
+
     void equipItem(const std::string& itemName);
     void unequipItem();
 
@@ -56,7 +61,7 @@ public:
     bool addContainedItem(const std::string& containerName, const InventoryItem& item);
     bool removeContainedItem(const std::string& containerName, const std::string& itemName);
     const std::vector<InventoryItem>& getInventory() const;
-
+    const std::vector<InventoryItem>& getHotBar() const;
     float xVel, yVel;
     int xPos, yPos;
     void setPosition(int x, int y);
@@ -78,8 +83,13 @@ public:
     void increaseHunger(int amount);//player ate something
     int getInventorySize();
     int getMaxInventorySize();
+    int getHotBarSize();
+    int getMaxHotBarSize();
+    void updateSlot(int slotIndex, InventoryItem newItem);
+    void renderSlots(SDL_Renderer* renderer);
 
 private:
+
     SDL_Texture* texture;
     SDL_Rect srcRect, destRect;
     float hungerAccumulation;
@@ -87,10 +97,14 @@ private:
     //float xVel, yVel;
     int maxInventorySize;
     int inventorySize;
+    int hotBarSize;
+    int maxHotBarSize;
     CollisionBox collisionBox;
     CollisionBox interactionBox;
     int health,hunger,thirst;
     std::vector<InventoryItem> inventory; // List of items in the player's inventory
+    std::vector<InventoryItem> slots; //hotbar slots for items.
+    //InventoryItem tempItem;
     /*
     bool hotBar1empty,hotBar2empty,hotBar3empty,hotBar4empty,hotBar5empty,hotBar6empty,hotBar7empty,hotBar8empty;
     InventoryItem* hotBarItem1;

@@ -7,8 +7,12 @@ Player::Player(const char* texturePath, SDL_Renderer* renderer, int x, int y)
     srcRect = {0, 0, 16, 16}; // Assume the player sprite is 16x16 pixels
     destRect = {x, y, 16, 16};
     inventorySize=0;
-    maxInventorySize=24;
+    hotBarSize=0;
+    maxHotBarSize = 8;
+    maxInventorySize=32;
     hungerAccumulation = 0.0f;
+
+    //
     //hotBar1empty = hotBar2empty = hotBar3empty= hotBar4empty= hotBar5empty=hotBar6empty=hotBar7empty=hotBar8empty=false;
 }
 
@@ -125,8 +129,16 @@ int Player::getInventorySize(){
     return inventorySize;
 }
 
+int Player::getHotBarSize(){
+    return hotBarSize;
+}
+
 int Player::getMaxInventorySize(){
     return maxInventorySize;
+}
+
+int Player::getMaxHotBarSize(){
+    return maxHotBarSize;
 }
 /*
 void Player::addItemToInventory(const std::string& item) {
@@ -143,6 +155,14 @@ void Player::removeItemFromInventory() {
     }
 }
 
+void Player::removeItemFromHotBar() {
+    if(slots.size() > 0)
+    {
+        slots.pop_back();
+        hotBarSize--;
+    }
+}
+
 void Player::showPlayerInventory() const {
 //    inventory.showInventory();
 }
@@ -156,6 +176,14 @@ void Player::addItem(const InventoryItem& item) {
     //setX(64+(16*inventorySize));
     inventorySize++;
 
+}
+
+void Player::addHotBarItem(const InventoryItem& item)
+{
+    slots.push_back(item);
+    slots.back().setX(64+(15*hotBarSize));
+    std::cout << "\n added HOT item: " << item.getName() <<std::endl;
+    hotBarSize++;
 }
 
 void Player::dropItem(int itemIndex){
@@ -184,9 +212,15 @@ void Player::pickUpItem(std::vector<DroppedItem>& droppedItems)
     }
 }*/
 
-int Player::getItemX(int index){
+int Player::getInventoryItemX(int index){
     int theX;
     theX = inventory.at(index).getX();
+    return theX;
+}
+
+int Player::getHotBarItemX(int index){
+    int theX;
+    theX = slots.at(index).getX();
     return theX;
 }
 
@@ -201,54 +235,18 @@ void Player::equipItem(const std::string& itemName) {
     }
     std::cout << "\n Item not found or not equippable: " << itemName;
 }
-/*
-void Player::setHotBarItem(const std::string& itemName){
-    for(auto& item : inventory){
-        if(item.getName() == itemName && item.isSingeUse()){
-            if(hotBar1empty){
-                hotBarItem1 = &item;
-                std::cout<<"\n HotBar 1 item: "<<itemName;
-                hotBar1empty = false;
-            }
-            else if(hotBar2empty){
-                hotBarItem2 = &item;
-                std::cout<<"\n HotBar 2 item: "<<itemName;
-                hotBar2empty = false;
-            }
-            else if(hotBar3empty){
-                hotBarItem3 = &item;
-                std::cout<<"\n HotBar 3 item: "<<itemName;
-                hotBar3empty = false;
-            }
-            else if(hotBar4empty){
-                hotBarItem4 = &item;
-                std::cout<<"\n HotBar 4 item: "<<itemName;
-                hotBar4empty = false;
-            }
-            else if(hotBar5empty){
-                hotBarItem5 = &item;
-                std::cout<<"\n HotBar 5 item: "<<itemName;
-                hotBar5empty = false;
-            }
-            else if(hotBar6empty){
-                hotBarItem6 = &item;
-                std::cout<<"\n HotBar 6 item: "<<itemName;
-                hotBar6empty = false;
-            }
-            else if(hotBar7empty){
-                hotBarItem7 = &item;
-                std::cout<<"\n HotBar 7 item: "<<itemName;
-                hotBar7empty = false;
-            }
-            else if(hotBar8empty){
-                hotBarItem8 = &item;
-                std::cout<<"\n HotBar 8 item: "<<itemName;
-                hotBar8empty = false;
-            }
-        }
+
+void Player::updateSlot(int slotIndex, InventoryItem newItem) {
+    if (slotIndex >= 0 && slotIndex < slots.size()) {
+        slots[slotIndex] = newItem;
+    }
+}
+
+void Player::renderSlots(SDL_Renderer* renderer) {
+        // Render hotbar slots and items here
 
     }
-}*/
+
 
 // Method to unequip the currently equipped item
 void Player::unequipItem() {
@@ -259,96 +257,6 @@ void Player::unequipItem() {
         std::cout << "No item is currently equipped" << std::endl;
     }
 }
-
-/*
-void Player::unhotBarItem1(){
-    if(hotBarItem1){
-            std::cout<<"\n hotbaritem1: " << hotBarItem1->getName();
-        hotBarItem1 = nullptr;
-        hotBar1empty = true;
-    }
-    else{
-        std::cout<<"\n no item in hotbar 1 slot!";
-    }
-}
-
-void Player::unhotBarItem2(){
-    if(hotBarItem2){
-            std::cout<<"\n hotbaritem2: " << hotBarItem2->getName();
-        hotBarItem2 = nullptr;
-        hotBar2empty = true;
-    }
-    else{
-        std::cout<<"\n no item in hotbar 2 slot!";
-    }
-}
-
-void Player::unhotBarItem3(){
-    if(hotBarItem3){
-            std::cout<<"\n hotbaritem3: " << hotBarItem3->getName();
-        hotBarItem3 = nullptr;
-        hotBar3empty = true;
-    }
-    else{
-        std::cout<<"\n no item in hotbar 3 slot!";
-    }
-}
-
-void Player::unhotBarItem4(){
-    if(hotBarItem4){
-            std::cout<<"\n hotbaritem4: " << hotBarItem4->getName();
-        hotBarItem4 = nullptr;
-        hotBar4empty = true;
-    }
-    else{
-        std::cout<<"\n no item in hotbar 4 slot!";
-    }
-}
-
-void Player::unhotBarItem5(){
-    if(hotBarItem5){
-            std::cout<<"\n hotbaritem5: " << hotBarItem5->getName();
-        hotBarItem5 = nullptr;
-        hotBar5empty = true;
-    }
-    else{
-        std::cout<<"\n no item in hotbar 5 slot!";
-    }
-}
-
-void Player::unhotBarItem6(){
-    if(hotBarItem6){
-            std::cout<<"\n hotbaritem6: " << hotBarItem6->getName();
-        hotBarItem6 = nullptr;
-        hotBar6empty = true;
-    }
-    else{
-        std::cout<<"\n no item in hotbar 6 slot!";
-    }
-}
-
-void Player::unhotBarItem7(){
-    if(hotBarItem7){
-            std::cout<<"\n hotbaritem7: " << hotBarItem7->getName();
-        hotBarItem7 = nullptr;
-        hotBar7empty = true;
-    }
-    else{
-        std::cout<<"\n no item in hotbar 7 slot!";
-    }
-}
-
-void Player::unhotBarItem8(){
-    if(hotBarItem8){
-            std::cout<<"\n hotbaritem8: " << hotBarItem8->getName();
-        hotBarItem8 = nullptr;
-        hotBar8empty = true;
-    }
-    else{
-        std::cout<<"\n no item in hotbar 8 slot!";
-    }
-}
-*/
 
 // Method to use an item by name
 void Player::useItem(const std::string& itemName) {
@@ -366,31 +274,7 @@ void Player::useItem(const std::string& itemName) {
             if ((it->isSingleUse() || it->getUsesRemaining() == 0) && it->getUsesRemaining() != -1) {
                 if (equippedItem == &(*it)) {
                     unequipItem(); // Unequip the item if it was equipped
-                }/*
-                if(hotBarItem1 == &(*it)){
-                    unhotBarItem1();
                 }
-                if(hotBarItem2 == &(*it)){
-                    unhotBarItem2();
-                }
-                if(hotBarItem3 == &(*it)){
-                    unhotBarItem3();
-                }
-                if(hotBarItem4 == &(*it)){
-                    unhotBarItem4();
-                }
-                if(hotBarItem5 == &(*it)){
-                    unhotBarItem5();
-                }
-                if(hotBarItem6 == &(*it)){
-                    unhotBarItem6();
-                }
-                if(hotBarItem7 == &(*it)){
-                    unhotBarItem7();
-                }
-                if(hotBarItem8 == &(*it)){
-                    unhotBarItem8();
-                }*/
                 it = inventory.erase(it); // Remove the item from the inventory
                 std::cout << "Removed item: " << itemName << std::endl;
             } else {
@@ -406,6 +290,9 @@ void Player::useItem(const std::string& itemName) {
 
 // Method to update the state of all items in the inventory
 void Player::updateItemsState() {
+    for(auto& item : slots){
+        item.updateState();
+    }
     for (auto& item : inventory) {
         item.updateState(); // Update the state of each item
     }
@@ -448,6 +335,10 @@ bool Player::removeContainedItem(const std::string& containerName, const std::st
 // Method to get the inventory
 const std::vector<InventoryItem>& Player::getInventory() const {
     return inventory; // Return the inventory
+}
+
+const std::vector<InventoryItem>& Player::getHotBar() const {
+    return slots;
 }
 
 void Player::setPosition(int x, int y) {
@@ -518,8 +409,16 @@ void Player::setHunger(int newHunger) {
     std::cout<<"\n player hunger: "<<hunger;
 }
 void Player::decreaseHunger(int amount) {
-    hunger -= amount;
-    std::cout<<"\n player hunger: "<<hunger;
+    if(hunger>0){
+        hunger -= amount;
+        std::cout<<"\n player hunger: "<<hunger;
+    }
+    else{
+        health -=amount;
+        std::cout<<"\n player health: "<<health;
+    }
+
+
 }
 
 void Player::increaseHunger(int amount) {

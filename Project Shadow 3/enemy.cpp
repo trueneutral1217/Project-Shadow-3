@@ -7,6 +7,10 @@
 Enemy::Enemy(const char* texturePath, SDL_Renderer* renderer, int x, int y)
     : xPos(x), yPos(y), xVel(0.0f), yVel(0.0f), collisionBox(x, y, 16, 16) {  // Initialize collision box
     texture = IMG_LoadTexture(renderer, texturePath);  // Load texture
+    if (!texture) {
+        // Handle error
+        SDL_Log("Failed to load texture: %s", SDL_GetError());
+    }
     std::srand(std::time(0));  // Seed for random number generation
     texturePathString = texturePath;
     walkTimer = 0.0f;

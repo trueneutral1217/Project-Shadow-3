@@ -24,13 +24,10 @@
 
 //note, eventManager (eventManager seemed incomplete, ask Phaedra) and network class has problems (network needs proper SDL libraries in place and linked).
 
+//enemy texture is invisible? sometimes.  their collisionbox still exists and can kill the player.
 
-//set up newGameCutScene, text textures for premise/backstory, need timer, and fast forward
-//on player clicks, add a skip intro button as well.
-//save/load map.
-//need slider for volume, background image, and back button for options_menu gamestate.
+//need slider for volume, and back button for options_menu gamestate.
 
-//resourceNodes aren't rendering at full size.  inventoryItems are.  find and eliminate the discrepancy.
 
 /*
 #include "AI.h"
@@ -62,32 +59,47 @@ GAMESTATE gameSTATE;
 //player interacts with a resourcenode
 void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,std::vector<Enemy>& squirrels,std::vector<Enemy>& bunnies, InventoryItem& stone, InventoryItem& branch, InventoryItem& walnuts) {
     //for (const auto& node : resourceNodes) {
-     for (int i = 0; i < resourceNodes.size(); i++) {
-            //i++;
-        if (player.getInteractionBox().intersects(resourceNodes[i].getInteractionBox())) {
-            SoundManager::getInstance().playSound("collect2");
-            int iSize = player.getInventory().size();
-            if(player.getInventorySize()<player.getMaxInventorySize())
+    for (int i = 0; i < resourceNodes.size(); i++)//iterate through nodes
+    {
+        if (player.getInteractionBox().intersects(resourceNodes[i].getInteractionBox()))//if player is within interaction range of node
+        {
+            if(resourceNodes[i].getTextureId() == "images/walnuts.png")//if it's a walnut
+            {
+                if(player.getHotBarSize() < player.getMaxHotBarSize()){//if hotbar isn't full
+                    player.addHotBarItem(walnuts);
+                    resourceNodes.erase(resourceNodes.begin()+i);
+                    SoundManager::getInstance().playSound("collect2");
+                }
+                else{
+                    if(player.getInventorySize()<player.getMaxInventorySize())//if hotbar is full, but inventory isn't
+                    {
+                        player.addItem(walnuts);
+                        resourceNodes.erase(resourceNodes.begin()+i);
+                        SoundManager::getInstance().playSound("collect2");
+                    }
+                }
+            }
+            else
             {
                 if(resourceNodes[i].getTextureId() == "images/stone1.png")
                 {
-                    player.addItem(stone);
-                    //player.getInventory()[iSize].setY(174);
-                    //player.getInventory()[iSize].setX(64 + (16*(iSize)));
-                    resourceNodes.erase(resourceNodes.begin()+i);
+                    if(player.getInventorySize()<player.getMaxInventorySize())
+                    {
+                        player.addItem(stone);
+                        resourceNodes.erase(resourceNodes.begin()+i);
+                        SoundManager::getInstance().playSound("collect2");
+                    }
                 }
                 if(resourceNodes[i].getTextureId() == "images/branch1.png")
                 {
-                    player.addItem(branch);
-                    resourceNodes.erase(resourceNodes.begin()+i);
-                }
-                if(resourceNodes[i].getTextureId() == "images/walnuts.png")
-                {
-                    player.addItem(walnuts);
-                    resourceNodes.erase(resourceNodes.begin()+i);
+                    if(player.getInventorySize()<player.getMaxInventorySize())
+                    {
+                        player.addItem(branch);
+                        resourceNodes.erase(resourceNodes.begin()+i);
+                        SoundManager::getInstance().playSound("collect2");
+                    }
                 }
             }
-
             // Handle other interactions, like collecting resources
         }
     }
@@ -192,8 +204,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
             }
 
         }
-        if(e.type == SDL_KEYDOWN && (e.key.keysym.sym == SDLK_1  || e.key.keysym.sym == SDLK_2 || e.key.keysym.sym == SDLK_3 || e.key.keysym.sym == SDLK_4 || e.key.keysym.sym == SDLK_5 || e.key.keysym.sym == SDLK_6 || e.key.keysym.sym == SDLK_7 || e.key.keysym.sym == SDLK_8 ) ){
-            if(player.getInventory()[0].getName() == walnuts.getName()){
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_1  ){
+            if(player.getHotBar()[0].getName() == walnuts.getName()){
                 if(player.getHealth() < 100)
                 {
                     if(player.getHealth() < 90)
@@ -220,15 +232,248 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                 std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
                 //player.removeItemFromInventory("Walnuts");
-                player.removeItemFromInventory();
+                player.removeItemFromHotBar();
                 std::cout<<"\n removed walnuts.";
             }
         }
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_2)
+        {
+            if(player.getHotBar()[1].getName() == walnuts.getName()){
+                if(player.getHealth() < 100)
+                {
+                    if(player.getHealth() < 90)
+                    {
+                        player.increaseHealth(10);
+                    }
+                    else
+                    {
+                        player.setHealth(100);
+                    }
+                }
+                if(player.getHunger()<100)
+                {
+                    if(player.getHunger() < 90)
+                    {
+                        player.increaseHunger(10);
+                    }
+                    else
+                    {
+                        player.setHunger(100);
+                    }
+                }
+                //player.increaseHealth(100);
+                std::cout<<"\n used walnuts";
+                SoundManager::getInstance().playSound("powerUp");
+                //player.removeItemFromInventory("Walnuts");
+                player.removeItemFromHotBar();
+                std::cout<<"\n removed walnuts.";
+            }
+        }
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_3)
+        {
+            if(player.getHotBar()[2].getName() == walnuts.getName()){
+                if(player.getHealth() < 100)
+                {
+                    if(player.getHealth() < 90)
+                    {
+                        player.increaseHealth(10);
+                    }
+                    else
+                    {
+                        player.setHealth(100);
+                    }
+                }
+                if(player.getHunger()<100)
+                {
+                    if(player.getHunger() < 90)
+                    {
+                        player.increaseHunger(10);
+                    }
+                    else
+                    {
+                        player.setHunger(100);
+                    }
+                }
+                //player.increaseHealth(100);
+                std::cout<<"\n used walnuts";
+                SoundManager::getInstance().playSound("powerUp");
+                //player.removeItemFromInventory("Walnuts");
+                player.removeItemFromHotBar();
+                std::cout<<"\n removed walnuts.";
+            }
+        }
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_4)
+        {
+            if(player.getHotBar()[3].getName() == walnuts.getName()){
+                if(player.getHealth() < 100)
+                {
+                    if(player.getHealth() < 90)
+                    {
+                        player.increaseHealth(10);
+                    }
+                    else
+                    {
+                        player.setHealth(100);
+                    }
+                }
+                if(player.getHunger()<100)
+                {
+                    if(player.getHunger() < 90)
+                    {
+                        player.increaseHunger(10);
+                    }
+                    else
+                    {
+                        player.setHunger(100);
+                    }
+                }
+                //player.increaseHealth(100);
+                std::cout<<"\n used walnuts";
+                SoundManager::getInstance().playSound("powerUp");
+                //player.removeItemFromInventory("Walnuts");
+                player.removeItemFromHotBar();
+                std::cout<<"\n removed walnuts.";
+            }
+        }
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_5)
+        {
+            if(player.getHotBar()[4].getName() == walnuts.getName()){
+                if(player.getHealth() < 100)
+                {
+                    if(player.getHealth() < 90)
+                    {
+                        player.increaseHealth(10);
+                    }
+                    else
+                    {
+                        player.setHealth(100);
+                    }
+                }
+                if(player.getHunger()<100)
+                {
+                    if(player.getHunger() < 90)
+                    {
+                        player.increaseHunger(10);
+                    }
+                    else
+                    {
+                        player.setHunger(100);
+                    }
+                }
+                //player.increaseHealth(100);
+                std::cout<<"\n used walnuts";
+                SoundManager::getInstance().playSound("powerUp");
+                //player.removeItemFromInventory("Walnuts");
+                player.removeItemFromHotBar();
+                std::cout<<"\n removed walnuts.";
+            }
+        }
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_6)
+        {
+            if(player.getHotBar()[5].getName() == walnuts.getName()){
+                if(player.getHealth() < 100)
+                {
+                    if(player.getHealth() < 90)
+                    {
+                        player.increaseHealth(10);
+                    }
+                    else
+                    {
+                        player.setHealth(100);
+                    }
+                }
+                if(player.getHunger()<100)
+                {
+                    if(player.getHunger() < 90)
+                    {
+                        player.increaseHunger(10);
+                    }
+                    else
+                    {
+                        player.setHunger(100);
+                    }
+                }
+                //player.increaseHealth(100);
+                std::cout<<"\n used walnuts";
+                SoundManager::getInstance().playSound("powerUp");
+                //player.removeItemFromInventory("Walnuts");
+                player.removeItemFromHotBar();
+                std::cout<<"\n removed walnuts.";
+            }
+        }
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_7)
+        {
+            if(player.getHotBar()[6].getName() == walnuts.getName()){
+                if(player.getHealth() < 100)
+                {
+                    if(player.getHealth() < 90)
+                    {
+                        player.increaseHealth(10);
+                    }
+                    else
+                    {
+                        player.setHealth(100);
+                    }
+                }
+                if(player.getHunger()<100)
+                {
+                    if(player.getHunger() < 90)
+                    {
+                        player.increaseHunger(10);
+                    }
+                    else
+                    {
+                        player.setHunger(100);
+                    }
+                }
+                //player.increaseHealth(100);
+                std::cout<<"\n used walnuts";
+                SoundManager::getInstance().playSound("powerUp");
+                //player.removeItemFromInventory("Walnuts");
+                player.removeItemFromHotBar();
+                std::cout<<"\n removed walnuts.";
+            }
+        }
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_8)
+        {
+            if(player.getHotBar()[7].getName() == walnuts.getName()){
+                if(player.getHealth() < 100)
+                {
+                    if(player.getHealth() < 90)
+                    {
+                        player.increaseHealth(10);
+                    }
+                    else
+                    {
+                        player.setHealth(100);
+                    }
+                }
+                if(player.getHunger()<100)
+                {
+                    if(player.getHunger() < 90)
+                    {
+                        player.increaseHunger(10);
+                    }
+                    else
+                    {
+                        player.setHunger(100);
+                    }
+                }
+                //player.increaseHealth(100);
+                std::cout<<"\n used walnuts";
+                SoundManager::getInstance().playSound("powerUp");
+                //player.removeItemFromInventory("Walnuts");
+                player.removeItemFromHotBar();
+                std::cout<<"\n removed walnuts.";
+            }
+        }
+
         player.handleEvents(e);
+        /*
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q)
         {//this button is just to test player death
             player.decreaseHealth(101);
-        }
+        }*/
         break;
     case PLAYER_DEAD:
         //player clicks to skip player dead screen.
@@ -488,6 +733,9 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
             {
                 player.removeItemFromInventory();
             }
+            for(int j = 0; j < player.getHotBar().size(); j++){
+                player.removeItemFromHotBar();
+            }
              //Possibly reset to MAIN_MENU or offer options for retry
             break;
         case OPTIONS_MENU:
@@ -717,29 +965,41 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                     if(player.getInventory().size() > 0)
                     {
                         */
+                        for(int i = 0; i < player.getHotBar().size(); i++)
+                        {
+                            int tempX = player.getHotBarItemX(i);
+                            //hotbar items
+
+                            player.getHotBar()[i].renderIcon(renderer,tempX,174);
+
+                        }
+
                         for(int i = 0; i < player.getInventory().size(); i++)
                         {
                             //std::cout<<"\n player.getInventory().size() = "<<player.getInventory().size();
                             //player.getInventory()[i].renderIcon(renderer,((i*16) + 64),174);
-                            int tempX = player.getItemX(i);
-                            //hotbar items
-                            if(i<8){
-                                player.getInventory()[i].renderIcon(renderer,tempX,174);
-                            }
+
 
                             if(inventoryMenu)
                             {
-                                if(i>=8 && i < 16)//each 8 iterations is a row in the inventory,
+                                if(i<8)//each 8 iterations is a row in the inventory,
                                 {
-                                    player.getInventory()[i].renderIcon(renderer,39 + ((i-8)*17),83);
+                                    player.getInventory()[i].renderIcon(renderer,39 + (i*17),83);
+                                }
+                                if(i>=8 && i < 16)
+                                {
+                                    player.getInventory()[i].renderIcon(renderer,39 + ((i-8)*17),99);
                                 }
                                 if(i>=16 && i < 24)
                                 {
-                                    player.getInventory()[i].renderIcon(renderer,39 + ((i-16)*17),99);
+                                    player.getInventory()[i].renderIcon(renderer,39 + ((i-16)*17),115);
                                 }
-                                if(i>=24)
+                                if(i>=24 && i < 32)
                                 {
-                                    player.getInventory()[i].renderIcon(renderer,39 + ((i-24)*17),115);
+                                    player.getInventory()[i].renderIcon(renderer,39 + ((i-24)*17),131);
+                                }
+                                if(i>=32){
+                                    std::cout<<"\n player has greater than 32 items in inventory!";
                                 }
                             }
                             //player.getInventory()[1].renderIcon(renderer,80,174);

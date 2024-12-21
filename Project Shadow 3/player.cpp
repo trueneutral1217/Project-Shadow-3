@@ -58,7 +58,11 @@ void Player::handleEvents(const SDL_Event& e) {
             case SDLK_a: xVel = 0; break;
             case SDLK_d: xVel = 0; break;
         }
-    }/*
+    }
+    //player.handleMouseoverTooltip(e);
+        //handleButtonClick(e, buttons, /* current item */);
+
+    /*
     if (e.type == SDL_MOUSEBUTTONDOWN) {
         if (e.button.button == SDL_BUTTON_RIGHT) {
             int mouseX = e.button.x;
@@ -155,35 +159,223 @@ void Player::removeItemFromInventory() {
     }
 }
 
-void Player::removeItemFromHotBar() {
+void Player::removeItemFromHotBar(int index) {
+    //whatever was in the hotbar at the index that corresponds with the key pressed by user should be deleted.
+    //an emptySlot item should be inserted at the index of the pressed hotkey.
+    //int index = 0;
+    //slots.at(index) = inventoryItem emptySlot();
+    /*
     if(slots.size() > 0)
     {
         slots.pop_back();
         hotBarSize--;
-    }
+    }*/
 }
-
+/*
 void Player::showPlayerInventory() const {
 //    inventory.showInventory();
-}
+}*/
 
 // Method to add an item to the player's inventory
 void Player::addItem(const InventoryItem& item) {
     //item.setX(64+(16*inventorySize));
     inventory.push_back(item); // Add the item to the inventory
     inventory.back().setX(64+(15*inventorySize));
-    std::cout << "\n Added item: " << item.getName() << std::endl;
+    //std::cout << "\n Added item: " << item.getName() << std::endl;
     //setX(64+(16*inventorySize));
     inventorySize++;
 
 }
 
-void Player::addHotBarItem(const InventoryItem& item)
+void Player::addItem(const InventoryItem& item, int index)
 {
+    //std::cout << "\n index = " << index;
+    if(inventory.size() == getMaxInventorySize() )
+    {
+        inventory[index] = item;
+    }
+    else
+    {
+        inventory.insert(inventory.begin() + index,item);
+    }
+    //inventory.back().setX(64+(15*inventorySize));
+    inventory[index].setX(64+(15*index));
+    //std::cout << "\n added INV item: " << item.getName();
+}
+
+//this function may be deprecated
+void Player::insertItem(const InventoryItem& item, int index){
+    //.push_back(item);
+    //inventory.swap(inventory.back(),inventory.at(index));
+    //inventory.pop_back();
+    //inventory.emplace(index,item);
+    //inventory.insert(index,item);
+    //inventory.insert()
+    std::cout<<"\ inserted item: " <<item.getName() << " at index "<<index;
+}
+
+void Player::addHotBarItem(const InventoryItem& item)
+{//I think this version is now depricated
     slots.push_back(item);
     slots.back().setX(64+(15*hotBarSize));
     std::cout << "\n added HOT item: " << item.getName() <<std::endl;
     hotBarSize++;
+}
+
+void Player::addHotBarItem(const InventoryItem& item, int index)
+{
+    //this is currently working correctly, remember to clean out the artifacts!
+
+    /*
+    if(index < (slots.size() - 1)){
+        //slots[index] = item;
+        //vec.insert(vec.begin() + 1, 10);
+        slots.insert(slots.begin() + index,item);
+        //slots.push_back(item);
+        //slots[index] = slots[slots.size()-1];
+        //slots.insert(index, item);
+
+    }
+    else{
+        slots.push_back(item);
+    }
+    */
+    /*
+    if( slots.size() >= ( slots.begin() + index ) )
+    {
+        slots.erase(slots.begin() + index );
+    }
+    */
+    //THIS function needs to replace an index in the hotbar slots vector with an item sent in.
+    //note: it is called when using an item from the hotbar also, in that case, an emptySlot item is sent into that slot.
+    //std::cout << "\n index = " << index;
+
+    /*
+    if(slots[index].getName() != "emptySlot")
+    {
+        slots.erase(slots.begin() + index);
+        slots.insert( slots.begin+index - 1, item);
+    }
+    else
+    {
+
+    }*/
+    //slots.insert(slots.begin() + index,item);
+    //std::cout << "\n index = " << index;
+    if(slots.size() == 8)
+    {
+        slots[index] = item;
+    }
+    else
+    {
+        slots.insert(slots.begin() + index,item);
+    }
+
+
+    //if( slots.size() > maxHotBarSize ){
+        //slots.erase(slots.begin() + index + 1);
+    //}
+    //slots.erase(slots.begin() + index + 1);
+    /*
+    if(!item.getName() == "emptySlot")
+    {
+        slots.insert(slots.begin() + index,item);
+        slots.erase(slots.begin() + index + 1);
+    }*/
+    //slots.emplace(slots.begin() + index, item);
+    //
+    slots[index].setX(64+(15*index));
+    //std::cout << "\n added HOT item: " << item.getName() <<std::endl;
+    /*
+    for(int i = 0; i < slots.size();i++)
+    {
+        std::cout << "\n slots["<<i<<"].getName(): "<<slots[i].getName();
+    }*/
+    if(item.getName() == "emptySlot")
+    {
+        hotBarSize--;
+    }
+    else{
+        hotBarSize++;
+    }
+}
+
+bool Player::inventoryFull()
+{
+    bool full = true;
+    for(int i = 0; i<(maxInventorySize-1);i++)
+    {
+        //std::cout<<"\n inventory["<<i<<"].getName() = "<<inventory[i].getName();
+        if(inventory[i].getName() == "emptySlot")
+        {
+            full = false;
+        }
+    }
+    if(full){
+        //std::cout<<"\n inventory is full!";
+    }
+    else{
+        //std::cout<<"\n inventory is not full.";
+    }
+    return full;
+}
+
+bool Player::hotBarFull()
+{
+    bool full = true;
+    for(int i = 0; i < slots.size(); i++)
+    {
+        //std::cout<<"\n slots["<<i<<"].getName() = "<<slots[i].getName();
+
+        if(slots[i].getName() == "emptySlot")
+        {
+
+            full = false;
+        }
+    }
+    if(slots.size() < 8)
+    {
+        full = false;
+    }
+    if(full){
+        //std::cout<<"\n hotbar is full!";
+    }
+    else{
+        //std::cout<<"\n hotbar is not full.";
+    }
+    return full;
+}
+
+int Player::firstEmptySlot()
+{
+    int index = slots.size();
+
+
+    for(int i = (slots.size()-1); i >= 0; i--)
+    {
+        if(slots[i].getName() == "emptySlot")
+        {
+            index = i;
+        }
+    }
+    //std::cout<<"\n first empty hotbar slot is: "<< index;
+    return index;
+}
+
+int Player::firstEmptyInventorySlot()
+{
+    int index = inventory.size();
+
+
+    for(int i = (inventory.size()-1); i >= 0; i--)
+    {
+        if(inventory[i].getName() == "emptySlot")
+        {
+            index = i;
+        }
+    }
+    //std::cout<<"\n first empty inventory slot is: "<< index;
+    return index;
 }
 
 void Player::dropItem(int itemIndex){
@@ -424,4 +616,15 @@ void Player::decreaseHunger(int amount) {
 void Player::increaseHunger(int amount) {
     hunger += amount;
     std::cout<<"\n player hunger: "<<hunger;
+}
+
+void Player::renderTooltip(SDL_Renderer* renderer, Tooltip& tooltip, TTF_Font* font, SDL_Color color) {
+    SDL_Surface* surface = TTF_RenderText_Blended_Wrapped(font, tooltip.text.c_str(), color, tooltip.rect.w);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+    SDL_Rect destRect = { tooltip.rect.x, tooltip.rect.y, surface->w, surface->h };
+    SDL_RenderCopy(renderer, texture, NULL, &destRect);
+
+    SDL_FreeSurface(surface);
+    SDL_DestroyTexture(texture);
 }

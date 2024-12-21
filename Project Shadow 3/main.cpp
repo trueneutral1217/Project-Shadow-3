@@ -28,6 +28,9 @@
 
 //need slider for volume, and back button for options_menu gamestate.
 
+//allow player to click items in inventory or hotbar to use them.
+//allow player to move inventory items to the hotbar if they press 1-8 while mouse is hovering over the item.
+//maybe allow player to move items from the hotbar to the inventory by right clicking them.
 
 /*
 #include "AI.h"
@@ -65,15 +68,29 @@ void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,
         {
             if(resourceNodes[i].getTextureId() == "images/walnuts.png")//if it's a walnut
             {
-                if(player.getHotBarSize() < player.getMaxHotBarSize()){//if hotbar isn't full
-                    player.addHotBarItem(walnuts);
+
+                if(!player.hotBarFull())
+                {
+                    //std::cout<<"\n first empty slot = "<< player.firstEmptySlot();
+                    int slot = player.firstEmptySlot();
+                    //player.addHotBarItem(walnuts,slot);
+                    player.addHotBarItem(walnuts,player.firstEmptySlot());
                     resourceNodes.erase(resourceNodes.begin()+i);
                     SoundManager::getInstance().playSound("collect2");
                 }
+                //deprecated by above
+                /*
+                if(player.getHotBarSize() < player.getMaxHotBarSize()){//if hotbar isn't full
+                    player.addHotBarItem(walnuts);
+                    std::cout<<"\n player.hotBarFull() = "<<player.hotBarFull();
+                    resourceNodes.erase(resourceNodes.begin()+i);
+                    SoundManager::getInstance().playSound("collect2");
+                }*/
+
                 else{
-                    if(player.getInventorySize()<player.getMaxInventorySize())//if hotbar is full, but inventory isn't
+                    if(!player.inventoryFull())//if hotbar is full, but inventory isn't
                     {
-                        player.addItem(walnuts);
+                        player.addItem(walnuts,player.firstEmptyInventorySlot());
                         resourceNodes.erase(resourceNodes.begin()+i);
                         SoundManager::getInstance().playSound("collect2");
                     }
@@ -83,18 +100,20 @@ void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,
             {
                 if(resourceNodes[i].getTextureId() == "images/stone1.png")
                 {
-                    if(player.getInventorySize()<player.getMaxInventorySize())
+                    if(!player.inventoryFull())
                     {
-                        player.addItem(stone);
+                        //player.addItem(stone);
+                        player.addItem(stone,player.firstEmptyInventorySlot());
                         resourceNodes.erase(resourceNodes.begin()+i);
                         SoundManager::getInstance().playSound("collect2");
                     }
                 }
                 if(resourceNodes[i].getTextureId() == "images/branch1.png")
                 {
-                    if(player.getInventorySize()<player.getMaxInventorySize())
+                    if(!player.inventoryFull())
                     {
-                        player.addItem(branch);
+                        //player.addItem(branch);
+                        player.addItem(branch,player.firstEmptyInventorySlot());
                         resourceNodes.erase(resourceNodes.begin()+i);
                         SoundManager::getInstance().playSound("collect2");
                     }
@@ -109,6 +128,7 @@ void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,
         {
             //enemy.dead();
             squirrels.erase(squirrels.begin() + i);
+            std::cout<<"\n erasing squirrel #"<<i;
             SoundManager::getInstance().playSound("bwah");
         }
     }
@@ -117,6 +137,7 @@ void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,
         if(player.getInteractionBox().intersects(bunnies[i].getCollisionBox()))
         {
             bunnies.erase(bunnies.begin()+i);
+            std::cout<<"\n erasing bunny #"<<i;
             SoundManager::getInstance().playSound("bwah");
         }
     }
@@ -124,7 +145,7 @@ void handleInteraction(Player& player, std::vector<ResourceNode>& resourceNodes,
 }
 
 //Other necessary includes and initializations
-void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,Button& button6,SDL_Window* window,bool& fullSCREEN,bool& displayControls,bool& cutSceneFinished,std::vector<ResourceNode>& resourceNodes,GameState& gameState, std::map<int, std::map<int, int>>& tileMap,std::vector<Enemy>& squirrels,std::vector<Enemy>& bunnies, InventoryItem& stone, InventoryItem& branch, InventoryItem& walnuts,bool& inventoryMenu) {
+void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,Button& button6,Button& button7,Button& button8,SDL_Window* window,bool& fullSCREEN,bool& displayControls,bool& cutSceneFinished,std::vector<ResourceNode>& resourceNodes,GameState& gameState, std::map<int, std::map<int, int>>& tileMap,std::vector<Enemy>& squirrels,std::vector<Enemy>& bunnies, InventoryItem& stone, InventoryItem& branch, InventoryItem& walnuts, InventoryItem& emptySlot,bool& inventoryMenu) {
     //user x'd out the window. possibly alt+F4'd.
     if (e.type == SDL_QUIT) {
         quit = true;
@@ -191,8 +212,18 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
         SDL_GetMouseState(&mouseX, &mouseY);
         if(fullSCREEN){mouseX-=24;}//fix for aspect ratio pixels
         button6.update(mouseX, mouseY, mouseClicked);
+        //button7.update(mouseX,mouseY, mouseClicked);
+        //button8.update(mouseX,mouseY,mouseClicked);
 
         if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_e) {
+            for(int i = 0; i < bunnies.size(); i++)
+            {
+                std::cout<<"\n bunnies["<<i<<"].getTextureName() = "<< bunnies[i].getTextureName();
+            }
+            for(int i = 0; i < squirrels.size(); i++)
+            {
+                std::cout<<"\n squirrels["<<i<<"].getTextureName() = "<< squirrels[i].getTextureName();
+            }
             handleInteraction(player, resourceNodes,squirrels,bunnies,stone,branch,walnuts);
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_i){
@@ -204,7 +235,24 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
             }
 
         }
-        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_1  ){
+        if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_1  ){//player pressed "1" button
+            if(player.getHotBar()[0].getName() == emptySlot.getName())//hotbar slot 1 is empty
+            {
+                if(inventoryMenu)//inventory menu is open (just like the glory hole).
+                {
+                    for(int i =0; i < player.getInventory().size(); i++)
+                    {
+                        //if(mouse pointer collides with a usable item in the inventory (currently only walnuts), move that item to first hotbar slot.
+                        /*
+                        player.getInventory()[i].update(mouseX,mouseY,mouseClicked); //inventoryItem is const, so running update is making trouble.
+                        if(player.getInventory()[i].hover){
+                            player.addHotBarItem(player.getInventory()[i],0);//insert inventory item into hotbar slot 0
+                            player.addItem(emptySlot,i);
+                        }*/
+                    }
+
+                }
+            }
             if(player.getHotBar()[0].getName() == walnuts.getName()){
                 if(player.getHealth() < 100)
                 {
@@ -232,7 +280,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                 std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
                 //player.removeItemFromInventory("Walnuts");
-                player.removeItemFromHotBar();
+                //player.removeItemFromHotBar(0);
+                player.addHotBarItem(emptySlot,0);
                 std::cout<<"\n removed walnuts.";
             }
         }
@@ -265,7 +314,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                 std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
                 //player.removeItemFromInventory("Walnuts");
-                player.removeItemFromHotBar();
+                //player.removeItemFromHotBar(1);
+                player.addHotBarItem(emptySlot,1);
                 std::cout<<"\n removed walnuts.";
             }
         }
@@ -298,7 +348,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                 std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
                 //player.removeItemFromInventory("Walnuts");
-                player.removeItemFromHotBar();
+                player.removeItemFromHotBar(2);
+                player.addHotBarItem(emptySlot,2);
                 std::cout<<"\n removed walnuts.";
             }
         }
@@ -331,7 +382,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                 std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
                 //player.removeItemFromInventory("Walnuts");
-                player.removeItemFromHotBar();
+                //player.removeItemFromHotBar(3);
+                player.addHotBarItem(emptySlot,3);
                 std::cout<<"\n removed walnuts.";
             }
         }
@@ -364,7 +416,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                 std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
                 //player.removeItemFromInventory("Walnuts");
-                player.removeItemFromHotBar();
+                //player.removeItemFromHotBar(4);
+                player.addHotBarItem(emptySlot,4);
                 std::cout<<"\n removed walnuts.";
             }
         }
@@ -397,7 +450,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                 std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
                 //player.removeItemFromInventory("Walnuts");
-                player.removeItemFromHotBar();
+                //player.removeItemFromHotBar(5);
+                player.addHotBarItem(emptySlot,5);
                 std::cout<<"\n removed walnuts.";
             }
         }
@@ -430,7 +484,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                 std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
                 //player.removeItemFromInventory("Walnuts");
-                player.removeItemFromHotBar();
+                //player.removeItemFromHotBar(6);
+                player.addHotBarItem(emptySlot,6);
                 std::cout<<"\n removed walnuts.";
             }
         }
@@ -463,12 +518,14 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                 std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
                 //player.removeItemFromInventory("Walnuts");
-                player.removeItemFromHotBar();
+                //player.removeItemFromHotBar(7);
+                player.addHotBarItem(emptySlot,7);
                 std::cout<<"\n removed walnuts.";
             }
         }
 
         player.handleEvents(e);
+
         /*
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_q)
         {//this button is just to test player death
@@ -605,7 +662,7 @@ placeResourceNodes(int width, int height, std::vector<std::vector<int>>& map,SDL
     return 0;
 }
 
-void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,Button& button6,bool& quit, int height, int width, std::vector<std::vector<int>>& map, std::map<int, std::map<int, int>>& tileMap,std::vector<ResourceNode>& resourceNodes,SDL_Renderer* renderer,bool& displayControls, bool& cutSceneFinished,Timer& myTimer,Camera& camera,GameState& gameState, std::vector<Enemy>& squirrels, std::vector<Enemy>& bunnies,ParticleSystem& sparkles,int& currentThirstBarPixels,int& currentHungerBarPixels,int& currentHealthBarPixels,bool& inventoryMenu)
+void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& player, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,Button& button6,Button& button7,Button& button8,bool& quit, int height, int width, std::vector<std::vector<int>>& map, std::map<int, std::map<int, int>>& tileMap,std::vector<ResourceNode>& resourceNodes,SDL_Renderer* renderer,bool& displayControls, bool& cutSceneFinished,Timer& myTimer,Camera& camera,GameState& gameState, std::vector<Enemy>& squirrels, std::vector<Enemy>& bunnies,ParticleSystem& sparkles,int& currentThirstBarPixels,int& currentHungerBarPixels,int& currentHealthBarPixels,bool& inventoryMenu)
 {
     int prevX, prevY;
     player.getPosition(prevX, prevY);
@@ -734,7 +791,7 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
                 player.removeItemFromInventory();
             }
             for(int j = 0; j < player.getHotBar().size(); j++){
-                player.removeItemFromHotBar();
+                player.removeItemFromHotBar(j);
             }
              //Possibly reset to MAIN_MENU or offer options for retry
             break;
@@ -755,7 +812,7 @@ void update(GAMESTATE& gameSTATE, Animation& splash, float& deltaTime, Player& p
     }
 }
 
-void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player& player, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,Button& button6, float& deltaTime, int height, int width, std::vector<std::vector<int>>& map,std::vector<ResourceNode>& resourceNodes,bool& displayControls, bool& cutSceneFinished,Timer& myTimer,Camera& camera, std::vector<Enemy>& squirrels,std::vector<Enemy>& bunnies,ParticleSystem& sparkles,int& currentThirstBarPixels,int& currentHungerBarPixels,int& currentHealthBarPixels,bool& inventoryMenu) {
+void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player& player, Button& button1, Button& button2, Button& button3, Button& button4,Button& button5,Button& button6,Button& button7,Button& button8, float& deltaTime, int height, int width, std::vector<std::vector<int>>& map,std::vector<ResourceNode>& resourceNodes,bool& displayControls, bool& cutSceneFinished,Timer& myTimer,Camera& camera, std::vector<Enemy>& squirrels,std::vector<Enemy>& bunnies,ParticleSystem& sparkles,int& currentThirstBarPixels,int& currentHungerBarPixels,int& currentHealthBarPixels,bool& inventoryMenu) {
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderClear(renderer);
 
@@ -930,6 +987,8 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                         }
                     }
                     TextureManager::getInstance().renderTexture("HUD",renderer,0,0,256,192);
+                    //button7.render(renderer);
+                    //button8.render(renderer);
                     //std::cout<<"\n currentThirstBarPixels: "<<currentThirstBarPixels;
                     TextureManager::getInstance().renderTexture("thirstBar",renderer,194,3,currentThirstBarPixels,5);
                     TextureManager::getInstance().renderTexture("hungerBar",renderer,194,9,currentHungerBarPixels,5);
@@ -982,7 +1041,7 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
 
                             if(inventoryMenu)
                             {
-                                if(i<8)//each 8 iterations is a row in the inventory,
+                                if(i<8)//each 8 iterations is a row in the inventory, i%8 is column number.
                                 {
                                     player.getInventory()[i].renderIcon(renderer,39 + (i*17),83);
                                 }
@@ -1204,8 +1263,11 @@ int main(int argc, char* args[]) {
     bunnyY = std::rand() % 576;
     squirrelX = std::rand() % 768;
     squirrelY = std::rand() % 576;
+
     for(int i = 0; i < bunniesMax; ++i)
     {
+        std::cout<<"\n bunnyX = "<<bunnyX;
+        std::cout<<"\n bunnyY = "<<bunnyY;
         bunnies.emplace_back("images/bunny1.png",renderer,bunnyX,bunnyY);
         std::srand(bunnyX);
         bunnyX = std::rand() % 768;
@@ -1246,6 +1308,19 @@ int main(int argc, char* args[]) {
     int currentHealthBarPixels = 59;
 
 
+    //SDL_Rect itemRects[inventory.size()];
+    //Tooltip tooltip;
+    /*
+    std::vector<Button> buttons = {
+        { {0, 0, 100, 30}, "Drop", dropItem },
+        { {0, 0, 100, 30}, "Use", useItem },
+        { {0, 0, 100, 30}, "Add to Hotbar", addToHotbar }
+    };*/
+
+    Button button7("images/buttons/drop.png","images/buttons/dropMO.png",renderer,100,30,8,8);
+    Button button8("images/buttons/use.png","images/buttons/useMO.png",renderer,100,39,8,8);
+
+
     GameState gameState("save.dat");
 
     Timer myTimer;
@@ -1283,11 +1358,27 @@ int main(int argc, char* args[]) {
     }
 
     // Initialize items with various properties
+    InventoryItem emptySlot(renderer,"emptySlot"," ","images/icons/emptySlot.png",InventoryItem::SOLID,false,false,-1);
     InventoryItem sword(renderer,"Sword", "A sharp blade used for combat.","images/icons/sword.png", InventoryItem::EQUIPPABLE, true, false, -1);
     InventoryItem potion(renderer,"Potion", "A healing potion for emergencies.","images/icons/potion.png", InventoryItem::SOLID, false, true);
     InventoryItem stone(renderer,"Stone","Smaller than a boulder, larger than a pebble.","images/stone1.png",InventoryItem::SOLID,false,false,-1,false,false,5,5,InventoryItem::FRESH);
     InventoryItem walnuts(renderer,"Walnuts","Shells like walnuts, taste like walnuts.","images/walnuts.png",InventoryItem::SOLID,false,true,-1,false,false,1,-1,InventoryItem::FRESH);
     InventoryItem branch(renderer,"Branch","A branch from a tree","images/branch1.png",InventoryItem::SOLID,false,false,-1,false,false,5,5,InventoryItem::FRESH);
+
+    for(int i = 0; i < player.getMaxInventorySize(); i++)
+    {
+        player.addItem(emptySlot);
+        //std::cout<<"emptySlot added to "<<player.getInventorySize();//<<" of "<<player.getMaxInventorySize();
+    }
+    for(int i = 0; i < player.getMaxHotBarSize(); i++)
+    {
+        player.addHotBarItem(emptySlot,i);
+        std::cout<<"emptySlot added to "<<player.getHotBar().size();//<<" of "<<player.getMaxInventorySize();
+    }
+
+    //player.insertItem(walnuts,3);
+
+
 
     while (!quit) {
         endTick = SDL_GetTicks();
@@ -1295,7 +1386,7 @@ int main(int argc, char* args[]) {
         float deltaTime = static_cast<float>(endTick - startTick);
         startTick = endTick;
         while (SDL_PollEvent(&e) != 0) {
-            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,button5,button6,window,fullSCREEN,displayControls,cutSceneFinished,resourceNodes,gameState,tileMap,squirrels,bunnies,stone,branch,walnuts,inventoryMenu);
+            handleEvents(e,gameSTATE,player,quit,button1,button2,button3,button4,button5,button6,button7,button8,window,fullSCREEN,displayControls,cutSceneFinished,resourceNodes,gameState,tileMap,squirrels,bunnies,stone,branch,walnuts,emptySlot,inventoryMenu);
 
             if (e.type == SDL_KEYDOWN) {
                 if (e.key.keysym.sym == SDLK_e) {
@@ -1317,9 +1408,9 @@ int main(int argc, char* args[]) {
             }
         }
 
-        update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,button5,button6,quit,height,width,map,tileMap,resourceNodes,renderer,displayControls,cutSceneFinished,myTimer,camera,gameState,squirrels,bunnies,sparkles,currentThirstBarPixels,currentHungerBarPixels,currentHealthBarPixels,inventoryMenu);
+        update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,button5,button6,button7,button8,quit,height,width,map,tileMap,resourceNodes,renderer,displayControls,cutSceneFinished,myTimer,camera,gameState,squirrels,bunnies,sparkles,currentThirstBarPixels,currentHungerBarPixels,currentHealthBarPixels,inventoryMenu);
         player.updateItemsState();
-        render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,button5,button6,deltaTime,height,width,map,resourceNodes,displayControls,cutSceneFinished,myTimer,camera,squirrels,bunnies,sparkles,currentThirstBarPixels,currentHungerBarPixels,currentHealthBarPixels,inventoryMenu);
+        render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,button5,button6,button7,button8,deltaTime,height,width,map,resourceNodes,displayControls,cutSceneFinished,myTimer,camera,squirrels,bunnies,sparkles,currentThirstBarPixels,currentHungerBarPixels,currentHealthBarPixels,inventoryMenu);
 
 
         endTick = SDL_GetTicks();

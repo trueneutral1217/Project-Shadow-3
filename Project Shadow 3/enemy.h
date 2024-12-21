@@ -19,6 +19,7 @@ public:
     void avoidPlayer(int x, int y);
     const CollisionBox& getCollisionBox() const;  // Get the collision box
     SDL_Texture* getTexture() const;
+    std::string getTextureName();
 
 private:
     std::string texturePathString;

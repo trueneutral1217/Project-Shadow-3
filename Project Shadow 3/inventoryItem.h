@@ -5,6 +5,12 @@
 #include <vector>
 #include <SDL.h> // Include SDL for rendering
 
+struct Tooltip {
+    std::string text;
+    SDL_Rect rect;
+    // You can add more properties for styling
+};
+
 class InventoryItem {
 public:
     enum ItemState { FRESH, STALE, SPOILED };
@@ -38,7 +44,14 @@ public:
     int getX();
     int getY();
 
+    void update(int mouseX, int mouseY, bool mouseClicked);
+
+    bool getHover();
+
 private:
+    SDL_Rect itemRect;
+    bool hover;
+    Tooltip tooltip;
     int x,y;
     std::string name;
     std::string description;

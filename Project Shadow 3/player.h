@@ -11,6 +11,9 @@
 #include "DroppedItem.h"
 #include <cmath>
 #include <cstdlib>
+#include <string>
+#include <SDL_ttf.h>
+
 
 //add melee skill when player defeats an enemy.
 
@@ -26,7 +29,7 @@ public:
 
     //void addItemToInventory(const std::string& item);
     void removeItemFromInventory();
-    void removeItemFromHotBar();
+    void removeItemFromHotBar(int index);
     void showPlayerInventory() const;
 
     /*
@@ -39,22 +42,18 @@ public:
     int getHotBarItemX(int index);
 
     void addItem(const InventoryItem& item);
+    void addItem(const InventoryItem& item, int index);
+    void insertItem(const InventoryItem& item, int index);
     void addHotBarItem(const InventoryItem& item);
+    void addHotBarItem(const InventoryItem& item, int index);
+
+    bool inventoryFull();
+    bool hotBarFull();
+    int firstEmptySlot();
+    int firstEmptyInventorySlot();
 
     void equipItem(const std::string& itemName);
     void unequipItem();
-
-    /*
-    void unhotBarItem1();
-    void unhotBarItem2();
-    void unhotBarItem3();
-    void unhotBarItem4();
-    void unhotBarItem5();
-    void unhotBarItem6();
-    void unhotBarItem7();
-    void unhotBarItem8();*/
-
-
 
     void useItem(const std::string& itemName);
     void updateItemsState();
@@ -87,6 +86,7 @@ public:
     int getMaxHotBarSize();
     void updateSlot(int slotIndex, InventoryItem newItem);
     void renderSlots(SDL_Renderer* renderer);
+    void renderTooltip(SDL_Renderer* renderer, Tooltip& tooltip, TTF_Font* font, SDL_Color color);
 
 private:
 

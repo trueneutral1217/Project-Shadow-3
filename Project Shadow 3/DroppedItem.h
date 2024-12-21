@@ -11,6 +11,7 @@ public:
     DroppedItem(const InventoryItem& item, int x, int y,SDL_Texture* texture);
     void render(SDL_Renderer* renderer);
     const SDL_Rect& getCollisionBox() const;
+    const SDL_Rect& getInteractionBox() const;
     const InventoryItem& getItem() const; // Add this method to get the InventoryItem
     int getX() const { return x;}
     int getY() const { return y; }
@@ -19,6 +20,7 @@ private:
     InventoryItem item;
     int x, y;
     SDL_Rect collisionBox;
+    SDL_Rect interactionBox;
     SDL_Texture* texture;
 };
 

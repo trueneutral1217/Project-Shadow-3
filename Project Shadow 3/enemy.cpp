@@ -366,3 +366,7 @@ const CollisionBox& Enemy::getCollisionBox() const {
 SDL_Texture* Enemy::getTexture() const {
     return texture;
 }
+
+std::string Enemy::getTextureName(){
+    return texturePathString;
+}

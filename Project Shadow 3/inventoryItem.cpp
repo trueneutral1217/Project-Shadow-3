@@ -10,7 +10,8 @@ InventoryItem::InventoryItem(SDL_Renderer* renderer,const std::string& name, con
         textureManager.loadTexture(iconTextureId, iconTextureId, renderer);
         texture = textureManager.textures[iconTextureId];
         y=174;
-
+        this->itemRect = { x, y, 16, 16 };
+        this->hover = false;
     }
 
 const std::string& InventoryItem::getName() const {
@@ -144,4 +145,17 @@ int InventoryItem::getX()
 int InventoryItem::getY()
 {
     return y;
+}
+
+void InventoryItem::update(int mouseX, int mouseY, bool mouseClicked) {
+    hover = (mouseX >= itemRect.x && mouseX <= itemRect.x + itemRect.w && mouseY >= itemRect.y && mouseY <= itemRect.y + itemRect.h);
+    if (hover && mouseClicked) {
+        // Handle item click
+        //clicked = true;
+        std::cout << "\n "<<name<<" item clicked!" << std::endl;
+    }
+}
+
+bool InventoryItem::getHover(){
+    return hover;
 }

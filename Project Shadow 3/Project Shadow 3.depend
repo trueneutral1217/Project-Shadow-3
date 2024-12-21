@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1731734620 source:c:\project shadow 3\project shadow 3\main.cpp
+1734767775 source:c:\project shadow 3\project shadow 3\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
@@ -852,11 +852,11 @@
 	<vector>
 	<string>
 
-1731735308 source:c:\project shadow 3\project shadow 3\player.cpp
+1734767912 source:c:\project shadow 3\project shadow 3\player.cpp
 	"Player.h"
 	<iostream>
 
-1731735308 c:\project shadow 3\project shadow 3\player.h
+1734766234 c:\project shadow 3\project shadow 3\player.h
 	"SDL.h"
 	"SDL_image.h"
 	"Inventory.h"
@@ -867,6 +867,8 @@
 	"DroppedItem.h"
 	<cmath>
 	<cstdlib>
+	<string>
+	<SDL_ttf.h>
 
 1729626348 source:c:\project shadow 3\project shadow 3\soundmanager.cpp
 	"SoundManager.h"
@@ -921,14 +923,14 @@
 1729138335 c:\project shadow 3\project shadow 3\collision.h
 	<SDL.h>
 
-1731545198 source:c:\project shadow 3\project shadow 3\enemy.cpp
+1734767367 source:c:\project shadow 3\project shadow 3\enemy.cpp
 	"Enemy.h"
 	"texture.h"
 	<cstdlib>
 	<ctime>
 	<iostream>
 
-1731480276 c:\project shadow 3\project shadow 3\enemy.h
+1734767361 c:\project shadow 3\project shadow 3\enemy.h
 	<SDL.h>
 	<string>
 	"CollisionBox.h"
@@ -942,13 +944,13 @@
 	<SDL_ttf.h>
 	<string>
 
-1731137218 source:c:\project shadow 3\project shadow 3\inventoryitem.cpp
+1734769771 source:c:\project shadow 3\project shadow 3\inventoryitem.cpp
 	"InventoryItem.h"
 	"Texture.h"
 	<ctime>
 	<iostream>
 
-1731136588 c:\project shadow 3\project shadow 3\inventoryitem.h
+1734769674 c:\project shadow 3\project shadow 3\inventoryitem.h
 	<string>
 	<vector>
 	<SDL.h>
@@ -1071,12 +1073,12 @@
 1730061512 c:\project shadow 3\project shadow 3\camera.h
 	<SDL.h>
 
-1731371785 c:\project shadow 3\project shadow 3\droppeditem.h
+1731803198 c:\project shadow 3\project shadow 3\droppeditem.h
 	<SDL.h>
 	"InventoryItem.h"
 	<cstdlib>
 	<algorithm>
 
-1731371241 source:c:\project shadow 3\project shadow 3\droppeditem.cpp
+1731803198 source:c:\project shadow 3\project shadow 3\droppeditem.cpp
 	"DroppedItem.h"
 

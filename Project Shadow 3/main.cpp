@@ -216,19 +216,10 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
         //button8.update(mouseX,mouseY,mouseClicked);
 
         if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_e) {
-            for(int i = 0; i < bunnies.size(); i++)
-            {
-                std::cout<<"\n bunnies["<<i<<"].getTextureName() = "<< bunnies[i].getTextureName();
-            }
-            for(int i = 0; i < squirrels.size(); i++)
-            {
-                std::cout<<"\n squirrels["<<i<<"].getTextureName() = "<< squirrels[i].getTextureName();
-            }
             handleInteraction(player, resourceNodes,squirrels,bunnies,stone,branch,walnuts);
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_i){
             if(!inventoryMenu){
-                    std::cout<<"\n inventoryMenu was false, but is now true.";
                 inventoryMenu = true;
             }else{
                 inventoryMenu = false;
@@ -276,13 +267,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                         player.setHunger(100);
                     }
                 }
-                //player.increaseHealth(100);
-                std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
-                //player.removeItemFromInventory("Walnuts");
-                //player.removeItemFromHotBar(0);
                 player.addHotBarItem(emptySlot,0);
-                std::cout<<"\n removed walnuts.";
             }
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_2)
@@ -310,13 +296,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                         player.setHunger(100);
                     }
                 }
-                //player.increaseHealth(100);
-                std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
-                //player.removeItemFromInventory("Walnuts");
-                //player.removeItemFromHotBar(1);
                 player.addHotBarItem(emptySlot,1);
-                std::cout<<"\n removed walnuts.";
             }
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_3)
@@ -344,13 +325,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                         player.setHunger(100);
                     }
                 }
-                //player.increaseHealth(100);
-                std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
-                //player.removeItemFromInventory("Walnuts");
-                player.removeItemFromHotBar(2);
                 player.addHotBarItem(emptySlot,2);
-                std::cout<<"\n removed walnuts.";
             }
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_4)
@@ -378,13 +354,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                         player.setHunger(100);
                     }
                 }
-                //player.increaseHealth(100);
-                std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
-                //player.removeItemFromInventory("Walnuts");
-                //player.removeItemFromHotBar(3);
                 player.addHotBarItem(emptySlot,3);
-                std::cout<<"\n removed walnuts.";
             }
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_5)
@@ -412,13 +383,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                         player.setHunger(100);
                     }
                 }
-                //player.increaseHealth(100);
-                std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
-                //player.removeItemFromInventory("Walnuts");
-                //player.removeItemFromHotBar(4);
                 player.addHotBarItem(emptySlot,4);
-                std::cout<<"\n removed walnuts.";
             }
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_6)
@@ -446,13 +412,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                         player.setHunger(100);
                     }
                 }
-                //player.increaseHealth(100);
-                std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
-                //player.removeItemFromInventory("Walnuts");
-                //player.removeItemFromHotBar(5);
                 player.addHotBarItem(emptySlot,5);
-                std::cout<<"\n removed walnuts.";
             }
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_7)
@@ -480,13 +441,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                         player.setHunger(100);
                     }
                 }
-                //player.increaseHealth(100);
-                std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
-                //player.removeItemFromInventory("Walnuts");
-                //player.removeItemFromHotBar(6);
                 player.addHotBarItem(emptySlot,6);
-                std::cout<<"\n removed walnuts.";
             }
         }
         if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_8)
@@ -514,13 +470,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
                         player.setHunger(100);
                     }
                 }
-                //player.increaseHealth(100);
-                std::cout<<"\n used walnuts";
                 SoundManager::getInstance().playSound("powerUp");
-                //player.removeItemFromInventory("Walnuts");
-                //player.removeItemFromHotBar(7);
                 player.addHotBarItem(emptySlot,7);
-                std::cout<<"\n removed walnuts.";
             }
         }
 
@@ -551,7 +502,7 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
 }
 
 void copyMap(const std::vector<std::vector<int>>& src, std::map<int, std::map<int, int>>& dest) {
-    std::cout<<"\n map copied to tilemap!";
+    //copies map to tilemap
     for (size_t i = 0; i < src.size(); ++i) {
         for (size_t j = 0; j < src[i].size(); ++j) {
             dest[i][j] = src[i][j];
@@ -560,7 +511,6 @@ void copyMap(const std::vector<std::vector<int>>& src, std::map<int, std::map<in
 }
 
 void copyTileMapToMap(const std::map<int, std::map<int, int>>& tileMap, std::vector<std::vector<int>>& map) {
-    std::cout<<"\n tilemap copied to map";
     // Resize the vector to match the dimensions of the tileMap
     int maxRow = 0;
     int maxCol = 0;
@@ -595,7 +545,7 @@ float perlin(float x, float y) {
 
 // Generate Procedural Map
 void generateMap(int width, int height, std::vector<std::vector<int>>& map) {
-    std::cout<<"\n map generated";
+
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             float noise = perlin(x * 0.1, y * 0.1); // Scale noise for larger maps
@@ -624,10 +574,9 @@ void generateMap(int width, int height, std::vector<std::vector<int>>& map) {
 }
 
 placeResourceNodes(int width, int height, std::vector<std::vector<int>>& map,SDL_Renderer* renderer,std::vector<ResourceNode>& resourceNodes){
-    std::cout<<"\n placing resource nodes \n";
+
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            std::cout << map[y][x] << " ";
             if(map[y][x] == 1)
             {
                 //resourceNodes.emplace_back("images/",renderer,x*16,y*16,16,16);
@@ -657,7 +606,6 @@ placeResourceNodes(int width, int height, std::vector<std::vector<int>>& map,SDL
                 resourceNodes.emplace_back("images/branch1.png",renderer,x*16,y*16,16,16);
             }
         }
-        std::cout << std::endl;
     }
     return 0;
 }
@@ -850,10 +798,8 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                         renderRect.y -= camera.getCameraRect().y;
                         if(node.getTextureId() == "images/tree1.png")
                         {
-                            //std::cout<<"\n node.getCollisionBox().getRect().x = "<<node.getCollisionBox().getRect().x<<" renderRect.x = "<<renderRect.x;
                             renderRect.y -=16;
 
-                            //std::cout<<"\n node.getCollisionBox().getRect().y = "<<node.getCollisionBox().getRect().y<<" renderRect.y = "<<renderRect.y;
                             renderRect.h = 32;
                             renderRect.w = 32;
                         }
@@ -972,9 +918,7 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                             renderRect.y -= camera.getCameraRect().y;
                             if(node.getTextureId() == "images/tree1.png")
                             {
-                                //std::cout<<"\n node.getCollisionBox().getRect().x = "<<node.getCollisionBox().getRect().x<<" renderRect.x = "<<renderRect.x;
                                 renderRect.y -=16;
-                                //std::cout<<"\n node.getCollisionBox().getRect().y = "<<node.getCollisionBox().getRect().y<<" renderRect.y = "<<renderRect.y;
                                 renderRect.h = 32;
                                 renderRect.w = 32;
                             }
@@ -999,31 +943,6 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                         TextureManager::getInstance().renderTexture("inventoryMenu",renderer,5,59,178,93);
                     }
 
-                    // The code below renders inventoryItem icons.  implement at HUD and when player viewing inventory.
-
-                    //int xx, yy;
-                    //xx = 130;
-                    //yy = 166;
-                    //player.getPosition(xx,yy);
-                    /*
-                    for(int i = player.getInventory().size()-1; i >= 0; i--){
-                        //std::cout<<"\n index: "<<i<<" itemName: "<<player.getInventory()[i].getName();
-                        std::cout<<"\n index: "<<i<<" iconTextureId: "<<player.getInventory()[i].getIconTextureId();
-                    }*/
-
-                    /*
-                    if(player.getInventory().size() > 3){
-                        player.getInventory()[3].renderIcon(renderer,105,174);
-                    }
-                    if(player.getInventory().size() > 2){
-                        player.getInventory()[2].renderIcon(renderer,92,174);
-                    }
-                    if(player.getInventory().size() > 1){
-                        player.getInventory()[1].renderIcon(renderer,80,174);
-                    }
-                    if(player.getInventory().size() > 0)
-                    {
-                        */
                         for(int i = 0; i < player.getHotBar().size(); i++)
                         {
                             int tempX = player.getHotBarItemX(i);
@@ -1033,13 +952,9 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
 
                         }
 
-                        for(int i = 0; i < player.getInventory().size(); i++)
+                        for(int i = 0; i < player.getInventory().size(); i++)//iterates through inventory to render item icons.
                         {
-                            //std::cout<<"\n player.getInventory().size() = "<<player.getInventory().size();
-                            //player.getInventory()[i].renderIcon(renderer,((i*16) + 64),174);
-
-
-                            if(inventoryMenu)
+                            if(inventoryMenu)//inventory menu is open (player pressed 'i' or clicked backpack button in HUD
                             {
                                 if(i<8)//each 8 iterations is a row in the inventory, i%8 is column number.
                                 {
@@ -1061,13 +976,7 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
                                     std::cout<<"\n player has greater than 32 items in inventory!";
                                 }
                             }
-                            //player.getInventory()[1].renderIcon(renderer,80,174);
-                            //player.getInventory()[2].renderIcon(renderer,92,174);
-                            //player.getInventory()[3].renderIcon(renderer,105,174);
                         }
-                        /*
-                        player.getInventory()[0].renderIcon(renderer,64,174);
-                    }*/
                 }
 
             break;
@@ -1092,7 +1001,6 @@ void render(SDL_Renderer* renderer,GAMESTATE& gameSTATE,Animation& splash,Player
             }
             break;
     }
-
     SDL_RenderPresent(renderer);
 }
 
@@ -1256,7 +1164,7 @@ int main(int argc, char* args[]) {
     int squirrelX;
     int squirrelY;
     //squirrelMax += 1;
-    std::cout<<"\n squirrelMax = "<<squirrelMax<<"\n";
+    //std::cout<<"\n squirrelMax = "<<squirrelMax<<"\n";
 
     std::srand(std::time(0));
     bunnyX = std::rand() % 768;
@@ -1266,8 +1174,6 @@ int main(int argc, char* args[]) {
 
     for(int i = 0; i < bunniesMax; ++i)
     {
-        std::cout<<"\n bunnyX = "<<bunnyX;
-        std::cout<<"\n bunnyY = "<<bunnyY;
         bunnies.emplace_back("images/bunny1.png",renderer,bunnyX,bunnyY);
         std::srand(bunnyX);
         bunnyX = std::rand() % 768;
@@ -1275,9 +1181,6 @@ int main(int argc, char* args[]) {
     }
     for(int i = 0; i < squirrelMax; ++i)
     {
-
-        std::cout<<"\n squirrelX = "<<squirrelX;
-        std::cout<<"\n squirrelY = "<<squirrelY<<"\n";
         squirrels.emplace_back("images/squirrel1.png",renderer,squirrelX,squirrelY);
         std::srand(squirrelX);
         squirrelX = std::rand() % 768;
@@ -1294,7 +1197,6 @@ int main(int argc, char* args[]) {
 
     // Initialize resource nodes
     std::vector<ResourceNode> resourceNodes;
-
 
     // Initialize tile map
     std::map<int, std::map<int, int>> tileMap;
@@ -1373,12 +1275,8 @@ int main(int argc, char* args[]) {
     for(int i = 0; i < player.getMaxHotBarSize(); i++)
     {
         player.addHotBarItem(emptySlot,i);
-        std::cout<<"emptySlot added to "<<player.getHotBar().size();//<<" of "<<player.getMaxInventorySize();
+        //std::cout<<"emptySlot added to "<<player.getHotBar().size();//<<" of "<<player.getMaxInventorySize();
     }
-
-    //player.insertItem(walnuts,3);
-
-
 
     while (!quit) {
         endTick = SDL_GetTicks();
@@ -1408,10 +1306,11 @@ int main(int argc, char* args[]) {
             }
         }
 
+        //handleEvents,update,and render are where most of the action in the game occurs.
+        //handle events takes input, update does the change in the game, render renders based on the changes.
         update(gameSTATE,splash,deltaTime,player,button1,button2,button3,button4,button5,button6,button7,button8,quit,height,width,map,tileMap,resourceNodes,renderer,displayControls,cutSceneFinished,myTimer,camera,gameState,squirrels,bunnies,sparkles,currentThirstBarPixels,currentHungerBarPixels,currentHealthBarPixels,inventoryMenu);
         player.updateItemsState();
         render(renderer,gameSTATE,splash,player,button1,button2,button3,button4,button5,button6,button7,button8,deltaTime,height,width,map,resourceNodes,displayControls,cutSceneFinished,myTimer,camera,squirrels,bunnies,sparkles,currentThirstBarPixels,currentHungerBarPixels,currentHealthBarPixels,inventoryMenu);
-
 
         endTick = SDL_GetTicks();
         deltaTime = endTick - startTick;
@@ -1423,8 +1322,6 @@ int main(int argc, char* args[]) {
         //Uint32 time = myTimer.getTicks();
         //std::cout << "Timer: " << time << " ms" << std::endl;
     }
-
-
 
     gameState.save(player);
     gameState.saveTileMap(tileMap);

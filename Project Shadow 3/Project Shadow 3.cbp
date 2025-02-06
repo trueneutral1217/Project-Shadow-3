@@ -34,9 +34,18 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="C:/mingw_dev_lib/SDL2-2.30.1/i686-w64-mingw32/include/SDL2" />
+					<Add directory="C:/mingw_dev_lib/SDL2_image-2.8.2/i686-w64-mingw32/include/SDL2" />
+					<Add directory="C:/mingw_dev_lib/SDL2_mixer-2.8.0/i686-w64-mingw32/include/SDL2" />
+					<Add directory="C:/mingw_dev_lib/SDL2_ttf-2.22.0/i686-w64-mingw32/include/SDL2" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
+					<Add option="-lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf" />
+					<Add directory="C:/mingw_dev_lib/SDL2-2.30.1/i686-w64-mingw32/lib" />
+					<Add directory="C:/mingw_dev_lib/SDL2_image-2.8.2/i686-w64-mingw32/lib" />
+					<Add directory="C:/mingw_dev_lib/SDL2_mixer-2.8.0/i686-w64-mingw32/lib" />
+					<Add directory="C:/mingw_dev_lib/SDL2_ttf-2.22.0/i686-w64-mingw32/lib" />
 				</Linker>
 			</Target>
 		</Build>

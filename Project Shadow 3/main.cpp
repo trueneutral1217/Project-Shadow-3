@@ -207,7 +207,8 @@ void handleEvents(SDL_Event& e, GAMESTATE& gameSTATE, Player& player, bool& quit
         }
 
         if(!cutSceneFinished){
-            cutSceneFinished = true;
+                //this is to jump straight into the game for testing purposes.
+            //cutSceneFinished = true;
         }
         SDL_GetMouseState(&mouseX, &mouseY);
         if(fullSCREEN){mouseX-=24;}//fix for aspect ratio pixels

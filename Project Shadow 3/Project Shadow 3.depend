@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1734767775 source:c:\project shadow 3\project shadow 3\main.cpp
+1738050435 source:c:\project shadow 3\project shadow 3\main.cpp
 	<SDL.h>
 	<SDL_image.h>
 	<SDL_ttf.h>
